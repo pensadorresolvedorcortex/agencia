@@ -152,7 +152,7 @@ body.nafb-modal-open {
   padding: 0 18px;
   font-size: 19px;
   color: #0f172a;
-  caret-color: #2563eb;
+  caret-color: #375233;
   transition: border-color .12s ease, box-shadow .12s ease, background-color .12s ease;
 }
 
@@ -162,8 +162,8 @@ body.nafb-modal-open {
 
 #nafb-native-layer .nafb-modal__input:focus {
   outline: none;
-  border-color: rgba(37, 99, 235, 0.72);
-  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.16);
+  border-color: rgba(55, 82, 51, 0.72);
+  box-shadow: 0 0 0 4px rgba(172, 211, 100, 0.25);
   background: #fff;
 }
 
@@ -202,8 +202,8 @@ body.nafb-modal-open {
   font-size: 15px;
   font-weight: 600;
   color: #fff;
-  background: linear-gradient(135deg, #1e40af, #2563eb);
-  box-shadow: 0 12px 24px rgba(29, 78, 216, 0.35);
+  background: linear-gradient(135deg, #375233, #4f6f49);
+  box-shadow: 0 12px 24px rgba(55, 82, 51, 0.3);
   transition: transform var(--nafb-update) var(--nafb-ease), box-shadow var(--nafb-update) var(--nafb-ease), opacity var(--nafb-update) var(--nafb-ease);
   cursor: pointer;
 }
@@ -212,7 +212,7 @@ body.nafb-modal-open {
 .nafb-cart-edit.vs-btn:hover,
 .nafb-drawer .vs-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 14px 28px rgba(29, 78, 216, 0.4);
+  box-shadow: 0 14px 28px rgba(55, 82, 51, 0.35);
 }
 
 #nafb-native-layer .vs-btn:active,
@@ -309,7 +309,7 @@ body.nafb-modal-open {
 
 #nafb-native-layer .nafb-order-summary__price {
   font-weight: 700;
-  color: #1e40af;
+  color: #375233;
   font-size: 14px;
   text-align: right;
 }
@@ -404,10 +404,9 @@ body.nafb-modal-open {
 
 #nafb-native-layer .nafb-order-summary__actions [data-role="nafb-order-go-cart"] {
   order: 1;
-  background: linear-gradient(135deg, #1d4ed8, #2563eb);
-  color: #fff;
+  background: #acd364;
+  color: #375233;
   border: 0;
-  box-shadow: 0 12px 24px rgba(37, 99, 235, 0.3);
   font-weight: 700;
 }
 
@@ -418,7 +417,7 @@ body.nafb-modal-open {
 #nafb-native-layer .nafb-order-summary__urgency {
   margin: 8px 0 0;
   font-size: 12px;
-  color: #64748b;
+  color: #375233;
 }
 
 #nafb-native-layer .nafb-order-summary__reassurance {
@@ -485,8 +484,8 @@ body.nafb-modal-open {
 
 #nafb-native-layer ~ form.variations_form select.nafb-highlight,
 form.variations_form select.nafb-highlight {
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
-  border-color: rgba(37, 99, 235, 0.72);
+  box-shadow: 0 0 0 3px rgba(172, 211, 100, 0.35);
+  border-color: rgba(55, 82, 51, 0.72);
   transition: box-shadow .15s ease, border-color .15s ease;
 }
 
