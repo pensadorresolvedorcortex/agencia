@@ -24,6 +24,29 @@
       .replace(/'/g, '&#39;');
   }
 
+  function sanitizeWooPriceHtml(html) {
+    const template = document.createElement('template');
+    template.innerHTML = String(html || '');
+    const allowed = new Set(['SPAN', 'BDI']);
+    const walk = (node) => {
+      Array.from(node.children).forEach((child) => {
+        if (!allowed.has(child.tagName)) {
+          const text = document.createTextNode(child.textContent || '');
+          child.replaceWith(text);
+          return;
+        }
+        Array.from(child.attributes).forEach((attr) => {
+          if (!(child.tagName === 'SPAN' && attr.name === 'class')) {
+            child.removeAttribute(attr.name);
+          }
+        });
+        walk(child);
+      });
+    };
+    walk(template.content);
+    return template.innerHTML;
+  }
+
   function postBatch(payload) {
     return fetch(nafbApp.ajaxUrl, {
       method: 'POST',
@@ -257,7 +280,8 @@
           </article>
         `;
       }).join('');
-      const nextSubtotalText = `Subtotal do pedido: ${subtotalHtml || '—'}`;
+      const safeSubtotalHtml = sanitizeWooPriceHtml(subtotalHtml || '');
+      const nextSubtotalText = `Subtotal do pedido: ${safeSubtotalHtml || '—'}`;
       if (state.lastSubtotalText && state.lastSubtotalText !== nextSubtotalText) {
         orderSummarySubtotal.classList.remove('is-updated');
         void orderSummarySubtotal.offsetWidth;
@@ -265,7 +289,7 @@
         setTimeout(() => orderSummarySubtotal.classList.remove('is-updated'), 120);
       }
       state.lastSubtotalText = nextSubtotalText;
-      orderSummarySubtotal.textContent = nextSubtotalText;
+      orderSummarySubtotal.innerHTML = `Subtotal do pedido: ${safeSubtotalHtml || '—'}`;
       if (orderSummaryStatus) orderSummaryStatus.textContent = 'Seu pedido está pronto para finalizar';
       if (mobileCheckout && mobileCheckoutLink) {
         mobileCheckoutLink.textContent = `Finalizar pedido • ${String(subtotalHtml || '').replace(/<[^>]+>/g, '').trim()}`;
