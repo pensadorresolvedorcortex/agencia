@@ -107,7 +107,10 @@
     }
 
     function closeModal() {
+      if (!state.isOpen) return;
+      modal.classList.add('is-closing');
       setModalOpen(false);
+      setTimeout(() => modal.classList.remove('is-closing'), 130);
     }
 
     function collectNamesFromFields() {
@@ -156,7 +159,7 @@
 
       state.namesByVariation[state.currentVariationId] = collectNamesFromFields();
       closeModal();
-      toast('Nome salvo', 'success');
+      toast('Nome salvo com sucesso', 'success');
     }
 
     function handleVariationChange() {

@@ -4,7 +4,7 @@
   background: rgba(10, 18, 35, 0.22);
   opacity: 0;
   pointer-events: none;
-  transition: opacity .18s ease;
+  transition: opacity .15s ease-out;
   z-index: 10000;
 }
 
@@ -28,7 +28,7 @@
   padding: 22px;
   opacity: 0;
   pointer-events: none;
-  transition: transform .16s ease, opacity .16s ease;
+  transition: transform .15s ease-out, opacity .15s ease-out;
   z-index: 10001;
 }
 
@@ -36,6 +36,10 @@
   opacity: 1;
   pointer-events: auto;
   transform: translate(-50%, -50%) scale(1);
+}
+
+#nafb-native-layer .nafb-modal:not(.is-open) {
+  transition-duration: .12s;
 }
 
 #nafb-native-layer .nafb-modal__header {
@@ -61,6 +65,12 @@
   color: #334155;
 }
 
+#nafb-native-layer .nafb-modal__trust {
+  margin: 4px 0 0;
+  font-size: 11px;
+  color: #94a3b8;
+  letter-spacing: .01em;
+}
 
 #nafb-native-layer .nafb-modal__helper {
   margin: 6px 0 0;
@@ -87,7 +97,6 @@
   cursor: pointer;
 }
 
-
 #nafb-native-layer .nafb-modal__fields {
   display: grid;
   gap: 14px;
@@ -97,11 +106,10 @@
 #nafb-native-layer .nafb-modal__field {
   display: grid;
   gap: 8px;
-  animation: nafb-field-in .2s ease;
+  animation: nafb-field-in .16s ease-out;
 }
 
 #nafb-native-layer .nafb-modal__label {
-  display: block;
   margin: 0;
   font-size: 15px;
   font-weight: 600;
@@ -114,10 +122,11 @@
   border-radius: 12px;
   border: 1px solid rgba(148, 163, 184, 0.5);
   background: rgba(255, 255, 255, 0.84);
-  padding: 0 16px;
+  padding: 0 18px;
   font-size: 19px;
   color: #0f172a;
-  transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+  caret-color: #2563eb;
+  transition: border-color .12s ease, box-shadow .12s ease, background-color .12s ease;
 }
 
 #nafb-native-layer .nafb-modal__input::placeholder {
@@ -144,7 +153,12 @@
 }
 
 #nafb-native-layer .nafb-modal__field.is-shaking {
-  animation: nafb-shake .28s ease;
+  animation: nafb-shake .2s ease;
+}
+
+#nafb-native-layer .nafb-modal__ok {
+  position: sticky;
+  bottom: 0;
 }
 
 #nafb-native-layer .vs-btn,
@@ -157,16 +171,15 @@
   border: 0;
   border-radius: 9999px;
   padding: 18px 28px;
+  min-height: 58px;
   font-size: 15px;
   font-weight: 600;
-  color: #ffffff;
+  color: #fff;
   background: linear-gradient(135deg, #1e40af, #2563eb);
   box-shadow: 0 12px 24px rgba(29, 78, 216, 0.35);
   transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
   cursor: pointer;
-  min-height: 58px;
 }
-
 
 #nafb-native-layer .vs-btn:hover,
 .nafb-cart-edit.vs-btn:hover,
@@ -178,7 +191,7 @@
 #nafb-native-layer .vs-btn:active,
 .nafb-cart-edit.vs-btn:active,
 .nafb-drawer .vs-btn:active {
-  transform: translateY(0);
+  transform: scale(0.98);
 }
 
 #nafb-native-layer .vs-btn.is-complete {
@@ -193,7 +206,7 @@
 }
 
 #nafb-native-layer .vs-btn.is-loading {
-  opacity: .8;
+  opacity: .85;
   pointer-events: none;
 }
 
@@ -204,7 +217,7 @@
   margin-left: 10px;
   border-radius: 50%;
   border: 2px solid rgba(255, 255, 255, 0.45);
-  border-top-color: #ffffff;
+  border-top-color: #fff;
   animation: nafb-spin .7s linear infinite;
 }
 
@@ -212,20 +225,47 @@
   margin-top: 8px;
 }
 
-@keyframes nafb-spin {
-  to { transform: rotate(360deg); }
+.nafb-toast-container {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  z-index: 10030;
+  display: grid;
+  gap: 8px;
 }
 
+.nafb-toast {
+  min-width: 180px;
+  max-width: 280px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: #fff;
+  background: rgba(15, 23, 42, 0.92);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.2);
+  transform: translateY(8px);
+  opacity: 0;
+  transition: opacity .16s ease, transform .16s ease;
+}
+
+.nafb-toast.is-show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.nafb-toast.is-success { background: rgba(22, 163, 74, 0.95); }
+.nafb-toast.is-error { background: rgba(180, 35, 24, 0.95); }
+.nafb-toast.is-hide { opacity: 0; transform: translateY(4px); }
+
+@keyframes nafb-spin { to { transform: rotate(360deg); } }
 @keyframes nafb-field-in {
   from { opacity: 0; transform: translateY(4px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes nafb-shake {
   0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  50% { transform: translateX(4px); }
-  75% { transform: translateX(-3px); }
+  25% { transform: translateX(-4px); }
+  50% { transform: translateX(3px); }
+  75% { transform: translateX(-2px); }
 }
 
 @media (max-width: 768px) {
@@ -235,8 +275,8 @@
     right: 8px;
     top: auto;
     bottom: 8px;
-    transform: translateY(16px);
-    border-radius: 20px;
+    transform: translateY(12px);
+    border-radius: 18px;
     max-height: 88vh;
     overflow: visible;
     padding: 14px;
@@ -246,16 +286,7 @@
     transform: translateY(0);
   }
 
-  #nafb-native-layer .nafb-modal__header h4 {
-    font-size: 26px;
-  }
-
-  #nafb-native-layer .nafb-modal__subtitle {
-    font-size: 15px;
-  }
-
-  #nafb-native-layer .nafb-modal__input {
-    min-height: 56px;
-    font-size: 17px;
-  }
+  #nafb-native-layer .nafb-modal__header h4 { font-size: 26px; }
+  #nafb-native-layer .nafb-modal__subtitle { font-size: 15px; }
+  #nafb-native-layer .nafb-modal__input { min-height: 56px; font-size: 17px; }
 }

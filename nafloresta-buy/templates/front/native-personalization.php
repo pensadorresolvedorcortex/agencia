@@ -5,6 +5,7 @@
             <div>
                 <h4><?php esc_html_e('Personalizar', 'nafloresta-buy'); ?></h4>
                 <p class="nafb-modal__subtitle" data-role="nafb-modal-subtitle"></p>
+                <p class="nafb-modal__trust"><?php esc_html_e('Personalização segura • você poderá revisar depois', 'nafloresta-buy'); ?></p>
                 <p class="nafb-modal__helper" data-role="nafb-modal-helper">Digite o nome para personalizar o livro</p>
                 <p class="nafb-modal__progress" data-role="nafb-modal-progress"></p>
             </div>

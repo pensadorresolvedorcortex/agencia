@@ -16,10 +16,13 @@
     toast.textContent = message;
     container.appendChild(toast);
 
+    requestAnimationFrame(() => toast.classList.add('is-show'));
+
     setTimeout(() => {
+      toast.classList.remove('is-show');
       toast.classList.add('is-hide');
-      setTimeout(() => toast.remove(), 220);
-    }, 2600);
+      setTimeout(() => toast.remove(), 160);
+    }, 1600);
   }
 
   window.NAFBToast = { show };
