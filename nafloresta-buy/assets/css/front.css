@@ -1,10 +1,10 @@
 #nafb-native-layer .nafb-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(10, 18, 35, 0.32);
+  background: rgba(10, 18, 35, 0.28);
   opacity: 0;
   pointer-events: none;
-  transition: opacity .25s ease;
+  transition: opacity .22s ease;
   z-index: 10000;
 }
 
@@ -17,18 +17,18 @@
   position: fixed;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -44%) scale(.98);
-  width: min(560px, calc(100vw - 32px));
-  border-radius: 28px;
-  border: 1px solid rgba(255, 255, 255, 0.66);
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.68));
-  box-shadow: 0 30px 80px rgba(15, 23, 42, 0.22);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  transform: translate(-50%, -46%) scale(.98);
+  width: min(560px, calc(100vw - 36px));
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.56);
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.90), rgba(247, 250, 255, 0.78));
+  box-shadow: 0 28px 70px rgba(15, 23, 42, 0.20);
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
   padding: 24px;
   opacity: 0;
   pointer-events: none;
-  transition: all .28s ease;
+  transition: transform .24s ease, opacity .24s ease;
   z-index: 10001;
 }
 
@@ -40,17 +40,25 @@
 
 #nafb-native-layer .nafb-modal__header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 10px;
+  gap: 12px;
   margin-bottom: 14px;
 }
 
 #nafb-native-layer .nafb-modal__header h4 {
   margin: 0;
-  font-size: 28px;
+  font-size: 30px;
+  line-height: 1.1;
   font-weight: 700;
   color: #0f172a;
+}
+
+#nafb-native-layer .nafb-modal__subtitle {
+  margin: 8px 0 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1d4ed8;
 }
 
 #nafb-native-layer .nafb-modal__close {
@@ -64,37 +72,81 @@
   cursor: pointer;
 }
 
+#nafb-native-layer .nafb-modal__fields {
+  display: grid;
+  gap: 12px;
+  margin: 14px 0 18px;
+}
+
+#nafb-native-layer .nafb-modal__field {
+  display: grid;
+  gap: 8px;
+  animation: nafb-field-in .2s ease;
+}
+
 #nafb-native-layer .nafb-modal__label {
   display: block;
-  margin-bottom: 10px;
-  font-size: 28px;
-  color: #1e1b6f;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #334155;
 }
 
 #nafb-native-layer .nafb-modal__input {
   width: 100%;
-  min-height: 56px;
-  border-radius: 14px;
-  border: 1px solid rgba(148, 163, 184, 0.6);
-  background: rgba(255, 255, 255, 0.82);
+  min-height: 54px;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  background: rgba(255, 255, 255, 0.84);
   padding: 0 16px;
-  font-size: 20px;
-  margin-bottom: 16px;
+  font-size: 18px;
+  color: #0f172a;
+  transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+}
+
+#nafb-native-layer .nafb-modal__input::placeholder {
+  color: #94a3b8;
+}
+
+#nafb-native-layer .nafb-modal__input:focus {
+  outline: none;
+  border-color: rgba(37, 99, 235, 0.72);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.16);
+  background: #fff;
+}
+
+#nafb-native-layer .nafb-modal__error {
+  min-height: 16px;
+  margin: 0;
+  color: #b42318;
+  font-size: 12px;
+}
+
+#nafb-native-layer .nafb-modal__field.is-invalid .nafb-modal__input {
+  border-color: rgba(180, 35, 24, 0.8);
+  box-shadow: 0 0 0 4px rgba(180, 35, 24, 0.12);
+}
+
+#nafb-native-layer .nafb-modal__field.is-shaking {
+  animation: nafb-shake .28s ease;
 }
 
 #nafb-native-layer .vs-btn,
 .nafb-cart-edit.vs-btn,
 .nafb-drawer .vs-btn {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
   border: 0;
   border-radius: 9999px;
-  padding: 16px 30px;
+  padding: 16px 28px;
   font-size: 16px;
   font-weight: 600;
-  color: #0f172a;
-  background: linear-gradient(135deg, #fff, #eef4ff 62%, #e6efff);
-  box-shadow: 0 12px 28px rgba(15, 23, 42, .15);
-  transition: transform .25s ease, box-shadow .25s ease;
+  color: #fff;
+  background: linear-gradient(135deg, #1d4ed8, #2563eb);
+  box-shadow: 0 14px 28px rgba(29, 78, 216, 0.35);
+  transition: transform .2s ease, box-shadow .2s ease, opacity .2s ease;
   cursor: pointer;
 }
 
@@ -102,22 +154,63 @@
 .nafb-cart-edit.vs-btn:hover,
 .nafb-drawer .vs-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 16px 34px rgba(15, 23, 42, .18);
+  box-shadow: 0 16px 32px rgba(29, 78, 216, 0.4);
+}
+
+#nafb-native-layer .vs-btn:active,
+.nafb-cart-edit.vs-btn:active,
+.nafb-drawer .vs-btn:active {
+  transform: translateY(0);
+}
+
+#nafb-native-layer .vs-btn.is-loading {
+  opacity: .8;
+  pointer-events: none;
+}
+
+#nafb-native-layer .vs-btn.is-loading::after {
+  content: '';
+  width: 16px;
+  height: 16px;
+  margin-left: 10px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  border-top-color: #fff;
+  animation: nafb-spin .7s linear infinite;
 }
 
 .nafb-cart-actions {
   margin-top: 8px;
 }
 
+@keyframes nafb-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes nafb-field-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes nafb-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(4px); }
+  75% { transform: translateX(-3px); }
+}
+
 @media (max-width: 768px) {
   #nafb-native-layer .nafb-modal {
-    width: calc(100vw - 20px);
-    left: 10px;
-    right: 10px;
+    width: calc(100vw - 16px);
+    left: 8px;
+    right: 8px;
     top: auto;
-    bottom: 12px;
-    transform: translateY(14px);
-    border-radius: 24px;
+    bottom: 8px;
+    transform: translateY(16px);
+    border-radius: 20px;
+    max-height: 84vh;
+    overflow: auto;
+    padding: 18px;
   }
 
   #nafb-native-layer .nafb-modal.is-open {
@@ -128,11 +221,12 @@
     font-size: 24px;
   }
 
-  #nafb-native-layer .nafb-modal__label {
-    font-size: 22px;
+  #nafb-native-layer .nafb-modal__subtitle {
+    font-size: 16px;
   }
 
-  #nafb-native-layer .vs-btn {
-    width: 100%;
+  #nafb-native-layer .nafb-modal__input {
+    min-height: 52px;
+    font-size: 17px;
   }
 }

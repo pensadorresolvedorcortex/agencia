@@ -37,14 +37,13 @@
     const modal = layer.querySelector('[data-role="nafb-modal"]');
     const closeBtn = layer.querySelector('[data-role="nafb-modal-close"]');
     const okBtn = layer.querySelector('[data-role="nafb-modal-ok"]');
-    const input = layer.querySelector('[data-role="nafb-modal-input"]');
-    const label = layer.querySelector('[data-role="nafb-modal-label"]');
+    const subtitle = layer.querySelector('[data-role="nafb-modal-subtitle"]');
+    const fieldsWrap = layer.querySelector('[data-role="nafb-modal-fields"]');
     const qtyInput = form.querySelector('input.qty');
     const variationIdInput = form.querySelector('input[name="variation_id"]');
 
     const state = {
       currentVariationId: 0,
-      currentIndex: 0,
       namesByVariation: {},
       isOpen: false,
       shouldOpenOnNextChange: true,
@@ -65,23 +64,12 @@
       modal.classList.toggle('is-open', open);
       overlay.setAttribute('aria-hidden', open ? 'false' : 'true');
       modal.setAttribute('aria-hidden', open ? 'false' : 'true');
-      if (open) setTimeout(() => input.focus(), 20);
-    }
-
-    function openModal(variationId, index) {
-      state.currentVariationId = variationId;
-      state.currentIndex = index;
-      const list = state.namesByVariation[variationId] || [];
-      const value = list[index] || '';
-      const variationLabel = getLabel(String(variationId));
-      label.textContent = `Nome do aluno ${index + 1} para o produto: ${variationLabel}`;
-      input.value = value;
-      setModalOpen(true);
-      track('drawer_opened', { variation_id: variationId, index: index + 1 });
-    }
-
-    function closeModal() {
-      setModalOpen(false);
+      if (open) {
+        setTimeout(() => {
+          const first = fieldsWrap.querySelector('input');
+          if (first) first.focus();
+        }, 20);
+      }
     }
 
     function ensureNames(variationId) {
@@ -91,37 +79,86 @@
       return state.namesByVariation[variationId];
     }
 
-    function firstMissingIndex(list) {
-      return list.findIndex((name) => !String(name || '').trim());
+    function renderFields(variationId) {
+      const names = ensureNames(variationId);
+      fieldsWrap.innerHTML = '';
+
+      names.forEach((value, index) => {
+        const row = document.createElement('div');
+        row.className = 'nafb-modal__field';
+        row.innerHTML = `
+          <label class="nafb-modal__label" for="nafb-student-name-${index}">Nome do aluno ${index + 1}</label>
+          <input id="nafb-student-name-${index}" type="text" class="nafb-modal__input" data-index="${index}" placeholder="Digite o nome do aluno" value="${String(value || '').replace(/"/g, '&quot;')}" />
+          <p class="nafb-modal__error" data-role="error"></p>
+        `;
+        fieldsWrap.appendChild(row);
+      });
+    }
+
+    function openModal(variationId) {
+      state.currentVariationId = variationId;
+      subtitle.textContent = getLabel(String(variationId));
+      renderFields(variationId);
+      setModalOpen(true);
+      track('drawer_opened', { variation_id: variationId });
+    }
+
+    function closeModal() {
+      setModalOpen(false);
+    }
+
+    function collectNamesFromFields() {
+      return Array.from(fieldsWrap.querySelectorAll('input')).map((input) => String(input.value || '').trim());
+    }
+
+    function validateFields() {
+      let valid = true;
+      const inputs = Array.from(fieldsWrap.querySelectorAll('input'));
+
+      inputs.forEach((input) => {
+        const row = input.closest('.nafb-modal__field');
+        const error = row.querySelector('[data-role="error"]');
+        if (!String(input.value || '').trim()) {
+          valid = false;
+          row.classList.add('is-invalid', 'is-shaking');
+          error.textContent = 'Nome obrigatório.';
+          setTimeout(() => row.classList.remove('is-shaking'), 280);
+        } else {
+          row.classList.remove('is-invalid');
+          error.textContent = '';
+        }
+      });
+
+      return valid;
+    }
+
+    async function saveModal() {
+      if (!state.currentVariationId) return;
+      if (!validateFields()) {
+        const firstInvalid = fieldsWrap.querySelector('.is-invalid input');
+        if (firstInvalid) firstInvalid.focus();
+        return;
+      }
+
+      okBtn.classList.add('is-loading');
+      okBtn.disabled = true;
+      state.namesByVariation[state.currentVariationId] = collectNamesFromFields();
+      await new Promise((resolve) => setTimeout(resolve, 180));
+      okBtn.classList.remove('is-loading');
+      okBtn.disabled = false;
+      closeModal();
     }
 
     function handleVariationChange() {
       const variationId = Number((variationIdInput && variationIdInput.value) || 0);
       if (!variationId || !(config.variations || {})[variationId]) return;
-      ensureNames(variationId);
 
       if (!state.shouldOpenOnNextChange) {
         state.shouldOpenOnNextChange = true;
         return;
       }
 
-      const idx = firstMissingIndex(state.namesByVariation[variationId]);
-      openModal(variationId, idx >= 0 ? idx : 0);
-    }
-
-    function saveCurrentAndAdvance() {
-      if (!state.currentVariationId) return;
-      const names = ensureNames(state.currentVariationId);
-      names[state.currentIndex] = String(input.value || '').trim();
-      state.namesByVariation[state.currentVariationId] = names;
-
-      const next = firstMissingIndex(names);
-      if (next >= 0 && next !== state.currentIndex) {
-        openModal(state.currentVariationId, next);
-        return;
-      }
-
-      closeModal();
+      openModal(variationId);
     }
 
     form.addEventListener('change', (event) => {
@@ -134,11 +171,11 @@
       const variationId = Number((variationIdInput && variationIdInput.value) || 0);
       if (!variationId || !(config.variations || {})[variationId]) return;
 
-      const names = ensureNames(variationId);
-      const missing = firstMissingIndex(names);
-      if (missing >= 0) {
+      ensureNames(variationId);
+      const names = state.namesByVariation[variationId] || [];
+      if (!names.length || names.some((name) => !String(name || '').trim())) {
         event.preventDefault();
-        openModal(variationId, missing);
+        openModal(variationId);
         track('validation_error', { variation_id: variationId, reason: 'missing_names' });
         return;
       }
@@ -175,7 +212,15 @@
       }
     });
 
-    okBtn.addEventListener('click', saveCurrentAndAdvance);
+    fieldsWrap.addEventListener('input', (event) => {
+      if (!event.target.matches('input[data-index]')) return;
+      const row = event.target.closest('.nafb-modal__field');
+      const error = row.querySelector('[data-role="error"]');
+      row.classList.remove('is-invalid');
+      error.textContent = '';
+    });
+
+    okBtn.addEventListener('click', saveModal);
     closeBtn.addEventListener('click', closeModal);
     overlay.addEventListener('click', closeModal);
     document.addEventListener('keydown', (event) => {
