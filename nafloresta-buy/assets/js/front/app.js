@@ -87,7 +87,7 @@
         const row = document.createElement('div');
         row.className = 'nafb-modal__field';
         row.innerHTML = `
-          <label class="nafb-modal__label" for="nafb-student-name-${index}">Nome do aluno ${index + 1}</label>
+          <label class="nafb-modal__label" for="nafb-student-name-${index}">Aluno ${index + 1}</label>
           <input id="nafb-student-name-${index}" type="text" class="nafb-modal__input" data-index="${index}" placeholder="Digite o nome do aluno" value="${String(value || '').replace(/"/g, '&quot;')}" />
           <p class="nafb-modal__error" data-role="error"></p>
         `;
@@ -121,7 +121,7 @@
         if (!String(input.value || '').trim()) {
           valid = false;
           row.classList.add('is-invalid', 'is-shaking');
-          error.textContent = 'Nome obrigatório.';
+          error.textContent = 'Digite o nome';
           setTimeout(() => row.classList.remove('is-shaking'), 280);
         } else {
           row.classList.remove('is-invalid');
@@ -218,6 +218,17 @@
       const error = row.querySelector('[data-role="error"]');
       row.classList.remove('is-invalid');
       error.textContent = '';
+
+      if (String(event.target.value || '').trim()) {
+        const next = fieldsWrap.querySelector(`input[data-index="${Number(event.target.dataset.index || 0) + 1}"]`);
+        if (next) next.focus();
+      }
+    });
+
+    fieldsWrap.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter') return;
+      event.preventDefault();
+      saveModal();
     });
 
     okBtn.addEventListener('click', saveModal);

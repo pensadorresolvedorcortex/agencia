@@ -1,10 +1,10 @@
 #nafb-native-layer .nafb-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(10, 18, 35, 0.28);
+  background: rgba(10, 18, 35, 0.22);
   opacity: 0;
   pointer-events: none;
-  transition: opacity .22s ease;
+  transition: opacity .18s ease;
   z-index: 10000;
 }
 
@@ -17,18 +17,18 @@
   position: fixed;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -46%) scale(.98);
+  transform: translate(-50%, -48%) scale(.99);
   width: min(560px, calc(100vw - 36px));
-  border-radius: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.56);
-  background: linear-gradient(165deg, rgba(255, 255, 255, 0.90), rgba(247, 250, 255, 0.78));
-  box-shadow: 0 28px 70px rgba(15, 23, 42, 0.20);
-  backdrop-filter: blur(14px) saturate(150%);
-  -webkit-backdrop-filter: blur(14px) saturate(150%);
-  padding: 24px;
+  border-radius: 20px;
+  border: 1px solid rgba(203, 213, 225, 0.65);
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.98), rgba(250, 252, 255, 0.95));
+  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.14);
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  padding: 22px;
   opacity: 0;
   pointer-events: none;
-  transition: transform .24s ease, opacity .24s ease;
+  transition: transform .16s ease, opacity .16s ease;
   z-index: 10001;
 }
 
@@ -42,23 +42,23 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 12px;
+  gap: 14px;
   margin-bottom: 14px;
 }
 
 #nafb-native-layer .nafb-modal__header h4 {
   margin: 0;
-  font-size: 30px;
+  font-size: 32px;
   line-height: 1.1;
   font-weight: 700;
   color: #0f172a;
 }
 
 #nafb-native-layer .nafb-modal__subtitle {
-  margin: 8px 0 0;
-  font-size: 18px;
+  margin: 6px 0 0;
+  font-size: 19px;
   font-weight: 600;
-  color: #1d4ed8;
+  color: #334155;
 }
 
 #nafb-native-layer .nafb-modal__close {
@@ -74,8 +74,8 @@
 
 #nafb-native-layer .nafb-modal__fields {
   display: grid;
-  gap: 12px;
-  margin: 14px 0 18px;
+  gap: 14px;
+  margin: 16px 0 20px;
 }
 
 #nafb-native-layer .nafb-modal__field {
@@ -87,19 +87,19 @@
 #nafb-native-layer .nafb-modal__label {
   display: block;
   margin: 0;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   color: #334155;
 }
 
 #nafb-native-layer .nafb-modal__input {
   width: 100%;
-  min-height: 54px;
+  min-height: 58px;
   border-radius: 12px;
   border: 1px solid rgba(148, 163, 184, 0.5);
   background: rgba(255, 255, 255, 0.84);
   padding: 0 16px;
-  font-size: 18px;
+  font-size: 19px;
   color: #0f172a;
   transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
 }
@@ -140,13 +140,13 @@
   width: 100%;
   border: 0;
   border-radius: 9999px;
-  padding: 16px 28px;
-  font-size: 16px;
+  padding: 18px 28px;
+  font-size: 15px;
   font-weight: 600;
-  color: #fff;
-  background: linear-gradient(135deg, #1d4ed8, #2563eb);
-  box-shadow: 0 14px 28px rgba(29, 78, 216, 0.35);
-  transition: transform .2s ease, box-shadow .2s ease, opacity .2s ease;
+  color: #ffffff;
+  background: linear-gradient(135deg, #1e40af, #2563eb);
+  box-shadow: 0 12px 24px rgba(29, 78, 216, 0.35);
+  transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
   cursor: pointer;
 }
 
@@ -154,7 +154,7 @@
 .nafb-cart-edit.vs-btn:hover,
 .nafb-drawer .vs-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 16px 32px rgba(29, 78, 216, 0.4);
+  box-shadow: 0 14px 28px rgba(29, 78, 216, 0.4);
 }
 
 #nafb-native-layer .vs-btn:active,
@@ -175,7 +175,7 @@
   margin-left: 10px;
   border-radius: 50%;
   border: 2px solid rgba(255, 255, 255, 0.45);
-  border-top-color: #fff;
+  border-top-color: #ffffff;
   animation: nafb-spin .7s linear infinite;
 }
 
@@ -208,9 +208,9 @@
     bottom: 8px;
     transform: translateY(16px);
     border-radius: 20px;
-    max-height: 84vh;
-    overflow: auto;
-    padding: 18px;
+    max-height: 88vh;
+    overflow: visible;
+    padding: 14px;
   }
 
   #nafb-native-layer .nafb-modal.is-open {
@@ -218,15 +218,15 @@
   }
 
   #nafb-native-layer .nafb-modal__header h4 {
-    font-size: 24px;
+    font-size: 26px;
   }
 
   #nafb-native-layer .nafb-modal__subtitle {
-    font-size: 16px;
+    font-size: 15px;
   }
 
   #nafb-native-layer .nafb-modal__input {
-    min-height: 52px;
+    min-height: 56px;
     font-size: 17px;
   }
 }
