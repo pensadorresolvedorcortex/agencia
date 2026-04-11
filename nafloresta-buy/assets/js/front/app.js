@@ -38,6 +38,8 @@
     const closeBtn = layer.querySelector('[data-role="nafb-modal-close"]');
     const okBtn = layer.querySelector('[data-role="nafb-modal-ok"]');
     const subtitle = layer.querySelector('[data-role="nafb-modal-subtitle"]');
+    const helper = layer.querySelector('[data-role="nafb-modal-helper"]');
+    const progress = layer.querySelector('[data-role="nafb-modal-progress"]');
     const fieldsWrap = layer.querySelector('[data-role="nafb-modal-fields"]');
     const qtyInput = form.querySelector('input.qty');
     const variationIdInput = form.querySelector('input[name="variation_id"]');
@@ -99,6 +101,7 @@
       state.currentVariationId = variationId;
       subtitle.textContent = getLabel(String(variationId));
       renderFields(variationId);
+      refreshProgress();
       setModalOpen(true);
       track('drawer_opened', { variation_id: variationId });
     }
@@ -111,6 +114,17 @@
       return Array.from(fieldsWrap.querySelectorAll('input')).map((input) => String(input.value || '').trim());
     }
 
+    function refreshProgress() {
+      const names = collectNamesFromFields();
+      const filled = names.filter((name) => name).length;
+      const total = names.length;
+      progress.textContent = `${filled} de ${total} preenchidos`;
+
+      const complete = total > 0 && filled === total;
+      helper.textContent = complete ? 'Tudo pronto ✔' : 'Digite o nome para personalizar o livro';
+      okBtn.classList.toggle('is-complete', complete);
+    }
+
     function validateFields() {
       let valid = true;
       const inputs = Array.from(fieldsWrap.querySelectorAll('input'));
@@ -121,7 +135,7 @@
         if (!String(input.value || '').trim()) {
           valid = false;
           row.classList.add('is-invalid', 'is-shaking');
-          error.textContent = 'Digite o nome';
+          error.textContent = 'Digite o nome do aluno';
           setTimeout(() => row.classList.remove('is-shaking'), 280);
         } else {
           row.classList.remove('is-invalid');
@@ -140,13 +154,9 @@
         return;
       }
 
-      okBtn.classList.add('is-loading');
-      okBtn.disabled = true;
       state.namesByVariation[state.currentVariationId] = collectNamesFromFields();
-      await new Promise((resolve) => setTimeout(resolve, 180));
-      okBtn.classList.remove('is-loading');
-      okBtn.disabled = false;
       closeModal();
+      toast('Nome salvo', 'success');
     }
 
     function handleVariationChange() {
@@ -223,10 +233,21 @@
         const next = fieldsWrap.querySelector(`input[data-index="${Number(event.target.dataset.index || 0) + 1}"]`);
         if (next) next.focus();
       }
+
+      refreshProgress();
     });
 
     fieldsWrap.addEventListener('keydown', (event) => {
       if (event.key !== 'Enter') return;
+      const input = event.target.closest('input[data-index]');
+      if (!input) return;
+      const next = fieldsWrap.querySelector(`input[data-index="${Number(input.dataset.index || 0) + 1}"]`);
+      if (next && String(input.value || '').trim()) {
+        event.preventDefault();
+        next.focus();
+        return;
+      }
+
       event.preventDefault();
       saveModal();
     });

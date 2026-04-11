@@ -5,6 +5,8 @@
             <div>
                 <h4><?php esc_html_e('Personalizar', 'nafloresta-buy'); ?></h4>
                 <p class="nafb-modal__subtitle" data-role="nafb-modal-subtitle"></p>
+                <p class="nafb-modal__helper" data-role="nafb-modal-helper">Digite o nome para personalizar o livro</p>
+                <p class="nafb-modal__progress" data-role="nafb-modal-progress"></p>
             </div>
             <button type="button" class="nafb-modal__close" data-role="nafb-modal-close" aria-label="<?php esc_attr_e('Fechar', 'nafloresta-buy'); ?>">×</button>
         </header>

@@ -61,6 +61,21 @@
   color: #334155;
 }
 
+
+#nafb-native-layer .nafb-modal__helper {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: #64748b;
+  min-height: 18px;
+}
+
+#nafb-native-layer .nafb-modal__progress {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #94a3b8;
+  min-height: 16px;
+}
+
 #nafb-native-layer .nafb-modal__close {
   width: 38px;
   height: 38px;
@@ -71,6 +86,7 @@
   font-size: 22px;
   cursor: pointer;
 }
+
 
 #nafb-native-layer .nafb-modal__fields {
   display: grid;
@@ -123,8 +139,8 @@
 }
 
 #nafb-native-layer .nafb-modal__field.is-invalid .nafb-modal__input {
-  border-color: rgba(180, 35, 24, 0.8);
-  box-shadow: 0 0 0 4px rgba(180, 35, 24, 0.12);
+  border-color: rgba(180, 35, 24, 0.72);
+  box-shadow: inset 0 -2px 0 rgba(180, 35, 24, 0.35);
 }
 
 #nafb-native-layer .nafb-modal__field.is-shaking {
@@ -148,7 +164,9 @@
   box-shadow: 0 12px 24px rgba(29, 78, 216, 0.35);
   transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
   cursor: pointer;
+  min-height: 58px;
 }
+
 
 #nafb-native-layer .vs-btn:hover,
 .nafb-cart-edit.vs-btn:hover,
@@ -161,6 +179,17 @@
 .nafb-cart-edit.vs-btn:active,
 .nafb-drawer .vs-btn:active {
   transform: translateY(0);
+}
+
+#nafb-native-layer .vs-btn.is-complete {
+  background: linear-gradient(135deg, #166534, #16a34a);
+  box-shadow: 0 12px 24px rgba(22, 163, 74, 0.28);
+}
+
+#nafb-native-layer .vs-btn.is-complete::before {
+  content: '✓';
+  margin-right: 8px;
+  font-weight: 700;
 }
 
 #nafb-native-layer .vs-btn.is-loading {
