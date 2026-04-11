@@ -15,26 +15,10 @@ class ProductPageRenderer
 
     public function register(): void
     {
-        add_action('woocommerce_before_add_to_cart_form', [$this, 'renderRoot']);
-        add_action('woocommerce_before_add_to_cart_form', [$this, 'hideNativeFormWhenEnabled'], 1);
+        add_action('woocommerce_after_variations_form', [$this, 'renderNativeLayer']);
     }
 
-    public function hideNativeFormWhenEnabled(): void
-    {
-        global $product;
-        if (!$product) {
-            return;
-        }
-
-        $config = $this->repository->getProductConfig((int) $product->get_id());
-        if (empty($config['enabled'])) {
-            return;
-        }
-
-        echo '<style>.single-product form.variations_form{display:none!important;}</style>';
-    }
-
-    public function renderRoot(): void
+    public function renderNativeLayer(): void
     {
         global $product;
         if (!$product || !$product->is_type('variable')) {
@@ -47,29 +31,27 @@ class ProductPageRenderer
         }
 
         $variationIds = array_map('intval', $config['variation_ids'] ?? []);
-        $variations = array_map(static function (int $id): array {
+        $variations = [];
+
+        foreach ($variationIds as $id) {
             $variation = wc_get_product($id);
             if (!$variation) {
-                return [];
+                continue;
             }
 
-            return [
+            $variations[$id] = [
                 'id' => $id,
-                'name' => $variation->get_name(),
-                'price' => $variation->get_price_html(),
-                'raw_price' => (float) $variation->get_price(),
-                'max_qty' => $variation->managing_stock() && $variation->get_stock_quantity() !== null ? max(0, (int) $variation->get_stock_quantity()) : 999,
+                'label' => $variation->get_name(),
                 'in_stock' => $variation->is_in_stock(),
             ];
-        }, $variationIds);
+        }
 
-        $builderConfig = [
+        $nativeConfig = [
             'product_id' => (int) $product->get_id(),
             'mode' => $config['builder_mode'] ?? 'matrix',
-            'ui_mode' => $config['ui_mode'] ?? 'drawer',
-            'items' => array_values(array_filter($variations)),
+            'variations' => $variations,
         ];
 
-        include NAFB_PLUGIN_PATH . 'templates/front/builder-root.php';
+        include NAFB_PLUGIN_PATH . 'templates/front/native-personalization.php';
     }
 }
