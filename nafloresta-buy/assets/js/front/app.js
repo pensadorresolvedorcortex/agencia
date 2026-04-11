@@ -25,8 +25,15 @@
   }
 
   function sanitizeWooPriceHtml(html) {
+    let source = String(html || '');
+    for (let i = 0; i < 2; i += 1) {
+      if (!/&(?:lt|gt|amp|quot|#0*39);/i.test(source)) break;
+      const textarea = document.createElement('textarea');
+      textarea.innerHTML = source;
+      source = textarea.value;
+    }
     const template = document.createElement('template');
-    template.innerHTML = String(html || '');
+    template.innerHTML = source;
     const allowed = new Set(['SPAN', 'BDI']);
     const walk = (node) => {
       Array.from(node.children).forEach((child) => {
@@ -265,11 +272,12 @@
       orderSummaryList.innerHTML = items.map((item) => {
         const names = Array.isArray(item.student_names) ? item.student_names.filter(Boolean).join(', ') : '';
         const namesMarkup = Array.isArray(item.student_names) ? item.student_names.filter(Boolean).map((name) => `<li>${escHtml(name)}</li>`).join('') : '';
+        const safeLineSubtotalHtml = sanitizeWooPriceHtml(item.line_subtotal_html || '');
         return `
           <article class="nafb-order-summary__item" data-cart-key="${escHtml(item.cart_key || '')}" data-variation-label="${escHtml(item.variation_label || '')}" data-student-names="${escHtml((item.student_names || []).join('|'))}">
             <div class="nafb-order-summary__row">
               <strong>${escHtml(item.variation_label || 'Série')}</strong>
-              <span class="nafb-order-summary__price">${item.line_subtotal_html || '—'}</span>
+              <span class="nafb-order-summary__price">${safeLineSubtotalHtml || '—'}</span>
             </div>
             <div class="nafb-order-summary__meta">Quantidade: ${Number(item.quantity || 0)}</div>
             <ul class="nafb-order-summary__names">${namesMarkup || `<li>${escHtml(names || '—')}</li>`}</ul>
