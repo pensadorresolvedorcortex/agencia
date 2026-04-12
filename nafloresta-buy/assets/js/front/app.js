@@ -528,12 +528,23 @@
     overlay.addEventListener('click', closeModal);
     if (addMoreBtn) {
       addMoreBtn.addEventListener('click', () => {
-        const select = form.querySelector('select');
-        if (!select) return;
-        select.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        select.classList.add('nafb-highlight');
-        setTimeout(() => select.classList.remove('nafb-highlight'), 120);
-        select.focus();
+        const select = form.querySelector('.variations select, select[name^="attribute_"], select');
+        const focusTarget = select || form.querySelector('.single_add_to_cart_button, input.qty');
+        form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        form.classList.add('nafb-highlight-target');
+        setTimeout(() => form.classList.remove('nafb-highlight-target'), 240);
+
+        if (focusTarget && typeof focusTarget.focus === 'function') {
+          focusTarget.focus({ preventScroll: true });
+        }
+
+        if (select) {
+          select.classList.add('nafb-highlight');
+          setTimeout(() => select.classList.remove('nafb-highlight'), 120);
+          toast('Escolha a série e continue o pedido.', 'success');
+        } else {
+          toast('Escolha uma opção do produto para adicionar outro livro.', 'success');
+        }
         scheduleIdleReminder();
       });
     }

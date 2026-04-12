@@ -489,6 +489,12 @@ form.variations_form select.nafb-highlight {
   transition: box-shadow .15s ease, border-color .15s ease;
 }
 
+form.variations_form.nafb-highlight-target {
+  border-radius: 10px;
+  box-shadow: 0 0 0 3px rgba(172, 211, 100, 0.2);
+  transition: box-shadow .2s ease;
+}
+
 @media (min-width: 992px) {
   #nafb-native-layer .nafb-order-summary {
     position: sticky;
