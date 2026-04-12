@@ -756,6 +756,14 @@
     });
   }
 
-  initNativePersonalization();
-  initCartEditing();
+  function boot() {
+    initNativePersonalization();
+    initCartEditing();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot, { once: true });
+  } else {
+    boot();
+  }
 })(window, document);
