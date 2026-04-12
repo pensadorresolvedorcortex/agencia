@@ -112,6 +112,7 @@
     if (!layer || !form) return;
     if (layer.dataset.nafbInit === '1') return;
     layer.dataset.nafbInit = '1';
+    document.body.classList.add('nafb-active-product');
 
     const config = JSON.parse(layer.dataset.config || '{}');
     const overlay = layer.querySelector('[data-role="nafb-modal-overlay"]');
