@@ -393,13 +393,20 @@ body.nafb-modal-open {
   flex-wrap: wrap;
 }
 
-#nafb-native-layer .nafb-order-summary__actions .button {
+#nafb-native-layer .nafb-order-summary__actions .nafb-order-summary__cta {
   min-height: 58px;
   border-radius: 9999px;
   padding: 0 22px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid #334155;
+  background: #fff;
+  color: #1e293b;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 #nafb-native-layer .nafb-order-summary__actions [data-role="nafb-order-go-cart"] {

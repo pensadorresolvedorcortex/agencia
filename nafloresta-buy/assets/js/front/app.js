@@ -561,12 +561,13 @@
       scheduleIdleReminder();
     }
 
-    layer.addEventListener('click', (event) => {
+    document.addEventListener('click', (event) => {
       const addMoreTrigger = event.target.closest('[data-role="nafb-order-add-more"]');
-      if (!addMoreTrigger) return;
+      if (!addMoreTrigger || !layer.contains(addMoreTrigger)) return;
       event.preventDefault();
+      event.stopPropagation();
       handleAddMoreClick();
-    });
+    }, true);
     if (goCartLink) {
       goCartLink.addEventListener('click', () => {
         state.checkoutClicked = true;

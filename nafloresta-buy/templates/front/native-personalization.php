@@ -33,8 +33,8 @@
         <footer class="nafb-order-summary__footer">
             <strong data-role="nafb-order-summary-subtotal"></strong>
             <div class="nafb-order-summary__actions">
-                <a class="button alt" data-role="nafb-order-go-cart" href="#"><?php esc_html_e('Finalizar pedido', 'nafloresta-buy'); ?></a>
-                <button type="button" class="button" data-role="nafb-order-add-more"><?php esc_html_e('Adicionar outro livro', 'nafloresta-buy'); ?></button>
+                <a class="nafb-order-summary__cta nafb-order-summary__cta--primary" data-role="nafb-order-go-cart" href="#"><?php esc_html_e('Finalizar pedido', 'nafloresta-buy'); ?></a>
+                <button type="button" class="nafb-order-summary__cta nafb-order-summary__cta--secondary" data-role="nafb-order-add-more"><?php esc_html_e('Adicionar outro livro', 'nafloresta-buy'); ?></button>
             </div>
         </footer>
     </section>
