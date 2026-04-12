@@ -502,14 +502,14 @@ form.variations_form.nafb-highlight-target {
   transition: box-shadow .2s ease;
 }
 
-body.nafb-active-product form.variations_form table.variations {
+form.variations_form table.variations {
   display: table !important;
   visibility: visible !important;
   opacity: 1 !important;
 }
 
-body.nafb-active-product form.variations_form table.variations select,
-body.nafb-active-product form.variations_form .variations select {
+form.variations_form table.variations select,
+form.variations_form .variations select {
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
