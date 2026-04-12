@@ -36,9 +36,6 @@
                 <a class="button alt" data-role="nafb-order-go-cart" href="#"><?php esc_html_e('Finalizar pedido', 'nafloresta-buy'); ?></a>
                 <button type="button" class="button" data-role="nafb-order-add-more"><?php esc_html_e('Adicionar outro livro', 'nafloresta-buy'); ?></button>
             </div>
-            <p class="nafb-order-summary__urgency"><?php esc_html_e('Leva menos de 1 minuto para finalizar', 'nafloresta-buy'); ?></p>
-            <p class="nafb-order-summary__reassurance"><?php esc_html_e('Você revisa tudo antes de pagar.', 'nafloresta-buy'); ?></p>
-            <p class="nafb-order-summary__secure"><?php esc_html_e('Pagamento seguro • entrega garantida pela escola', 'nafloresta-buy'); ?></p>
         </footer>
     </section>
 

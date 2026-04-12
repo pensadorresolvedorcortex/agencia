@@ -130,7 +130,6 @@
     const orderSummarySubtotal = layer.querySelector('[data-role="nafb-order-summary-subtotal"]');
     const orderSummaryEmpty = layer.querySelector('[data-role="nafb-order-summary-empty"]');
     const orderSummaryStatus = layer.querySelector('[data-role="nafb-order-summary-status"]');
-    const addMoreBtn = layer.querySelector('[data-role="nafb-order-add-more"]');
     const goCartLink = layer.querySelector('[data-role="nafb-order-go-cart"]');
     const exitHint = layer.querySelector('[data-role="nafb-exit-hint"]');
     const exitCheckout = layer.querySelector('[data-role="nafb-exit-checkout"]');
@@ -526,36 +525,48 @@
     okBtn.addEventListener('click', addCurrentSelection);
     closeBtn.addEventListener('click', closeModal);
     overlay.addEventListener('click', closeModal);
-    if (addMoreBtn) {
-      addMoreBtn.addEventListener('click', () => {
-        const selectedVariationId = Number((variationIdInput && variationIdInput.value) || 0);
-        if (selectedVariationId && (config.variations || {})[selectedVariationId]) {
-          ensureNames(selectedVariationId);
-          openModal(selectedVariationId);
-          track('add_more_reopen_modal', { variation_id: selectedVariationId });
-          return;
-        }
-
-        const select = form.querySelector('.variations select, select[name^="attribute_"], select');
-        const focusTarget = select || form.querySelector('.single_add_to_cart_button, input.qty');
-        form.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        form.classList.add('nafb-highlight-target');
-        setTimeout(() => form.classList.remove('nafb-highlight-target'), 240);
-
-        if (focusTarget && typeof focusTarget.focus === 'function') {
-          focusTarget.focus({ preventScroll: true });
-        }
-
-        if (select) {
-          select.classList.add('nafb-highlight');
-          setTimeout(() => select.classList.remove('nafb-highlight'), 120);
-          toast('Escolha a série e continue o pedido.', 'success');
-        } else {
-          toast('Escolha uma opção do produto para adicionar outro livro.', 'success');
-        }
-        scheduleIdleReminder();
-      });
+    function resolveVariationForAddMore() {
+      const selectedVariationId = Number((variationIdInput && variationIdInput.value) || 0);
+      if (selectedVariationId && (config.variations || {})[selectedVariationId]) return selectedVariationId;
+      const firstVariationId = Number(Object.keys(config.variations || {})[0] || 0);
+      return firstVariationId > 0 ? firstVariationId : 0;
     }
+
+    function handleAddMoreClick() {
+      const variationId = resolveVariationForAddMore();
+      if (variationId) {
+        ensureNames(variationId);
+        openModal(variationId);
+        track('add_more_reopen_modal', { variation_id: variationId });
+        return;
+      }
+
+      const select = form.querySelector('.variations select, select[name^="attribute_"], select');
+      const focusTarget = select || form.querySelector('.single_add_to_cart_button, input.qty');
+      form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      form.classList.add('nafb-highlight-target');
+      setTimeout(() => form.classList.remove('nafb-highlight-target'), 240);
+
+      if (focusTarget && typeof focusTarget.focus === 'function') {
+        focusTarget.focus({ preventScroll: true });
+      }
+
+      if (select) {
+        select.classList.add('nafb-highlight');
+        setTimeout(() => select.classList.remove('nafb-highlight'), 120);
+        toast('Escolha a série e continue o pedido.', 'success');
+      } else {
+        toast('Escolha uma opção do produto para adicionar outro livro.', 'success');
+      }
+      scheduleIdleReminder();
+    }
+
+    layer.addEventListener('click', (event) => {
+      const addMoreTrigger = event.target.closest('[data-role="nafb-order-add-more"]');
+      if (!addMoreTrigger) return;
+      event.preventDefault();
+      handleAddMoreClick();
+    });
     if (goCartLink) {
       goCartLink.addEventListener('click', () => {
         state.checkoutClicked = true;
