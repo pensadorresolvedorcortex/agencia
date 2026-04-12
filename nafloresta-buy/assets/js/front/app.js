@@ -528,6 +528,14 @@
     overlay.addEventListener('click', closeModal);
     if (addMoreBtn) {
       addMoreBtn.addEventListener('click', () => {
+        const selectedVariationId = Number((variationIdInput && variationIdInput.value) || 0);
+        if (selectedVariationId && (config.variations || {})[selectedVariationId]) {
+          ensureNames(selectedVariationId);
+          openModal(selectedVariationId);
+          track('add_more_reopen_modal', { variation_id: selectedVariationId });
+          return;
+        }
+
         const select = form.querySelector('.variations select, select[name^="attribute_"], select');
         const focusTarget = select || form.querySelector('.single_add_to_cart_button, input.qty');
         form.scrollIntoView({ behavior: 'smooth', block: 'center' });
