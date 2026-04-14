@@ -48,35 +48,40 @@ class Database extends \FormyChat\Base {
      */
     public function create_scf_table() {
         global $wpdb;
+
+        $table_name      = $wpdb->prefix . 'scf_leads';
         $charset_collate = $wpdb->get_charset_collate();
 
-        $wpdb->query( "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}scf_leads` (
-            `id` mediumint(30) NOT NULL AUTO_INCREMENT,
-            `field` text NOT NULL,
-            `meta` text NOT NULL,
-            `created_at` timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
-            `deleted_at` timestamp DEFAULT NULL,
-            `note` text NOT NULL,
-            PRIMARY KEY (`id`)
-        ) $charset_collate;" ); // phpcs:ignore 
+        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
-        // Alter SCF Table, add form (string) and form_id (int) columns if not exists.
-        $column_exists = $wpdb->get_results("SHOW COLUMNS FROM {$wpdb->prefix}scf_leads LIKE 'form'"); // db call ok; no-cache ok.
-        if ( empty($column_exists) ) {
-            $wpdb->query("ALTER TABLE {$wpdb->prefix}scf_leads ADD COLUMN form text NULL DEFAULT NULL"); // db call ok; no-cache ok.
-        }
+        $sql = "CREATE TABLE {$table_name} (
+            id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+            widget_id bigint(20) unsigned NOT NULL DEFAULT 1,
+            form_id bigint(20) unsigned NULL,
+            form varchar(100) NOT NULL,
+            field longtext NOT NULL,
+            meta longtext NOT NULL,
+            note longtext NOT NULL,
+            created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            deleted_at datetime NULL DEFAULT NULL,
+            PRIMARY KEY (id)
+        ) {$charset_collate};";
 
-        $column_exists = $wpdb->get_results("SHOW COLUMNS FROM {$wpdb->prefix}scf_leads LIKE 'form_id'"); // db call ok; no-cache ok.
-        if ( empty($column_exists) ) {
-            $wpdb->query("ALTER TABLE {$wpdb->prefix}scf_leads ADD COLUMN form_id mediumint NULL DEFAULT NULL"); // db call ok; no-cache ok.
-        }
+        dbDelta( $sql );
 
-        // Alter SCF Table, add widget_id (int) column if not exists.
-        $column_exists = $wpdb->get_results("SHOW COLUMNS FROM {$wpdb->prefix}scf_leads LIKE 'widget_id'"); // db call ok; no-cache ok.
-        if ( empty($column_exists) ) {
-            $wpdb->query("ALTER TABLE {$wpdb->prefix}scf_leads ADD COLUMN widget_id mediumint NULL DEFAULT 1"); // db call ok; no-cache ok.
+        $table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) ); // db call ok; no-cache ok.
+
+        if ( $table_name !== $table_exists ) {
+            $message = __( 'FormyChat database initialization failed: scf_leads table was not created.', 'social-contact-form' );
+
+            if ( function_exists( 'wp_die' ) ) {
+                wp_die( esc_html( $message ) );
+            }
+
+            throw new \RuntimeException( $message );
         }
     }
+
 
 
     /**
