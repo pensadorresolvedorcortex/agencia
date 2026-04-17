@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Viveiro da Mata | Home Institucional Premium</title>
+  <meta name="description" content="Viveiro da Mata: produção própria, paisagismo, mudas e plantas premium com atendimento técnico e logística estruturada para todo o Brasil." />
+  <meta property="og:title" content="Viveiro da Mata | Cultivando natureza com excelência" />
+  <meta property="og:description" content="Home institucional premium da Viveiro da Mata com produção própria, paisagismo e atendimento especializado." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=1200&q=80" />
+  <meta name="theme-color" content="#153b2a" />
+  <style>
+    :root {
+      --green-900: #153b2a;
+      --green-800: #1f4b35;
+      --green-600: #3d7a56;
+      --green-400: #79ac88;
+      --beige-100: #f8f2e6;
+      --beige-200: #eee4d2;
+      --ink: #19281f;
+      --muted: #5b6d62;
+      --white: #fff;
+      --radius-xs: 12px;
+      --radius-sm: 16px;
+      --radius-md: 22px;
+      --radius-lg: 34px;
+      --container: min(1180px, 92vw);
+      --shadow-soft: 0 22px 60px rgba(21, 59, 42, 0.13);
+      --shadow-strong: 0 28px 80px rgba(11, 33, 23, 0.24);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% -10%, #e5f1e6 0, transparent 28%),
+        radial-gradient(circle at 90% -10%, #f6eddd 0, transparent 34%),
+        #faf8f4;
+      line-height: 1.55;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    .container { width: var(--container); margin: 0 auto; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--green-600);
+      font-size: .78rem;
+    }
+
+    .site-header {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 999;
+      padding: 16px 0;
+      transition: .35s ease;
+    }
+    .site-header.scrolled {
+      padding: 10px 0;
+      background: rgba(255,255,255,.82);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 12px 30px rgba(11, 35, 24, .12);
+      border-bottom: 1px solid rgba(31, 75, 53, .1);
+    }
+    .header-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .logo img { width: 176px; border-radius: 0; }
+    .skip-link {
+      position: absolute;
+      left: -999px;
+      top: 0;
+      background: #fff;
+      color: #153b2a;
+      padding: 10px 12px;
+      border-radius: 0 0 10px 10px;
+      z-index: 2000;
+    }
+    .skip-link:focus { left: 12px; }
+
+    .menu {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      color: #edf5ef;
+      font-weight: 500;
+    }
+    .menu-toggle {
+      display: none;
+      border: 1px solid rgba(255,255,255,.45);
+      background: rgba(255,255,255,.1);
+      color: #fff;
+      border-radius: 10px;
+      width: 42px;
+      height: 42px;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+    .site-header.scrolled .menu-toggle {
+      color: var(--green-900);
+      border-color: rgba(31,75,53,.24);
+      background: rgba(31,75,53,.06);
+    }
+    .site-header.scrolled .menu { color: var(--ink); }
+    .menu a { position: relative; }
+    .menu a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      width: 100%;
+      height: 2px;
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform .25s ease;
+      background: linear-gradient(90deg, #5cb277, #2f6b4e);
+    }
+    .menu a:hover::after { transform: scaleX(1); transform-origin: left; }
+
+    .btn {
+      border: 0;
+      border-radius: 999px;
+      padding: 13px 20px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: .25s ease;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-whats {
+      color: var(--white);
+      background: linear-gradient(120deg, #2f7d52, #1a4f37);
+      box-shadow: 0 14px 30px rgba(20, 73, 49, .35);
+    }
+    .btn-ghost {
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,.52);
+      background: rgba(255,255,255,.08);
+      backdrop-filter: blur(6px);
+    }
+    .site-header.scrolled .btn-ghost {
+      color: var(--green-900);
+      border-color: rgba(31, 75, 53, .25);
+      background: rgba(31, 75, 53, .06);
+    }
+
+    main section { padding: 100px 0; }
+
+    .hero {
+      min-height: 100vh;
+      padding-top: 130px;
+      color: #edf8f1;
+      display: grid;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(115deg, rgba(8, 26, 18, .86), rgba(20, 69, 46, .50)),
+        url('https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=1900&q=80') center/cover;
+    }
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(2px);
+      opacity: .65;
+      pointer-events: none;
+      animation: drift 10s ease-in-out infinite alternate;
+    }
+    .hero::before {
+      width: 420px;
+      height: 420px;
+      top: -180px;
+      left: -100px;
+      background: radial-gradient(circle, rgba(121,172,136,.55), transparent 68%);
+    }
+    .hero::after {
+      width: 380px;
+      height: 380px;
+      bottom: -150px;
+      right: -100px;
+      background: radial-gradient(circle, rgba(248,242,230,.4), transparent 70%);
+      animation-delay: .8s;
+    }
+
+    @keyframes drift {
+      from { transform: translateY(0) translateX(0) scale(1); }
+      to { transform: translateY(16px) translateX(10px) scale(1.05); }
+    }
+
+    .hero-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1.08fr .92fr;
+      gap: 30px;
+      align-items: center;
+    }
+    h1 {
+      margin: 12px 0 18px;
+      font-size: clamp(2.1rem, 5vw, 4.1rem);
+      line-height: 1.08;
+      letter-spacing: -.03em;
+      max-width: 760px;
+    }
+    .hero p {
+      margin: 0 0 26px;
+      font-size: clamp(1rem, 2.1vw, 1.2rem);
+      color: #dbeadf;
+      max-width: 640px;
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+    .hero-panel {
+      position: relative;
+      background: linear-gradient(130deg, rgba(255,255,255,.17), rgba(255,255,255,.06));
+      border: 1px solid rgba(255,255,255,.35);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      backdrop-filter: blur(9px);
+      box-shadow: var(--shadow-strong);
+    }
+    .hero-panel h3 { margin-top: 0; margin-bottom: 10px; }
+    .hero-kpis {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 10px;
+    }
+    .hero-kpis div {
+      background: rgba(255,255,255,.16);
+      border: 1px solid rgba(255,255,255,.26);
+      border-radius: var(--radius-xs);
+      padding: 12px;
+    }
+    .hero-kpis strong { display: block; font-size: 1.25rem; }
+
+    .curve-sep {
+      height: 110px;
+      margin-top: -2px;
+      background: #fff;
+      border-radius: 55% 45% 0 0 / 100% 100% 0 0;
+    }
+
+    .authority {
+      margin-top: -35px;
+      position: relative;
+      z-index: 2;
+    }
+    .authority-wrap {
+      background: #fff;
+      border: 1px solid #dce8df;
+      border-radius: 24px;
+      box-shadow: var(--shadow-soft);
+      padding: 18px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 12px;
+    }
+    .auth-item {
+      background: linear-gradient(130deg, #f6fbf7, #edf6ef);
+      border-radius: 14px;
+      border: 1px solid #dbe9de;
+      padding: 15px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: transform .2s ease;
+    }
+    .auth-item:hover { transform: translateY(-3px); }
+
+    .section-head { margin-bottom: 28px; }
+    .section-head h2 {
+      margin: 10px 0;
+      font-size: clamp(1.6rem, 3.2vw, 2.7rem);
+      letter-spacing: -.02em;
+    }
+    .section-head p { margin: 0; color: var(--muted); max-width: 740px; }
+
+    .about-grid,
+    .cta-grid,
+    .map-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: center; }
+
+    .about-card {
+      background: #fff;
+      border-radius: var(--radius-lg);
+      border: 1px solid #e2ece4;
+      padding: 34px;
+      box-shadow: var(--shadow-soft);
+    }
+    .about-image {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+    }
+    .about-image img { width: 100%; height: 100%; object-fit: cover; }
+    .about-image::after {
+      content: "Produção própria | Escala nacional";
+      position: absolute;
+      right: 16px;
+      bottom: 16px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      color: #fff;
+      font-size: .8rem;
+      background: rgba(21, 59, 42, .76);
+      border: 1px solid rgba(255,255,255,.25);
+      backdrop-filter: blur(4px);
+    }
+
+    .categories { background: linear-gradient(180deg, #f4f8f3, #edf5ef); }
+    .cats-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 16px; }
+    .cat {
+      min-height: 300px;
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: var(--shadow-soft);
+    }
+    .cat img { width: 100%; height: 100%; object-fit: cover; transition: transform .45s ease; }
+    .cat:hover img { transform: scale(1.08); }
+    .cat::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(8, 20, 14, .7), transparent 62%);
+    }
+    .cat span {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 14px;
+      color: #fff;
+      font-weight: 700;
+      letter-spacing: .01em;
+      background: rgba(255,255,255,.16);
+      border: 1px solid rgba(255,255,255,.3);
+      border-radius: 10px;
+      padding: 10px;
+      backdrop-filter: blur(3px);
+    }
+
+    .diff-grid,
+    .steps,
+    .faq-grid,
+    .footer-grid { display: grid; gap: 16px; }
+    .diff-grid { grid-template-columns: repeat(4, minmax(0,1fr)); }
+    .diff {
+      background: #fff;
+      border: 1px solid #deebe1;
+      border-radius: 18px;
+      padding: 22px;
+      transition: .25s ease;
+    }
+    .diff:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-soft);
+      border-color: #bfd5c4;
+    }
+
+    .gallery {
+      background:
+        radial-gradient(circle at right bottom, #e7f1e9 0, transparent 35%),
+        #f1f7f2;
+    }
+    .gallery-grid { columns: 3 240px; column-gap: 14px; }
+    .gallery-grid img {
+      width: 100%;
+      margin: 0 0 14px;
+      border-radius: 18px;
+      box-shadow: var(--shadow-soft);
+      transition: transform .25s ease;
+    }
+    .gallery-grid img:hover { transform: translateY(-4px); }
+
+    .steps { grid-template-columns: repeat(3, minmax(0,1fr)); }
+    .step {
+      background: #fff;
+      border: 1px solid #deebe1;
+      border-radius: 18px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .step::after {
+      content: "";
+      position: absolute;
+      inset: auto -30px -30px auto;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(121,172,136,.28), transparent 70%);
+    }
+    .step b {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: inline-grid;
+      place-items: center;
+      color: #fff;
+      background: linear-gradient(140deg, #2f8157, #17452f);
+      margin-bottom: 8px;
+    }
+
+    .social {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 18px;
+    }
+    .logo-cloud {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 10px;
+    }
+    .logo-chip {
+      text-align: center;
+      padding: 13px;
+      border-radius: 11px;
+      background: #fff;
+      border: 1px solid #deebe1;
+      color: #4f665a;
+      font-weight: 600;
+    }
+    .testimonial {
+      background: linear-gradient(145deg, #153b2a, #275f43);
+      color: #edf7f1;
+      border-radius: var(--radius-md);
+      padding: 24px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .cta {
+      color: #eef7f1;
+      background:
+        radial-gradient(circle at 15% 50%, rgba(121,172,136,.3), transparent 35%),
+        linear-gradient(130deg, #153b2a, #2f6e4e);
+    }
+
+    .faq-item {
+      background: #fff;
+      border: 1px solid #deebe1;
+      border-radius: 13px;
+      overflow: hidden;
+    }
+    .faq-q {
+      width: 100%;
+      border: 0;
+      background: none;
+      text-align: left;
+      font: inherit;
+      font-weight: 600;
+      color: var(--ink);
+      padding: 16px;
+      cursor: pointer;
+    }
+    .faq-a {
+      max-height: 0;
+      overflow: hidden;
+      padding: 0 16px;
+      color: var(--muted);
+      transition: max-height .25s ease;
+    }
+    .faq-item.open .faq-a { max-height: 130px; padding-bottom: 14px; }
+
+    .map-box {
+      min-height: 340px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid #dce8df;
+    }
+    .map-box iframe { width: 100%; min-height: 340px; border: 0; }
+
+    .footer {
+      background: #102e21;
+      color: #d7e7dc;
+      padding: 64px 0 24px;
+      margin-top: 10px;
+    }
+    .footer-grid { grid-template-columns: 1.2fr .8fr .8fr .8fr; }
+    .footer h4 { margin: 0 0 10px; color: #f4faf6; }
+    .footer ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+    .copy { margin-top: 26px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.16); color: #b9cec0; }
+    .float-whats {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 920;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 1.3rem;
+      background: linear-gradient(130deg, #34af69, #1f7d4a);
+      box-shadow: 0 14px 30px rgba(19, 98, 56, .4);
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: .55s ease;
+    }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 1020px) {
+      .menu-toggle { display: inline-grid; place-items: center; }
+      .menu {
+        display: none;
+        position: absolute;
+        top: calc(100% + 10px);
+        left: 4vw;
+        right: 4vw;
+        background: rgba(255,255,255,.95);
+        border: 1px solid #dce8df;
+        border-radius: 16px;
+        padding: 14px;
+        box-shadow: var(--shadow-soft);
+        color: var(--ink);
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .menu.open { display: flex; }
+      .hero-grid, .about-grid, .cta-grid, .map-grid, .social { grid-template-columns: 1fr; }
+      .authority-wrap, .diff-grid, .cats-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .steps { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+    }
+    @media (max-width: 640px) {
+      main section { padding: 72px 0; }
+      .authority-wrap, .diff-grid, .cats-grid, .logo-cloud, .footer-grid { grid-template-columns: 1fr; }
+      .hero-kpis { grid-template-columns: 1fr; }
+      .logo img { width: 154px; }
+      .hero { padding-top: 110px; }
+      .curve-sep { height: 80px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="#conteudo-principal" class="skip-link">Pular para conteúdo</a>
+  <header class="site-header" id="site-header">
+    <div class="container header-wrap">
+      <a href="#home" class="logo" aria-label="Viveiro da Mata Home">
+        <img src="https://www.viveirodamata.com.br/wp-content/uploads/2026/03/logo.png" alt="Logo Viveiro da Mata" loading="eager" />
+      </a>
+      <nav class="menu" aria-label="Menu principal">
+        <a href="#home">Home</a>
+        <a href="#sobre">Sobre</a>
+        <a href="#produtos">Produtos</a>
+        <a href="#paisagismo">Paisagismo</a>
+        <a href="#loja">Loja</a>
+        <a href="#contato">Contato</a>
+      </nav>
+      <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false">☰</button>
+      <a class="btn btn-ghost" href="https://api.whatsapp.com/send?phone=5532999981727" target="_blank" rel="noopener noreferrer">Fale no WhatsApp</a>
+    </div>
+  </header>
+
+  <main id="conteudo-principal">
+    <section class="hero" id="home">
+      <div class="container hero-grid">
+        <div class="reveal">
+          <span class="eyebrow">Viveiro da Mata • referência nacional</span>
+          <h1>Cultivando natureza com excelência, escala e sofisticação.</h1>
+          <p>Plantas, mudas e soluções completas para ambientes e projetos. Uma operação premium com produção própria, atendimento técnico e padrão visual de alto nível.</p>
+          <div class="hero-actions">
+            <a class="btn btn-whats" href="#produtos">Ver plantas</a>
+            <a class="btn btn-ghost" href="https://api.whatsapp.com/send?phone=5532999981727" target="_blank" rel="noopener noreferrer">Falar no WhatsApp</a>
+          </div>
+        </div>
+        <aside class="hero-panel reveal" aria-label="Indicadores da empresa">
+          <h3>Estrutura profissional para alto desempenho</h3>
+          <p>Base em Dona Euzébia - MG, tradição no cultivo e logística para atender desde jardins residenciais até demandas corporativas em larga escala.</p>
+          <div class="hero-kpis">
+            <div><strong>Produção própria</strong><small>controle completo de qualidade</small></div>
+            <div><strong>Atendimento técnico</strong><small>orientação especializada</small></div>
+            <div><strong>Operação escalável</strong><small>volume para múltiplos perfis</small></div>
+            <div><strong>Entrega nacional</strong><small>planejamento por região</small></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <div class="curve-sep" aria-hidden="true"></div>
+
+    <section class="authority reveal" aria-label="Prova de autoridade">
+      <div class="container authority-wrap">
+        <article class="auth-item">🌱 Produção própria</article>
+        <article class="auth-item">🚚 Entrega em todo Brasil</article>
+        <article class="auth-item">🧠 Atendimento especializado</article>
+        <article class="auth-item">🏡 Grande escala</article>
+      </div>
+    </section>
+
+    <section id="sobre" class="reveal">
+      <div class="container about-grid">
+        <article class="about-card">
+          <span class="eyebrow">Sobre a empresa</span>
+          <h2>História, tradição e confiança para transformar espaços</h2>
+          <p>A Viveiro da Mata construiu sua reputação combinando excelência botânica, curadoria de espécies e relacionamento técnico próximo ao cliente. O resultado é uma entrega consistente para demandas residenciais, comerciais e institucionais.</p>
+          <p>Com processos organizados, rastreabilidade e padrão de qualidade, a empresa atende projetos com visão de longo prazo, equilíbrio estético e eficiência operacional.</p>
+        </article>
+        <figure class="about-image">
+          <img loading="lazy" src="https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1300&q=80" alt="Estrutura organizada de viveiro profissional" />
+        </figure>
+      </div>
+    </section>
+
+    <section class="categories" id="produtos">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="eyebrow">Categorias</span>
+          <h2>Seleção premium para compra e especificação técnica</h2>
+          <p>A Home orienta o visitante para categorias estratégicas sem perder o posicionamento institucional da marca.</p>
+        </header>
+        <div class="cats-grid reveal">
+          <a class="cat" href="#loja" aria-label="Plantas ornamentais">
+            <img loading="lazy" src="https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=950&q=80" alt="Plantas ornamentais" />
+            <span>Plantas ornamentais</span>
+          </a>
+          <a class="cat" href="#loja" aria-label="Mudas frutíferas">
+            <img loading="lazy" src="https://images.unsplash.com/photo-1471193945509-9ad0617afabf?auto=format&fit=crop&w=950&q=80" alt="Mudas frutíferas" />
+            <span>Mudas frutíferas</span>
+          </a>
+          <a class="cat" href="#paisagismo" aria-label="Paisagismo">
+            <img loading="lazy" src="https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=950&q=80" alt="Projeto de paisagismo" />
+            <span>Paisagismo</span>
+          </a>
+          <a class="cat" href="#loja" aria-label="Vasos">
+            <img loading="lazy" src="https://images.unsplash.com/photo-1463320726281-696a485928c7?auto=format&fit=crop&w=950&q=80" alt="Vasos e acessórios" />
+            <span>Vasos</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="eyebrow">Diferenciais</span>
+          <h2>Competitividade com padrão premium</h2>
+        </header>
+        <div class="diff-grid reveal">
+          <article class="diff"><h3>Produção própria</h3><p>Padronização de cultivo e consistência de qualidade em todas as entregas.</p></article>
+          <article class="diff"><h3>Logística estruturada</h3><p>Planejamento operacional para proteger o produto e cumprir prazos.</p></article>
+          <article class="diff"><h3>Variedade estratégica</h3><p>Mix de espécies para cenários residenciais, comerciais e corporativos.</p></article>
+          <article class="diff"><h3>Atendimento técnico</h3><p>Equipe preparada para orientar escolhas com segurança e performance.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="gallery" id="paisagismo">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="eyebrow">Galeria premium</span>
+          <h2>Escala, organização e impacto visual</h2>
+          <p>Uma leitura clara da capacidade produtiva e da sofisticação da operação.</p>
+        </header>
+        <div class="gallery-grid reveal">
+          <img loading="lazy" src="https://images.unsplash.com/photo-1438109491414-7198515b166b?auto=format&fit=crop&w=900&q=80" alt="Viveiro com fileiras organizadas" />
+          <img loading="lazy" src="https://images.unsplash.com/photo-1592415486689-125cbbfcbee2?auto=format&fit=crop&w=900&q=80" alt="Estrutura limpa e profissional" />
+          <img loading="lazy" src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=900&q=80" alt="Detalhe premium de plantas" />
+          <img loading="lazy" src="https://images.unsplash.com/photo-1465146633011-14f8e0781093?auto=format&fit=crop&w=900&q=80" alt="Ambiente paisagístico elegante" />
+          <img loading="lazy" src="https://images.unsplash.com/photo-1492496913980-501348b61469?auto=format&fit=crop&w=900&q=80" alt="Produção em escala" />
+          <img loading="lazy" src="https://images.unsplash.com/photo-1589405858862-2ac9cbb41321?auto=format&fit=crop&w=900&q=80" alt="Paisagismo integrado à arquitetura" />
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="eyebrow">Processo</span>
+          <h2>Como funciona</h2>
+          <p>Jornada simples para transformar intenção em entrega com qualidade.</p>
+        </header>
+        <div class="steps reveal">
+          <article class="step"><b>1</b><h3>Contato</h3><p>Você envia sua necessidade por WhatsApp, telefone ou formulário.</p></article>
+          <article class="step"><b>2</b><h3>Planejamento</h3><p>Definimos espécies, volumes e estratégia logística para seu cenário.</p></article>
+          <article class="step"><b>3</b><h3>Entrega</h3><p>Execução com acompanhamento técnico e padrão profissional.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container social reveal">
+        <div>
+          <header class="section-head">
+            <span class="eyebrow">Prova social</span>
+            <h2>Confiança construída em diferentes mercados</h2>
+            <p>Espaço para logos, avaliações e evidências de relacionamento duradouro.</p>
+          </header>
+          <div class="logo-cloud">
+            <div class="logo-chip">Hotelaria</div><div class="logo-chip">Construtoras</div>
+            <div class="logo-chip">Garden Centers</div><div class="logo-chip">Paisagistas</div>
+            <div class="logo-chip">Condomínios</div><div class="logo-chip">Arquitetos</div>
+            <div class="logo-chip">Empresas</div><div class="logo-chip">Revendas</div>
+          </div>
+        </div>
+        <aside class="testimonial">
+          <h3>“Parceiro confiável para demandas exigentes.”</h3>
+          <p>“A Viveiro da Mata entregou qualidade, previsibilidade e suporte técnico em todas as etapas. A percepção de valor dos nossos projetos aumentou significativamente.”</p>
+          <small>Cliente corporativo • Avaliação visual 5.0</small>
+        </aside>
+      </div>
+    </section>
+
+    <section class="cta" id="loja">
+      <div class="container cta-grid reveal">
+        <div>
+          <span class="eyebrow" style="color:#c4e5d2">Conversão comercial</span>
+          <h2 style="margin:10px 0 8px;font-size:clamp(1.7rem,3.2vw,2.6rem)">Solicite um orçamento personalizado</h2>
+          <p>Receba uma proposta estratégica com espécies, volume, logística e orientação técnica alinhados ao seu objetivo.</p>
+        </div>
+        <div class="hero-actions">
+          <a class="btn btn-whats" href="https://api.whatsapp.com/send?phone=5532999981727" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+          <a class="btn btn-ghost" href="#contato">Contato</a>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="eyebrow">FAQ</span>
+          <h2>Perguntas frequentes</h2>
+        </header>
+        <div class="faq-grid reveal">
+          <article class="faq-item open"><button class="faq-q" type="button">Existe pedido mínimo?</button><div class="faq-a"><p>Sim. O mínimo varia por espécie e destino logístico. Consulte para condição ideal.</p></div></article>
+          <article class="faq-item"><button class="faq-q" type="button">Vocês entregam em todo o Brasil?</button><div class="faq-a"><p>Atendemos várias regiões com roteirização e planejamento por disponibilidade.</p></div></article>
+          <article class="faq-item"><button class="faq-q" type="button">Quais espécies estão disponíveis?</button><div class="faq-a"><p>Ornamentais, frutíferas, vasos e soluções para paisagismo com variação sazonal.</p></div></article>
+          <article class="faq-item"><button class="faq-q" type="button">Há atendimento técnico?</button><div class="faq-a"><p>Sim. Nosso time orienta seleção, composição e cuidados conforme cada projeto.</p></div></article>
+          <article class="faq-item"><button class="faq-q" type="button">Posso personalizar meu projeto paisagístico?</button><div class="faq-a"><p>Sim. Desenvolvemos propostas sob medida para estética, função e orçamento.</p></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="contato">
+      <div class="container map-grid reveal">
+        <article>
+          <span class="eyebrow">Localização</span>
+          <h2 style="margin:10px 0 12px;font-size:clamp(1.7rem,3.2vw,2.5rem)">Dona Euzébia - MG</h2>
+          <p><strong>Telefone:</strong> (32) 99998-1727<br /><strong>Email:</strong> contato@viveirodamata.com.br</p>
+          <a class="btn btn-whats" href="https://api.whatsapp.com/send?phone=5532999981727" target="_blank" rel="noopener noreferrer">Iniciar conversa no WhatsApp</a>
+        </article>
+        <div class="map-box" aria-label="Mapa de localização da empresa">
+          <iframe loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Dona%20Euz%C3%A9bia%2C%20MG&output=embed" title="Mapa Dona Euzébia MG"></iframe>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <img src="https://www.viveirodamata.com.br/wp-content/uploads/2026/03/logo.png" alt="Viveiro da Mata" style="max-width:180px;border-radius:0;margin-bottom:10px" loading="lazy" />
+          <p>Produção própria, atendimento técnico e fornecimento premium em plantas e soluções de paisagismo.</p>
+        </div>
+        <div>
+          <h4>Contato</h4>
+          <ul>
+            <li><a href="tel:+5532999981727">(32) 99998-1727</a></li>
+            <li><a href="mailto:contato@viveirodamata.com.br">contato@viveirodamata.com.br</a></li>
+            <li>Dona Euzébia - MG</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Links rápidos</h4>
+          <ul>
+            <li><a href="#sobre">Sobre</a></li>
+            <li><a href="#produtos">Produtos</a></li>
+            <li><a href="#paisagismo">Paisagismo</a></li>
+            <li><a href="#contato">Contato</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Atendimento</h4>
+          <ul>
+            <li><a href="https://api.whatsapp.com/send?phone=5532999981727" target="_blank" rel="noopener noreferrer">WhatsApp</a></li>
+            <li><a href="https://www.viveirodamata.com.br/" target="_blank" rel="noopener noreferrer">Site atual</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="copy">© <span id="year"></span> Viveiro da Mata. Todos os direitos reservados.</div>
+    </div>
+  </footer>
+  <a class="float-whats" href="https://api.whatsapp.com/send?phone=5532999981727" target="_blank" rel="noopener noreferrer" aria-label="Abrir conversa no WhatsApp">✆</a>
+
+  <script>
+    const header = document.getElementById('site-header');
+    const year = document.getElementById('year');
+    const menu = document.querySelector('.menu');
+    const menuToggle = document.getElementById('menu-toggle');
+    year.textContent = new Date().getFullYear();
+
+    const onScroll = () => {
+      header.classList.toggle('scrolled', window.scrollY > 22);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    if (menu && menuToggle) {
+      menuToggle.addEventListener('click', () => {
+        const isOpen = menu.classList.toggle('open');
+        menuToggle.setAttribute('aria-expanded', String(isOpen));
+      });
+      menu.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => {
+          menu.classList.remove('open');
+          menuToggle.setAttribute('aria-expanded', 'false');
+        });
+      });
+    }
+
+    document.querySelectorAll('.faq-q').forEach((button) => {
+      button.addEventListener('click', () => {
+        button.closest('.faq-item').classList.toggle('open');
+      });
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add('in');
+      });
+    }, { threshold: .12 });
+
+    document.querySelectorAll('.reveal').forEach((item) => observer.observe(item));
+  </script>
+</body>
+</html>
