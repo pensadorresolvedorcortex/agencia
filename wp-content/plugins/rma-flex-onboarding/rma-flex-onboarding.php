@@ -29,7 +29,7 @@ final class RMA_Flex_Onboarding {
             'sanitize_callback' => static function ($value): bool {
                 return (bool) rest_sanitize_boolean($value);
             },
-            'default' => false,
+            'default' => true,
         ]);
 
         add_settings_field(
@@ -46,7 +46,8 @@ final class RMA_Flex_Onboarding {
     }
 
     private static function is_enabled(): bool {
-        $enabled = (bool) get_option(self::OPTION_ENABLED, false);
+        $stored = get_option(self::OPTION_ENABLED, null);
+        $enabled = $stored === null ? true : (bool) rest_sanitize_boolean($stored);
 
         if (defined('RMA_FLEX_ONBOARDING_ENABLED')) {
             $enabled = (bool) RMA_FLEX_ONBOARDING_ENABLED;
@@ -297,5 +298,11 @@ final class RMA_Flex_Onboarding {
         <?php
     }
 }
+
+register_activation_hook(__FILE__, static function (): void {
+    if (get_option('rma_flex_onboarding_enabled', null) === null) {
+        add_option('rma_flex_onboarding_enabled', 1);
+    }
+});
 
 RMA_Flex_Onboarding::init();
