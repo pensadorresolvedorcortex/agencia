@@ -19,6 +19,8 @@ final class RMA_Flex_Onboarding {
 
         add_filter('wp_redirect', [__CLASS__, 'filter_redirects'], 999, 2);
         add_filter('rest_pre_dispatch', [__CLASS__, 'intercept_rest_routes'], 10, 3);
+        add_filter('woocommerce_get_checkout_order_received_url', [__CLASS__, 'filter_checkout_success_redirect'], 10, 2);
+        add_action('template_redirect', [__CLASS__, 'force_dashboard_after_checkout_finish'], 1);
 
         add_action('wp_footer', [__CLASS__, 'inject_frontend_relaxations'], 999);
     }
@@ -75,6 +77,55 @@ final class RMA_Flex_Onboarding {
         }
 
         return $location;
+    }
+
+    public static function filter_checkout_success_redirect(string $order_received_url, $order): string {
+        if (! self::is_enabled()) {
+            return $order_received_url;
+        }
+
+        if (! is_user_logged_in()) {
+            return $order_received_url;
+        }
+
+        $order_id = 0;
+        if (class_exists('WC_Order') && $order instanceof WC_Order) {
+            $order_id = (int) $order->get_id();
+        } elseif (is_object($order) && method_exists($order, 'get_id')) {
+            $order_id = (int) $order->get_id();
+        }
+
+        return add_query_arg([
+            'rma_checkout_done' => '1',
+            'rma_order_id' => $order_id > 0 ? $order_id : '',
+        ], home_url('/dashboard/'));
+    }
+
+    public static function force_dashboard_after_checkout_finish(): void {
+        if (! self::is_enabled() || ! is_user_logged_in()) {
+            return;
+        }
+
+        if (! function_exists('is_checkout')) {
+            return;
+        }
+
+        $request_uri = isset($_SERVER['REQUEST_URI']) ? (string) wp_unslash($_SERVER['REQUEST_URI']) : '';
+        $request_path = (string) wp_parse_url($request_uri, PHP_URL_PATH);
+        $checkout_path = (string) wp_parse_url(home_url('/checkout/'), PHP_URL_PATH);
+
+        $is_checkout_path = $checkout_path !== '' && untrailingslashit($request_path) === untrailingslashit($checkout_path);
+        $has_order_received = function_exists('is_wc_endpoint_url') && is_wc_endpoint_url('order-received');
+        $checkout_done_flag = isset($_GET['rma_checkout_done']) && sanitize_key((string) wp_unslash($_GET['rma_checkout_done'])) === '1';
+
+        if ($checkout_done_flag && $request_path !== '' && untrailingslashit($request_path) === untrailingslashit((string) wp_parse_url(home_url('/dashboard/'), PHP_URL_PATH))) {
+            return;
+        }
+
+        if ($has_order_received || ($is_checkout_path && isset($_GET['key']) && strpos((string) wp_unslash($_GET['key']), 'wc_order_') === 0)) {
+            wp_safe_redirect(add_query_arg('rma_checkout_done', '1', home_url('/dashboard/')));
+            exit;
+        }
     }
 
     public static function intercept_rest_routes($result, WP_REST_Server $server, WP_REST_Request $request) {
