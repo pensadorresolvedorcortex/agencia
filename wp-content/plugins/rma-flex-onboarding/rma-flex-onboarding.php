@@ -260,11 +260,35 @@ final class RMA_Flex_Onboarding {
         if (! self::is_enabled() || is_admin()) {
             return;
         }
+
+        $request_uri = isset($_SERVER['REQUEST_URI']) ? (string) wp_unslash($_SERVER['REQUEST_URI']) : '';
+        $request_path = (string) wp_parse_url($request_uri, PHP_URL_PATH);
+        $allowed_paths = [
+            (string) wp_parse_url(home_url('/conta-da-entidade/'), PHP_URL_PATH),
+            (string) wp_parse_url(home_url('/dashboard/'), PHP_URL_PATH),
+        ];
+        $should_inject = false;
+        foreach ($allowed_paths as $allowed_path) {
+            if ($allowed_path !== '' && strpos(untrailingslashit($request_path), untrailingslashit($allowed_path)) === 0) {
+                $should_inject = true;
+                break;
+            }
+        }
+
+        if (! $should_inject) {
+            return;
+        }
         ?>
         <script>
         (function () {
             try {
                 var form = document.getElementById('rma-conta-setup-form');
+                var otpCard = document.getElementById('rma-auth-card');
+                var main = document.getElementById('rma-onboarding-main');
+                if (!form && !otpCard && !main) {
+                    return;
+                }
+
                 if (form) {
                     form.querySelectorAll('input[required],select[required],textarea[required]').forEach(function (el) {
                         el.removeAttribute('required');
@@ -275,8 +299,6 @@ final class RMA_Flex_Onboarding {
                     }
                 }
 
-                var otpCard = document.getElementById('rma-auth-card');
-                var main = document.getElementById('rma-onboarding-main');
                 if (otpCard && main) {
                     otpCard.style.display = 'none';
                     main.style.display = 'block';
@@ -286,11 +308,9 @@ final class RMA_Flex_Onboarding {
                     node.style.display = 'none';
                 });
 
-                document.querySelectorAll('*').forEach(function (node) {
+                document.querySelectorAll('.rma-premium-section-title strong').forEach(function (node) {
                     var text = (node.textContent || '').trim();
-                    if (/Documentos obrigatórios/i.test(text)) {
-                        node.textContent = text.replace(/Documentos obrigatórios/i, 'Documentos recomendados no modo assistido');
-                    }
+                    node.textContent = text.replace(/Documentos obrigatórios/i, 'Documentos recomendados no modo assistido');
                 });
             } catch (e) {}
         })();
