@@ -1,0 +1,69 @@
+<svg width="1600" height="1066" viewBox="0 0 1600 1066" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1600" y2="1066" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F7F1FA"/>
+      <stop offset="1" stop-color="#EEE3F8"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#97328D"/>
+      <stop offset="1" stop-color="#472D8E"/>
+    </linearGradient>
+    <radialGradient id="shine" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1200 260) rotate(130) scale(700 430)">
+      <stop stop-color="#fff" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blur" x="0" y="0" width="1600" height="1066" filterUnits="userSpaceOnUse">
+      <feGaussianBlur stdDeviation="16"/>
+    </filter>
+    <filter id="shadow" x="150" y="90" width="1300" height="900" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="24" stdDeviation="28" flood-color="#2B133B" flood-opacity="0.25"/>
+    </filter>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#F4D7A9"/>
+      <stop offset="0.5" stop-color="#D8A15D"/>
+      <stop offset="1" stop-color="#A36B2C"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="1066" fill="url(#bg)"/>
+  <ellipse cx="1350" cy="180" rx="320" ry="180" fill="url(#shine)"/>
+  <ellipse cx="260" cy="860" rx="350" ry="160" fill="#D4B6E7" fill-opacity="0.35" filter="url(#blur)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="200" y="140" width="1200" height="780" rx="46" fill="#ffffff"/>
+    <rect x="230" y="170" width="1140" height="190" rx="28" fill="url(#panel)"/>
+    <text x="290" y="250" fill="#fff" font-family="Playfair Display, serif" font-size="64" font-weight="700">Técnica do Entrelaçamento</text>
+    <text x="290" y="302" fill="#F3D9FF" font-family="Manrope, Arial" font-size="30">Acabamento premium • Técnica milenar • Alta percepção de valor</text>
+
+    <rect x="270" y="410" width="540" height="420" rx="26" fill="#F9F4FC" stroke="#E6D8F0"/>
+    <text x="310" y="480" fill="#4A2A5A" font-family="Manrope, Arial" font-size="34" font-weight="700">Aula completa da gravata</text>
+    <text x="310" y="536" fill="#6A4A7A" font-family="Manrope, Arial" font-size="24">Passo 1 — Laçada</text>
+    <text x="310" y="576" fill="#6A4A7A" font-family="Manrope, Arial" font-size="24">Passo 2 — Reforço</text>
+    <text x="310" y="616" fill="#6A4A7A" font-family="Manrope, Arial" font-size="24">Passo 3 — Nó na gravata</text>
+    <text x="310" y="656" fill="#6A4A7A" font-family="Manrope, Arial" font-size="24">Passo 4 — Escondendo o nó</text>
+    <text x="310" y="696" fill="#6A4A7A" font-family="Manrope, Arial" font-size="24">Passo 5 — Soltando o nó</text>
+
+    <rect x="840" y="410" width="500" height="420" rx="26" fill="#fff" stroke="#E8DDF1"/>
+    <ellipse cx="1090" cy="790" rx="140" ry="22" fill="#2E1E45" fill-opacity="0.16"/>
+    <circle cx="1090" cy="600" r="142" fill="url(#panel)"/>
+    <circle cx="1090" cy="600" r="108" fill="#F8EEFF"/>
+    <path d="M1022 600c36-44 90-74 136-74 0 66-34 120-84 154-32 22-69 38-106 48 8-40 27-89 54-128z" fill="#7A3AA5"/>
+    <path d="M1088 520c54 12 106 52 130 108-54-6-104-26-144-56-26-19-44-39-58-62 26-2 50 2 72 10z" fill="#B968CC"/>
+    <circle cx="1090" cy="600" r="16" fill="#CDA0DF"/>
+    <circle cx="1090" cy="600" r="86" fill="none" stroke="url(#gold)" stroke-width="10"/>
+    <path d="M1066 674l22 22 38-52" stroke="url(#gold)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+    <circle cx="1160" cy="515" r="10" fill="#fff" fill-opacity="0.8"/>
+    <circle cx="1194" cy="548" r="6" fill="#fff" fill-opacity="0.7"/>
+    <circle cx="993" cy="534" r="8" fill="#fff" fill-opacity="0.55"/>
+
+    <rect x="930" y="760" width="320" height="54" rx="27" fill="url(#panel)"/>
+    <text x="975" y="796" fill="#fff" font-family="Manrope, Arial" font-size="24" font-weight="800">QUERO GARANTIR MINHA VAGA</text>
+  </g>
+</svg>
