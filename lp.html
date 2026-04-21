@@ -3,446 +3,289 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Método Tramas que Vendem | Do artesanato à renda real</title>
-  <meta name="description" content="Transforme fios em peças que encantam e geram renda semanal com o Método Tramas que Vendem." />
+  <title>Técnicas de Entrelaçamento | Orgulho de ser Artesã</title>
+  <meta name="description" content="Curso Técnicas de Entrelaçamento com Suelli Bomfim: acabamento, reforço e fluidez para criar peças valorizadas e gerar renda com artesanato." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --primary: #472D8E;
-      --secondary: #96338D;
-      --bg: #ffffff;
-      --text: #1f1f2a;
-      --muted: #616173;
-      --surface: #fbf9ff;
-      --card: rgba(255, 255, 255, 0.72);
-      --border: rgba(71, 45, 142, 0.16);
-      --radius-xl: 22px;
-      --radius-lg: 16px;
-      --shadow-soft: 0 18px 42px rgba(71, 45, 142, 0.12);
-      --shadow-card: 0 12px 28px rgba(71, 45, 142, 0.08);
-      --grad: linear-gradient(130deg, var(--primary), var(--secondary));
+      --primary:#472D8E;
+      --secondary:#96338D;
+      --text:#261f38;
+      --muted:#655f77;
+      --bg:#ffffff;
+      --soft:#faf7ff;
+      --border:rgba(71,45,142,.16);
+      --shadow:0 16px 40px rgba(71,45,142,.13);
+      --grad:linear-gradient(120deg,var(--primary),var(--secondary));
+      --radius:18px;
+      --radius-sm:12px;
     }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',sans-serif;color:var(--text);background:#fff;line-height:1.55}
+    img{max-width:100%;display:block}
+    .container{width:min(1140px,92vw);margin:0 auto}
+    .section{padding:68px 0}
+    .section.soft{background:var(--soft)}
+    h1,h2,h3{font-family:'Playfair Display',serif;line-height:1.13;color:#22184a;margin:0 0 14px}
+    h1{font-size:clamp(2rem,4.6vw,3.5rem)}
+    h2{font-size:clamp(1.7rem,3.5vw,2.5rem)}
+    h3{font-size:clamp(1.15rem,2.3vw,1.45rem)}
+    p{margin:0 0 14px;color:var(--muted)}
 
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      color: var(--text);
-      background: var(--bg);
-      line-height: 1.6;
-    }
+    .topbar{padding:14px 0;background:#fff;border-bottom:1px solid rgba(71,45,142,.08)}
+    .topbar .container{display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .logo{height:46px;width:auto}
+    .mini-proof{font-size:.88rem;color:#594f7a;font-weight:600}
 
-    .container {
-      width: min(1120px, 92vw);
-      margin: 0 auto;
-    }
-
-    .section { padding: 72px 0; }
-    .section--soft { background: var(--surface); }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 14px;
-      border-radius: 999px;
-      font-size: 0.84rem;
-      font-weight: 700;
-      letter-spacing: .02em;
-      color: var(--primary);
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.76);
-      backdrop-filter: blur(6px);
-    }
-
-    h1, h2, h3 {
-      margin: 0 0 16px;
-      line-height: 1.15;
-      font-family: 'Playfair Display', serif;
-      letter-spacing: -0.01em;
-      color: #211649;
-    }
-
-    h1 { font-size: clamp(2rem, 4.5vw, 3.5rem); }
-    h2 { font-size: clamp(1.6rem, 3.4vw, 2.6rem); }
-    h3 { font-size: clamp(1.2rem, 2.2vw, 1.5rem); }
-
-    p { margin: 0 0 16px; color: var(--muted); }
-
-    .hero {
-      position: relative;
-      overflow: hidden;
-      padding: 56px 0 80px;
+    .hero{
       background:
-        radial-gradient(circle at 15% 20%, rgba(150, 51, 141, 0.12), transparent 45%),
-        radial-gradient(circle at 88% 12%, rgba(71, 45, 142, 0.14), transparent 36%),
-        #fff;
+        radial-gradient(circle at 12% 16%,rgba(150,51,141,.14),transparent 42%),
+        radial-gradient(circle at 92% 10%,rgba(71,45,142,.15),transparent 33%),
+        url('https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/bg-lp-1.webp') center top/cover no-repeat;
+      padding:62px 0 80px;
     }
+    .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:center}
+    .badge{display:inline-block;padding:7px 14px;border-radius:999px;background:rgba(255,255,255,.78);border:1px solid var(--border);font-weight:700;font-size:.82rem;color:var(--primary);backdrop-filter:blur(5px)}
+    .hero h1{margin-top:16px;color:#fff}
+    .hero p{color:#f2eefb;font-size:1.04rem}
+    .hero-card{background:rgba(255,255,255,.78);padding:20px;border-radius:var(--radius);border:1px solid rgba(255,255,255,.6);backdrop-filter:blur(7px);box-shadow:var(--shadow)}
+    .hero-card p{color:#3f3564}
 
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 36px;
-      align-items: center;
-    }
+    .cta-wrap{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;border-radius:12px;padding:14px 22px;font-weight:800;text-decoration:none;transition:.2s;cursor:pointer}
+    .btn:hover{transform:translateY(-2px)}
+    .btn.primary{background:var(--grad);color:#fff;box-shadow:0 14px 26px rgba(71,45,142,.28)}
+    .btn.ghost{background:#fff;color:var(--primary);border:1px solid var(--border)}
+    .micro{font-size:.86rem;color:#d8d3ea;margin-top:10px}
 
-    .highlight {
-      background: linear-gradient(180deg, transparent 65%, rgba(150, 51, 141, 0.2) 0);
-      padding: 0 2px;
-    }
+    .cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-sm);padding:20px;box-shadow:0 8px 22px rgba(71,45,142,.08)}
 
-    .cta-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      align-items: center;
-      margin-top: 28px;
-    }
+    .headline-center{text-align:center;max-width:860px;margin:0 auto 26px}
 
-    .btn {
-      border: 0;
-      text-decoration: none;
-      border-radius: 12px;
-      padding: 14px 24px;
-      font-weight: 800;
-      font-size: .98rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: transform .2s ease, box-shadow .2s ease;
-    }
+    .curso{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:center}
+    .pill-list{display:grid;gap:10px;padding:0;margin:0;list-style:none}
+    .pill-list li{display:flex;gap:10px;align-items:flex-start}
+    .tick{width:22px;height:22px;border-radius:50%;background:var(--grad);display:grid;place-items:center;color:#fff;font-size:.75rem;flex:0 0 22px}
 
-    .btn:hover { transform: translateY(-2px); }
+    .modulos{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+    .modulo{display:grid;grid-template-columns:110px 1fr;gap:14px;align-items:center}
+    .modulo img{border-radius:12px;border:1px solid var(--border)}
 
-    .btn--primary {
-      color: #fff;
-      background: var(--grad);
-      box-shadow: 0 14px 26px rgba(71, 45, 142, .28);
-    }
+    .mentor{display:grid;grid-template-columns:.8fr 1.2fr;gap:24px;align-items:center}
+    .mentor .foto{border-radius:20px;overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow)}
 
-    .btn--secondary {
-      background: rgba(255,255,255,.8);
-      color: var(--primary);
-      border: 1px solid var(--border);
-    }
+    .bonus-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+    .bonus{display:flex;gap:14px;align-items:center}
+    .bonus img{width:74px;height:74px;object-fit:cover;border-radius:14px;border:1px solid var(--border)}
 
-    .hero-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-xl);
-      backdrop-filter: blur(8px);
-      box-shadow: var(--shadow-soft);
-      padding: 24px;
-    }
+    .depos{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .depos img{border-radius:14px;border:1px solid var(--border);box-shadow:0 10px 26px rgba(71,45,142,.12)}
 
-    .hero-video {
-      aspect-ratio: 16 / 9;
-      border-radius: 14px;
-      background: linear-gradient(120deg, rgba(71,45,142,.14), rgba(150,51,141,.18));
-      border: 1px solid var(--border);
-      display: grid;
-      place-items: center;
-      margin-bottom: 18px;
-      font-weight: 700;
-      color: #3a2a75;
-    }
+    .offer{max-width:840px;margin:0 auto;background:#fff;border:2px solid rgba(71,45,142,.26);border-radius:22px;padding:28px;box-shadow:var(--shadow);text-align:center}
+    .old{font-size:1.05rem;color:#70688a;text-decoration:line-through}
+    .new{font-size:clamp(2rem,5vw,3.1rem);color:var(--primary);font-weight:900;line-height:1}
+    .installments{font-weight:700;color:#3b2f6d}
+    .urgency{display:inline-block;background:#2f1a67;color:#fff;border-radius:999px;padding:7px 13px;font-size:.82rem;font-weight:700;margin-bottom:12px}
 
-    .checklist {
-      display: grid;
-      gap: 10px;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
+    .faq details{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px}
+    .faq summary{cursor:pointer;font-weight:700;color:#2f225e}
 
-    .checklist li {
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-      color: #37334f;
-      font-size: .95rem;
-    }
+    .footer{padding:30px 0;background:#f6f2ff;border-top:1px solid rgba(71,45,142,.11)}
+    .footer p{margin:3px 0;text-align:center;font-size:.88rem}
 
-    .dot {
-      flex: 0 0 22px;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: var(--grad);
-      color: #fff;
-      font-size: .75rem;
-      display: grid;
-      place-items: center;
-      margin-top: 1px;
-    }
-
-    .grid-3 {
-      display: grid;
-      gap: 18px;
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    .card {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 22px;
-      box-shadow: var(--shadow-card);
-    }
-
-    .story {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 22px;
-    }
-
-    .benefits { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-    .benefit { padding: 20px; border-radius: 14px; border: 1px solid var(--border); background: #fff; }
-
-    .authority {
-      background: linear-gradient(145deg, rgba(71,45,142,.08), rgba(150,51,141,.08));
-      border-radius: var(--radius-xl);
-      border: 1px solid var(--border);
-      padding: 28px;
-      display: grid;
-      grid-template-columns: .7fr 1.3fr;
-      gap: 24px;
-      align-items: center;
-    }
-
-    .avatar {
-      width: min(300px, 100%);
-      aspect-ratio: 1 / 1;
-      border-radius: 22px;
-      background: linear-gradient(145deg, rgba(71,45,142,.2), rgba(150,51,141,.22));
-      border: 1px solid var(--border);
-      display: grid;
-      place-items: center;
-      font-weight: 700;
-      color: #fff;
-      font-family: 'Playfair Display', serif;
-      font-size: 1.15rem;
-    }
-
-    .price-box {
-      background: #fff;
-      border: 2px solid rgba(71,45,142,.28);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-soft);
-      padding: 30px;
-    }
-
-    .price {
-      display: flex;
-      align-items: baseline;
-      gap: 8px;
-      margin: 12px 0;
-    }
-
-    .price strong { font-size: clamp(2rem, 5vw, 3.2rem); color: var(--primary); }
-    .price small { color: var(--muted); }
-
-    .tag-urgency {
-      display: inline-block;
-      background: #2f1a67;
-      color: #fff;
-      padding: 7px 12px;
-      border-radius: 999px;
-      font-size: .82rem;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-
-    .faq details {
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px 16px;
-      background: #fff;
-      margin-bottom: 10px;
-    }
-
-    .faq summary { font-weight: 700; cursor: pointer; color: #2a1f56; }
-    .micro { font-size: .87rem; color: #6f6786; }
-
-    footer {
-      border-top: 1px solid rgba(71,45,142,.12);
-      padding: 24px 0 36px;
-      color: #6a6580;
-      font-size: .88rem;
-      text-align: center;
-    }
-
-    @media (max-width: 920px) {
-      .hero-grid, .story, .authority { grid-template-columns: 1fr; }
-      .grid-3, .benefits { grid-template-columns: 1fr; }
-      .section { padding: 58px 0; }
+    @media (max-width:920px){
+      .hero-grid,.curso,.mentor{grid-template-columns:1fr}
+      .cards3,.modulos,.depos,.bonus-grid{grid-template-columns:1fr}
+      .modulo{grid-template-columns:86px 1fr}
     }
   </style>
 </head>
 <body>
-  <header class="hero" id="topo">
+  <div class="topbar">
+    <div class="container">
+      <img class="logo" src="https://www.orgulhodeserartesa.com/wp-content/uploads/2022/03/logo.png" alt="Orgulho de ser Artesã" />
+      <span class="mini-proof">Mais de 40 anos de experiência em Eco Bijoux • Reconhecimento internacional</span>
+    </div>
+  </div>
+
+  <header class="hero">
     <div class="container hero-grid">
       <div>
-        <span class="eyebrow">Método Tramas que Vendem • edição 2026</span>
-        <h1>Transforme fios em peças desejadas e <span class="highlight">construa sua renda artesanal</span> com segurança.</h1>
-        <p>Você não precisa “nascer com dom” para criar peças que vendem. Precisa de direção certa, repertório visual e um método para sair da tentativa e erro.</p>
-        <div class="cta-group">
-          <a class="btn btn--primary" href="#oferta">Quero começar hoje e garantir minha vaga</a>
-          <a class="btn btn--secondary" href="#provas">Ver resultados de alunas reais</a>
+        <span class="badge">Curso original: Técnicas de Entrelaçamento</span>
+        <h1>Domine o entrelaçamento e crie peças que <u>encantam, valorizam e vendem</u>.</h1>
+        <p>Você aprenderá a técnica completa do entrelaçamento com foco em reforço, acabamento e fluidez de execução para criar bijuterias, acessórios e detalhes em roupas com padrão profissional.</p>
+        <div class="cta-wrap">
+          <a class="btn primary" href="https://pay.hotmart.com/S75821798B" target="_blank" rel="noopener">QUERO ADQUIRIR O CURSO</a>
+          <a class="btn ghost" href="#depoimentos">Ver depoimentos reais</a>
         </div>
-        <p class="micro">Acesso imediato + materiais de apoio + garantia de 7 dias.</p>
+        <p class="micro">Acesso imediato + garantia de 7 dias + acesso às aulas por 2 anos.</p>
       </div>
       <aside class="hero-card">
-        <div class="hero-video">Espaço para vídeo de apresentação</div>
-        <ul class="checklist">
-          <li><span class="dot">✓</span><span>Modelo de produção para criar peças com acabamento valorizado.</span></li>
-          <li><span class="dot">✓</span><span>Estratégia prática para transformar hobby em renda semanal.</span></li>
-          <li><span class="dot">✓</span><span>Plano de evolução para você sair da insegurança e entregar com confiança.</span></li>
-        </ul>
+        <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/curso.webp" alt="Curso Técnicas de Entrelaçamento" />
+        <p><strong>“Técnicas de Entrelaçamento”</strong>: didática clara, acabamento elegante e técnica que valoriza cada peça para artesãs que querem se destacar com propósito.</p>
       </aside>
     </div>
   </header>
 
-  <section class="section section--soft" id="dor">
+  <section class="section soft">
     <div class="container">
-      <span class="eyebrow">Se você sente isso, essa página é para você</span>
-      <h2>Seu talento não está faltando. O que falta é um caminho claro.</h2>
-      <div class="grid-3">
-        <article class="card"><h3>Frustração silenciosa</h3><p>Você começa empolgada, trava no meio, olha para a peça e sente que ficou “quase bom”, nunca pronto para vender.</p></article>
-        <article class="card"><h3>Comparação que paralisa</h3><p>Vê outras artesãs postando resultados incríveis e pensa: “talvez eu não seja capaz”. Isso derruba sua constância.</p></article>
-        <article class="card"><h3>Renda inconsistente</h3><p>Quando vende, é sem padrão e sem previsibilidade. Isso cansa, desmotiva e faz você duvidar do próprio potencial.</p></article>
+      <div class="headline-center">
+        <h2>Por que essa técnica muda o nível do seu artesanato?</h2>
+        <p>Porque ela resolve os três pontos que mais derrubam as vendas de uma artesã: peça sem estrutura, acabamento fraco e falta de padrão na execução.</p>
+      </div>
+      <div class="cards3">
+        <article class="card">
+          <h3>Estrutura firme</h3>
+          <p>Você aprende o reforço correto para a peça ficar resistente e segura, sem aparência frágil.</p>
+        </article>
+        <article class="card">
+          <h3>Acabamento limpo</h3>
+          <p>Domine detalhes que fazem o cliente olhar e pensar: “isso parece peça premium”.</p>
+        </article>
+        <article class="card">
+          <h3>Fluidez de execução</h3>
+          <p>Produza com mais velocidade e constância, sem travar em cada etapa do processo.</p>
+        </article>
       </div>
     </div>
   </section>
 
-  <section class="section" id="identificacao">
-    <div class="container story">
-      <article class="card">
-        <h3>Você não quer só aprender uma técnica.</h3>
-        <p>Você quer sentir orgulho ao mostrar sua peça pronta. Quer ouvir “uau, foi você que fez?”. Quer transformar sua habilidade em uma fonte de independência.</p>
-        <p>Esse desejo é legítimo. E é exatamente ele que guia todo o método.</p>
-      </article>
-      <article class="card">
-        <h3>Você quer voltar a acreditar em você.</h3>
-        <p>Quando você domina uma técnica com clareza, sua postura muda: você produz melhor, precifica com confiança e para de aceitar migalhas.</p>
-        <p>A venda deixa de ser sorte e vira consequência.</p>
-      </article>
-    </div>
-  </section>
-
-  <section class="section section--soft" id="solucao">
-    <div class="container">
-      <span class="eyebrow">A solução</span>
-      <h2>Método Tramas que Vendem</h2>
-      <p>Um programa desenhado para quem quer sair do improviso e construir peças com assinatura própria, acabamento profissional e potencial real de venda.</p>
-      <div class="benefits">
-        <div class="benefit"><h3>Resultado visual valorizado</h3><p>Você aprende a criar peças que chamam atenção pelo nível de acabamento e harmonia de composição.</p></div>
-        <div class="benefit"><h3>Processo que economiza tempo</h3><p>Produza com sequência inteligente e menos retrabalho, sem ficar perdida em vídeos soltos.</p></div>
-        <div class="benefit"><h3>Confiança para cobrar justo</h3><p>Com domínio técnico, você deixa de pedir desculpas pelo preço e começa a defender seu valor.</p></div>
-        <div class="benefit"><h3>Base para renda recorrente</h3><p>Transforme sua produção em catálogo vendável e ganhe previsibilidade de pedidos.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="provas">
-    <div class="container">
-      <span class="eyebrow">Demonstração e prova</span>
-      <h2>O que muda na prática</h2>
-      <div class="grid-3">
-        <article class="card"><h3>Antes</h3><p>Peças sem padrão, demora para finalizar e insegurança constante.</p></article>
-        <article class="card"><h3>Depois</h3><p>Produção organizada, acabamento limpo e segurança para apresentar e vender.</p></article>
-        <article class="card"><h3>Resultado percebido</h3><p>Mais elogios, mais indicações e mais pedidos por peças com valor maior.</p></article>
-      </div>
-    </div>
-  </section>
-
-  <section class="section section--soft" id="autoridade">
-    <div class="container authority">
-      <div class="avatar">Foto da Mentora</div>
+  <section class="section">
+    <div class="container curso">
       <div>
-        <span class="eyebrow">Quem vai te guiar</span>
-        <h2>Mentoria de quem vive o artesanato no dia a dia</h2>
-        <p>Você vai aprender com uma artesã que já acompanhou centenas de mulheres na transição da insegurança para a confiança criativa e comercial.</p>
-        <ul class="checklist">
-          <li><span class="dot">✓</span><span>Didática direta, sem enrolação e sem termos difíceis.</span></li>
-          <li><span class="dot">✓</span><span>Foco em peças com apelo de venda e percepção premium.</span></li>
-          <li><span class="dot">✓</span><span>Comunidade com mulheres que compartilham evolução real.</span></li>
+        <h2>O que você vai conquistar com o curso</h2>
+        <ul class="pill-list">
+          <li><span class="tick">✓</span><span>Confiança para criar e mostrar suas peças sem insegurança.</span></li>
+          <li><span class="tick">✓</span><span>Base técnica para transformar hobby em renda com previsibilidade.</span></li>
+          <li><span class="tick">✓</span><span>Peças com identidade artesanal e valor percebido mais alto.</span></li>
+          <li><span class="tick">✓</span><span>Domínio de uma técnica milenar aplicada ao mercado atual.</span></li>
         </ul>
+      </div>
+      <div class="card" style="padding:10px">
+        <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/diferenciais.png" alt="Diferenciais do curso" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section soft" id="modulos">
+    <div class="container">
+      <div class="headline-center">
+        <h2>Curso organizado para resultado prático</h2>
+        <p>Cada módulo foi estruturado para você aplicar imediatamente na construção das suas peças.</p>
+      </div>
+      <div class="modulos">
+        <article class="card modulo">
+          <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/lacada.png" alt="Técnica de laçada" />
+          <div><h3>Laçada no entrelaçamento</h3><p>Método de cruzamento para unir contas, pérolas e cordões com firmeza, flexibilidade e elegância.</p></div>
+        </article>
+        <article class="card modulo">
+          <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/gravata-1.png" alt="Nó na gravata" />
+          <div><h3>Nó na gravata</h3><p>Etapa essencial para dar forma e estrutura, elevando o acabamento final do colar.</p></div>
+        </article>
+        <article class="card modulo">
+          <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/reforco.png" alt="Reforço da peça" />
+          <div><h3>Técnica de reforço</h3><p>Firmeza, resistência e segurança para valorizar o trabalho artesanal e aumentar a durabilidade.</p></div>
+        </article>
+        <article class="card modulo">
+          <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/soltando.png" alt="Escondendo e soltando o nó" />
+          <div><h3>Esconder e soltar o nó</h3><p>Detalhes que deixam o acabamento delicado, limpo e visualmente profissional.</p></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="mentora">
+    <div class="container mentor">
+      <div class="foto">
+        <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/Suelli-1.png" alt="Suelli Bomfim" />
+      </div>
+      <div>
+        <h2>Suelli Bomfim, sua mentora</h2>
+        <p>Com mais de 40 anos de experiência, Suelli Bomfim é referência em transformar materiais em peças extraordinárias. Seus projetos já passaram por TV, cinema e escolas de samba.</p>
+        <p>Agora ela compartilha o método usado ao longo de décadas para você construir peças valorizadas e consistentes.</p>
+        <div class="cta-wrap">
+          <a class="btn primary" href="https://pay.hotmart.com/S75821798B" target="_blank" rel="noopener">QUERO APRENDER COM A SUELLI</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section soft">
+    <div class="container">
+      <div class="headline-center">
+        <h2>Garanta bônus exclusivos</h2>
+        <p>Além do curso, você recebe reforços para acelerar sua evolução e manter consistência.</p>
+      </div>
+      <div class="bonus-grid">
+        <article class="card bonus">
+          <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2024/08/selo-.png" alt="Selo garantia" />
+          <div><h3>Garantia de 7 dias</h3><p>Se não atender suas expectativas, você pode solicitar reembolso dentro do prazo.</p></div>
+        </article>
+        <article class="card bonus">
+          <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/sobre-2.png" alt="Mentoria com Suelli" />
+          <div><h3>Mentoria com Suelli Bomfim</h3><p>Direcionamento para tirar dúvidas e aplicar a técnica com mais segurança.</p></div>
+        </article>
       </div>
     </div>
   </section>
 
   <section class="section" id="depoimentos">
     <div class="container">
-      <span class="eyebrow">Prova social</span>
-      <h2>Elas chegaram com dúvidas. Hoje colhem reconhecimento.</h2>
-      <div class="grid-3">
-        <article class="card"><p>“Eu escondia minhas peças. Depois do método, comecei a vender toda semana no bairro e no Instagram.”</p><strong>— Carla M., aluna</strong></article>
-        <article class="card"><p>“Meu acabamento era meu maior bloqueio. Hoje minhas clientes falam que parece peça de loja premium.”</p><strong>— Renata F., aluna</strong></article>
-        <article class="card"><p>“Nunca imaginei contribuir na renda de casa com artesanato. Agora tenho lista de encomendas.”</p><strong>— Joana S., aluna</strong></article>
+      <div class="headline-center">
+        <h2>Depoimentos</h2>
+        <p>“Desde a década de 80, Suelli literalmente na cabeça comigo...” • “Há mais de 20 anos sou fanzoca!” • “Aprendi a criar artigos para mim, minha casa e minhas amigas.”</p>
+      </div>
+      <div class="depos">
+        <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/depoimento-5.png" alt="Depoimento de aluna 1" />
+        <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/depoimento-4.png" alt="Depoimento de aluna 2" />
+        <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/depoimento-6.png" alt="Depoimento de aluna 3" />
       </div>
     </div>
   </section>
 
-  <section class="section section--soft faq" id="objecoes">
+  <section class="section soft" id="oferta">
     <div class="container">
-      <span class="eyebrow">Quebra de objeções</span>
-      <h2>Respondendo suas dúvidas com transparência</h2>
+      <div class="offer">
+        <span class="urgency">Condição especial por tempo limitado</span>
+        <h2>Inscreva-se agora no curso “Técnicas de Entrelaçamento”</h2>
+        <p>Ao concluir o curso, você terá habilidade para criar peças diferenciadas e iniciar (ou fortalecer) sua linha de bijuterias sustentáveis.</p>
+        <p class="old">De R$ 99,90</p>
+        <p class="installments">6x de R$ 9,00</p>
+        <p class="new">R$ 47,00 à vista</p>
+        <div class="cta-wrap" style="justify-content:center">
+          <a class="btn primary" href="https://pay.hotmart.com/S75821798B" target="_blank" rel="noopener">SIM, QUERO GARANTIR MINHA VAGA</a>
+        </div>
+        <p style="font-size:.87rem">Microcopy de decisão: começar hoje custa menos que continuar adiando seu potencial artesanal.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section faq">
+    <div class="container">
+      <h2>Perguntas frequentes</h2>
       <details open>
-        <summary>“Sou iniciante total. Vou acompanhar?”</summary>
-        <p>Sim. O método foi pensado para quem está começando e também para quem já cria, mas quer elevar padrão e vender mais.</p>
+        <summary>O curso “Técnicas de Entrelaçamento” é pago?</summary>
+        <p>Sim. É um curso livre de formação prática em artesanato e não é regulamentado pelo MEC.</p>
       </details>
       <details>
-        <summary>“Tenho pouco tempo durante a semana.”</summary>
-        <p>Você acessa as aulas no seu ritmo e organiza sua evolução por blocos. Mesmo com rotina corrida, dá para avançar com consistência.</p>
+        <summary>Posso cancelar a compra?</summary>
+        <p>Sim. Você tem garantia de 7 dias para solicitar reembolso.</p>
       </details>
       <details>
-        <summary>“E se eu comprar e não me adaptar?”</summary>
-        <p>Você tem 7 dias de garantia incondicional. Se não fizer sentido para você, devolvemos 100% do valor.</p>
+        <summary>Por quanto tempo terei acesso?</summary>
+        <p>Comprando hoje, você poderá acessar as aulas quantas vezes quiser por 2 anos.</p>
       </details>
     </div>
   </section>
 
-  <section class="section" id="oferta">
+  <footer class="footer">
     <div class="container">
-      <span class="eyebrow">Oferta especial de hoje</span>
-      <h2>Seu próximo nível no artesanato começa agora</h2>
-      <div class="price-box">
-        <span class="tag-urgency">Condição de lançamento por tempo limitado</span>
-        <p>Você recebe acesso ao Método Tramas que Vendem, materiais de apoio e atualizações da turma atual.</p>
-        <div class="price">
-          <small>De R$ 197 por</small>
-          <strong>R$ 47</strong>
-          <small>à vista</small>
-        </div>
-        <ul class="checklist">
-          <li><span class="dot">✓</span><span>Acesso imediato após confirmação.</span></li>
-          <li><span class="dot">✓</span><span>Garantia incondicional de 7 dias.</span></li>
-          <li><span class="dot">✓</span><span>Suporte para tirar dúvidas na área de alunas.</span></li>
-        </ul>
-        <div class="cta-group">
-          <a class="btn btn--primary" href="#">SIM, QUERO MINHA VAGA COM DESCONTO</a>
-        </div>
-        <p class="micro">Microcopy de decisão: “Começar agora custa menos do que continuar travada por mais um mês.”</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="section section--soft" id="cta-final">
-    <div class="container" style="text-align:center;">
-      <h2>Você pode manter a dúvida… ou iniciar sua virada hoje.</h2>
-      <p>Cada peça pronta aumenta sua confiança. Cada venda confirma seu valor. Dê o primeiro passo com método e direção.</p>
-      <a class="btn btn--primary" href="#oferta">Quero transformar meu artesanato em renda</a>
-    </div>
-  </section>
-
-  <footer>
-    <div class="container">
-      © 2026 Orgulho de Ser Artesã • Todos os direitos reservados.
+      <p><strong>Contato:</strong> orgulhoserartesa@gmail.com</p>
+      <p><a href="https://www.orgulhodeserartesa.com/politica-de-privacidade/" target="_blank" rel="noopener">Política de Privacidade</a> • <a href="https://www.orgulhodeserartesa.com/atendimento/" target="_blank" rel="noopener">Atendimento</a> • <a href="https://catalogo.orgulhodeserartesa.com/" target="_blank" rel="noopener">Catálogo</a></p>
+      <p>Copyright © 2024 Orgulho de ser Artesã – Todos os Direitos Reservados</p>
     </div>
   </footer>
 </body>
