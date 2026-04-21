@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Técnicas de Entrelaçamento | Orgulho de ser Artesã</title>
   <meta name="description" content="Curso Técnicas de Entrelaçamento com Suelli Bomfim: acabamento, reforço e fluidez para criar peças valorizadas e gerar renda com artesanato." />
+  <meta name="theme-color" content="#472D8E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -18,13 +19,16 @@
       --soft:#faf7ff;
       --border:rgba(71,45,142,.16);
       --shadow:0 16px 40px rgba(71,45,142,.13);
+      --shadow-soft:0 10px 24px rgba(71,45,142,.08);
       --grad:linear-gradient(120deg,var(--primary),var(--secondary));
       --radius:18px;
       --radius-sm:12px;
     }
     *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
     body{margin:0;font-family:'Inter',sans-serif;color:var(--text);background:#fff;line-height:1.55}
     img{max-width:100%;display:block}
+    a{color:var(--primary)}
     .container{width:min(1140px,92vw);margin:0 auto}
     .section{padding:68px 0}
     .section.soft{background:var(--soft)}
@@ -54,11 +58,14 @@
     .hero-card p{color:#3f3564}
 
     .cta-wrap{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
-    .btn{display:inline-flex;align-items:center;justify-content:center;border-radius:12px;padding:14px 22px;font-weight:800;text-decoration:none;transition:.2s;cursor:pointer}
+    .btn{display:inline-flex;align-items:center;justify-content:center;border-radius:12px;padding:14px 22px;font-weight:800;text-decoration:none;transition:.2s;cursor:pointer;border:none}
     .btn:hover{transform:translateY(-2px)}
     .btn.primary{background:var(--grad);color:#fff;box-shadow:0 14px 26px rgba(71,45,142,.28)}
     .btn.ghost{background:#fff;color:var(--primary);border:1px solid var(--border)}
     .micro{font-size:.86rem;color:#d8d3ea;margin-top:10px}
+
+    .trust-strip{padding:14px;border:1px solid var(--border);border-radius:14px;background:#fff;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px;box-shadow:var(--shadow-soft)}
+    .trust-strip div{font-size:.86rem;color:#4e4474;font-weight:600;text-align:center}
 
     .cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
     .card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-sm);padding:20px;box-shadow:0 8px 22px rgba(71,45,142,.08)}
@@ -77,6 +84,10 @@
     .mentor{display:grid;grid-template-columns:.8fr 1.2fr;gap:24px;align-items:center}
     .mentor .foto{border-radius:20px;overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow)}
 
+    .forwho{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .forwho ul{margin:0;padding-left:18px;color:#4f456f}
+    .forwho li{margin-bottom:8px}
+
     .bonus-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
     .bonus{display:flex;gap:14px;align-items:center}
     .bonus img{width:74px;height:74px;object-fit:cover;border-radius:14px;border:1px solid var(--border)}
@@ -93,20 +104,60 @@
     .faq details{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px}
     .faq summary{cursor:pointer;font-weight:700;color:#2f225e}
 
-    .footer{padding:30px 0;background:#f6f2ff;border-top:1px solid rgba(71,45,142,.11)}
+    .footer{padding:30px 0 96px;background:#f6f2ff;border-top:1px solid rgba(71,45,142,.11)}
     .footer p{margin:3px 0;text-align:center;font-size:.88rem}
 
+    .sticky-cta{position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(255,255,255,.95);backdrop-filter:blur(6px);border-top:1px solid rgba(71,45,142,.12);padding:10px}
+    .sticky-cta .inner{width:min(1140px,95vw);margin:0 auto;display:flex;gap:10px;align-items:center;justify-content:space-between}
+    .sticky-cta small{font-weight:700;color:#483d71}
+
     @media (max-width:920px){
-      .hero-grid,.curso,.mentor{grid-template-columns:1fr}
-      .cards3,.modulos,.depos,.bonus-grid{grid-template-columns:1fr}
+      .topbar .container{flex-direction:column}
+      .hero-grid,.curso,.mentor,.forwho{grid-template-columns:1fr}
+      .cards3,.modulos,.depos,.bonus-grid,.trust-strip{grid-template-columns:1fr}
       .modulo{grid-template-columns:86px 1fr}
+      .sticky-cta .inner{flex-direction:column;align-items:stretch}
+      .sticky-cta .btn{width:100%}
     }
   </style>
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "O curso Técnicas de Entrelaçamento é pago?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sim. É um curso livre de formação prática em artesanato e não é regulamentado pelo MEC."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Posso cancelar a compra?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sim. Você tem garantia de 7 dias para solicitar reembolso."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Por quanto tempo terei acesso?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Comprando hoje, você poderá acessar as aulas quantas vezes quiser por 2 anos."
+          }
+        }
+      ]
+    }
+  </script>
 </head>
 <body>
   <div class="topbar">
     <div class="container">
-      <img class="logo" src="https://www.orgulhodeserartesa.com/wp-content/uploads/2022/03/logo.png" alt="Orgulho de ser Artesã" />
+      <img class="logo" src="https://www.orgulhodeserartesa.com/wp-content/uploads/2022/03/logo.png" alt="Orgulho de ser Artesã" loading="eager" decoding="async" />
       <span class="mini-proof">Mais de 40 anos de experiência em Eco Bijoux • Reconhecimento internacional</span>
     </div>
   </div>
@@ -122,9 +173,14 @@
           <a class="btn ghost" href="#depoimentos">Ver depoimentos reais</a>
         </div>
         <p class="micro">Acesso imediato + garantia de 7 dias + acesso às aulas por 2 anos.</p>
+        <div class="trust-strip">
+          <div>✅ Pagamento seguro</div>
+          <div>✅ Acesso imediato</div>
+          <div>✅ Garantia incondicional</div>
+        </div>
       </div>
       <aside class="hero-card">
-        <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/curso.webp" alt="Curso Técnicas de Entrelaçamento" />
+        <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/curso.webp" alt="Curso Técnicas de Entrelaçamento" loading="eager" decoding="async" />
         <p><strong>“Técnicas de Entrelaçamento”</strong>: didática clara, acabamento elegante e técnica que valoriza cada peça para artesãs que querem se destacar com propósito.</p>
       </aside>
     </div>
@@ -165,7 +221,7 @@
         </ul>
       </div>
       <div class="card" style="padding:10px">
-        <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/diferenciais.png" alt="Diferenciais do curso" />
+        <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/diferenciais.png" alt="Diferenciais do curso" loading="lazy" decoding="async" />
       </div>
     </div>
   </section>
@@ -178,19 +234,19 @@
       </div>
       <div class="modulos">
         <article class="card modulo">
-          <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/lacada.png" alt="Técnica de laçada" />
+          <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/lacada.png" alt="Técnica de laçada" loading="lazy" decoding="async" />
           <div><h3>Laçada no entrelaçamento</h3><p>Método de cruzamento para unir contas, pérolas e cordões com firmeza, flexibilidade e elegância.</p></div>
         </article>
         <article class="card modulo">
-          <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/gravata-1.png" alt="Nó na gravata" />
+          <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/gravata-1.png" alt="Nó na gravata" loading="lazy" decoding="async" />
           <div><h3>Nó na gravata</h3><p>Etapa essencial para dar forma e estrutura, elevando o acabamento final do colar.</p></div>
         </article>
         <article class="card modulo">
-          <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/reforco.png" alt="Reforço da peça" />
+          <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/reforco.png" alt="Reforço da peça" loading="lazy" decoding="async" />
           <div><h3>Técnica de reforço</h3><p>Firmeza, resistência e segurança para valorizar o trabalho artesanal e aumentar a durabilidade.</p></div>
         </article>
         <article class="card modulo">
-          <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/soltando.png" alt="Escondendo e soltando o nó" />
+          <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/soltando.png" alt="Escondendo e soltando o nó" loading="lazy" decoding="async" />
           <div><h3>Esconder e soltar o nó</h3><p>Detalhes que deixam o acabamento delicado, limpo e visualmente profissional.</p></div>
         </article>
       </div>
@@ -200,7 +256,7 @@
   <section class="section" id="mentora">
     <div class="container mentor">
       <div class="foto">
-        <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/Suelli-1.png" alt="Suelli Bomfim" />
+        <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/Suelli-1.png" alt="Suelli Bomfim" loading="lazy" decoding="async" />
       </div>
       <div>
         <h2>Suelli Bomfim, sua mentora</h2>
@@ -214,6 +270,27 @@
   </section>
 
   <section class="section soft">
+    <div class="container forwho">
+      <article class="card">
+        <h3>Esse curso é para você que...</h3>
+        <ul>
+          <li>Quer dominar acabamento e entregar peças com padrão profissional.</li>
+          <li>Deseja vender com mais confiança, sem depender de sorte.</li>
+          <li>Busca orientação de quem já vive do artesanato há décadas.</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h3>Não é para quem...</h3>
+        <ul>
+          <li>Procura resultado sem praticar as técnicas ensinadas.</li>
+          <li>Quer copiar sem desenvolver identidade artesanal própria.</li>
+          <li>Não está disposta a aplicar as aulas na rotina.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="section soft">
     <div class="container">
       <div class="headline-center">
         <h2>Garanta bônus exclusivos</h2>
@@ -221,11 +298,11 @@
       </div>
       <div class="bonus-grid">
         <article class="card bonus">
-          <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2024/08/selo-.png" alt="Selo garantia" />
+          <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2024/08/selo-.png" alt="Selo garantia" loading="lazy" decoding="async" />
           <div><h3>Garantia de 7 dias</h3><p>Se não atender suas expectativas, você pode solicitar reembolso dentro do prazo.</p></div>
         </article>
         <article class="card bonus">
-          <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/sobre-2.png" alt="Mentoria com Suelli" />
+          <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/sobre-2.png" alt="Mentoria com Suelli" loading="lazy" decoding="async" />
           <div><h3>Mentoria com Suelli Bomfim</h3><p>Direcionamento para tirar dúvidas e aplicar a técnica com mais segurança.</p></div>
         </article>
       </div>
@@ -239,9 +316,9 @@
         <p>“Desde a década de 80, Suelli literalmente na cabeça comigo...” • “Há mais de 20 anos sou fanzoca!” • “Aprendi a criar artigos para mim, minha casa e minhas amigas.”</p>
       </div>
       <div class="depos">
-        <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/depoimento-5.png" alt="Depoimento de aluna 1" />
-        <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/depoimento-4.png" alt="Depoimento de aluna 2" />
-        <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/depoimento-6.png" alt="Depoimento de aluna 3" />
+        <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/depoimento-5.png" alt="Depoimento de aluna 1" loading="lazy" decoding="async" />
+        <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/depoimento-4.png" alt="Depoimento de aluna 2" loading="lazy" decoding="async" />
+        <img src="https://www.orgulhodeserartesa.com/wp-content/uploads/2026/04/depoimento-6.png" alt="Depoimento de aluna 3" loading="lazy" decoding="async" />
       </div>
     </div>
   </section>
@@ -288,5 +365,12 @@
       <p>Copyright © 2024 Orgulho de ser Artesã – Todos os Direitos Reservados</p>
     </div>
   </footer>
+
+  <div class="sticky-cta" aria-label="Barra fixa de compra">
+    <div class="inner">
+      <small>Técnicas de Entrelaçamento • R$ 47,00 à vista</small>
+      <a class="btn primary" href="https://pay.hotmart.com/S75821798B" target="_blank" rel="noopener">GARANTIR MINHA VAGA AGORA</a>
+    </div>
+  </div>
 </body>
 </html>
