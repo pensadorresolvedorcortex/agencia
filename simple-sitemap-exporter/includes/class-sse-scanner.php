@@ -49,56 +49,70 @@ class SSE_Scanner
     {
         $post_types = get_post_types(
             array(
-                'public'             => true,
-                'publicly_queryable' => true,
+                'public' => true,
             ),
-            'objects'
+            'names'
         );
 
-        foreach ($post_types as $post_type_obj) {
-            if (! $post_type_obj || empty($post_type_obj->name)) {
-                continue;
-            }
+        if (empty($post_types)) {
+            return;
+        }
 
-            if ('attachment' === $post_type_obj->name) {
-                continue;
-            }
+        $post_types = array_values(array_filter($post_types, function ($post_type) {
+            return 'attachment' !== $post_type;
+        }));
 
-            $posts = get_posts(
-                array(
-                    'post_type'              => $post_type_obj->name,
-                    'post_status'            => 'publish',
-                    'posts_per_page'         => -1,
-                    'orderby'                => 'ID',
-                    'order'                  => 'ASC',
-                    'fields'                 => 'ids',
-                    'no_found_rows'          => true,
-                    'update_post_meta_cache' => false,
-                    'update_post_term_cache' => false,
-                    'suppress_filters'       => false,
-                )
-            );
+        foreach ($post_types as $post_type) {
+            $paged = 1;
 
-            foreach ($posts as $post_id) {
-                if (! $this->is_post_indexable($post_id)) {
-                    continue;
-                }
-
-                $url = wp_get_canonical_url($post_id);
-                if (empty($url)) {
-                    $url = get_permalink($post_id);
-                }
-
-                $normalized = $this->normalize_url($url);
-                if (! $normalized) {
-                    continue;
-                }
-
-                $items[$normalized] = array(
-                    'loc'     => $normalized,
-                    'lastmod' => $this->get_post_lastmod($post_id),
+            do {
+                $query = new WP_Query(
+                    array(
+                        'post_type'              => $post_type,
+                        'post_status'            => 'publish',
+                        'posts_per_page'         => 500,
+                        'paged'                  => $paged,
+                        'fields'                 => 'ids',
+                        'orderby'                => 'ID',
+                        'order'                  => 'ASC',
+                        'no_found_rows'          => false,
+                        'update_post_meta_cache' => false,
+                        'update_post_term_cache' => false,
+                        'cache_results'          => false,
+                        'ignore_sticky_posts'    => true,
+                        'suppress_filters'       => true,
+                    )
                 );
-            }
+
+                if (empty($query->posts)) {
+                    break;
+                }
+
+                foreach ($query->posts as $post_id) {
+                    if (! $this->is_post_indexable($post_id)) {
+                        continue;
+                    }
+
+                    $url = wp_get_canonical_url($post_id);
+                    if (empty($url)) {
+                        $url = get_permalink($post_id);
+                    }
+
+                    $normalized = $this->normalize_url($url);
+                    if (! $normalized) {
+                        continue;
+                    }
+
+                    $items[$normalized] = array(
+                        'loc'     => $normalized,
+                        'lastmod' => $this->get_post_lastmod($post_id),
+                    );
+                }
+
+                $paged++;
+            } while ($paged <= (int) $query->max_num_pages);
+
+            wp_reset_postdata();
         }
     }
 
