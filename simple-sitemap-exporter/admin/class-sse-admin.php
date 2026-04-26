@@ -25,6 +25,7 @@ class SSE_Admin
         add_action('admin_post_sse_scan', array($this, 'handle_scan'));
         add_action('admin_post_sse_generate', array($this, 'handle_generate'));
         add_action('admin_post_sse_download', array($this, 'handle_download'));
+        add_action('wp_ajax_sse_scan_batch', array($this, 'handle_scan_batch'));
     }
 
     public function register_menu()
@@ -48,6 +49,7 @@ class SSE_Admin
         $last_updated_at = $this->storage->get_last_updated_at();
         $notice = isset($_GET['sse_notice']) ? sanitize_text_field(wp_unslash($_GET['sse_notice'])) : '';
         $sitemap_url = home_url('/sitemap.xml');
+        $scan_nonce = wp_create_nonce('sse_scan_batch_action');
         ?>
         <div class="wrap">
             <h1><?php echo esc_html__('Simple Sitemap Exporter', 'simple-sitemap-exporter'); ?></h1>
@@ -68,12 +70,8 @@ class SSE_Admin
                 </p>
             <?php endif; ?>
 
-            <div style="display:flex;gap:12px;align-items:center;margin:16px 0;">
-                <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
-                    <input type="hidden" name="action" value="sse_scan" />
-                    <?php wp_nonce_field('sse_scan_action', 'sse_scan_nonce'); ?>
-                    <?php submit_button(__('Escanear URLs', 'simple-sitemap-exporter'), 'primary', 'submit', false); ?>
-                </form>
+            <div style="display:flex;gap:12px;align-items:center;margin:16px 0;flex-wrap:wrap;">
+                <button type="button" class="button button-primary" id="sse-scan-btn" data-nonce="<?php echo esc_attr($scan_nonce); ?>"><?php echo esc_html__('Escanear URLs (lotes)', 'simple-sitemap-exporter'); ?></button>
 
                 <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
                     <input type="hidden" name="action" value="sse_generate" />
@@ -87,6 +85,8 @@ class SSE_Admin
                     <?php submit_button(__('Exportar/Baixar sitemap.xml', 'simple-sitemap-exporter'), 'secondary', 'submit', false); ?>
                 </form>
             </div>
+
+            <p id="sse-scan-status" style="font-weight:600;"></p>
 
             <h2><?php echo esc_html__('URLs encontradas', 'simple-sitemap-exporter'); ?></h2>
             <table class="widefat striped">
@@ -112,6 +112,49 @@ class SSE_Admin
                 </tbody>
             </table>
         </div>
+        <script>
+        (function(){
+            var btn = document.getElementById('sse-scan-btn');
+            var status = document.getElementById('sse-scan-status');
+            if (!btn || !status) return;
+
+            function scanStep(isStart){
+                var form = new FormData();
+                form.append('action', 'sse_scan_batch');
+                form.append('_ajax_nonce', btn.getAttribute('data-nonce'));
+                form.append('start', isStart ? '1' : '0');
+
+                fetch(ajaxurl, { method: 'POST', credentials: 'same-origin', body: form })
+                    .then(function(resp){ return resp.json(); })
+                    .then(function(payload){
+                        if (!payload || !payload.success) {
+                            throw new Error('Falha no escaneamento em lote.');
+                        }
+
+                        var data = payload.data || {};
+                        status.textContent = 'Escaneando em lotes... URLs coletadas: ' + (data.total || 0);
+
+                        if (data.done) {
+                            status.textContent = 'Escaneamento concluído. ' + (data.total || 0) + ' URL(s) encontrada(s). Recarregando...';
+                            window.location.reload();
+                            return;
+                        }
+
+                        window.setTimeout(function(){ scanStep(false); }, 150);
+                    })
+                    .catch(function(err){
+                        status.textContent = 'Erro: ' + (err && err.message ? err.message : 'erro desconhecido');
+                        btn.disabled = false;
+                    });
+            }
+
+            btn.addEventListener('click', function(){
+                btn.disabled = true;
+                status.textContent = 'Iniciando escaneamento em lotes...';
+                scanStep(true);
+            });
+        })();
+        </script>
         <?php
     }
 
@@ -138,6 +181,63 @@ class SSE_Admin
         }
 
         $this->redirect_with_notice($notice);
+    }
+
+    public function handle_scan_batch()
+    {
+        if (! current_user_can('manage_options')) {
+            wp_send_json_error(array('message' => __('Permissão negada.', 'simple-sitemap-exporter')), 403);
+        }
+
+        check_ajax_referer('sse_scan_batch_action');
+
+        $start = isset($_POST['start']) && '1' === sanitize_text_field(wp_unslash($_POST['start']));
+
+        if ($start) {
+            $state = $this->scanner->create_initial_state();
+            $items = array();
+            $this->storage->save_scan_state($state);
+            $this->storage->save_scan_items($items);
+        } else {
+            $state = $this->storage->get_scan_state();
+            $items = $this->storage->get_scan_items();
+
+            if (empty($state)) {
+                $state = $this->scanner->create_initial_state();
+                $items = array();
+            }
+        }
+
+        $result = $this->scanner->run_batch($state, $items, 300);
+
+        $new_state = isset($result['state']) ? $result['state'] : array();
+        $new_items = isset($result['items']) ? $result['items'] : array();
+        $done = ! empty($result['done']);
+
+        if ($done) {
+            $final_urls = $this->scanner->finalize_items($new_items);
+            $this->storage->save_urls($final_urls);
+            $this->storage->clear_scan_state();
+            $this->storage->clear_scan_items();
+
+            wp_send_json_success(
+                array(
+                    'done' => true,
+                    'total' => count($final_urls),
+                )
+            );
+        }
+
+        $this->storage->save_scan_state($new_state);
+        $this->storage->save_scan_items($new_items);
+
+        wp_send_json_success(
+            array(
+                'done' => false,
+                'total' => count($new_items),
+                'phase' => isset($new_state['phase']) ? $new_state['phase'] : '',
+            )
+        );
     }
 
     public function handle_generate()
