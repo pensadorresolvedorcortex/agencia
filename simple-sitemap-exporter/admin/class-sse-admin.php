@@ -52,6 +52,21 @@ class SSE_Admin
         $sitemap_url = home_url('/sitemap.xml');
         $scan_nonce = wp_create_nonce('sse_scan_batch_action');
         $parts = $this->storage->get_parts();
+        $download_parts = array();
+
+        if (! empty($parts)) {
+            foreach ($parts as $part_filename => $part_data) {
+                if ('sitemap.xml' !== $part_filename) {
+                    $download_parts[] = $part_filename;
+                }
+            }
+        }
+
+        if (empty($download_parts) && count($urls) > $this->sitemap->get_max_urls()) {
+            for ($i = 1; $i <= 6; $i++) {
+                $download_parts[] = sprintf('sitemap-%d.xml', $i);
+            }
+        }
         ?>
         <div class="wrap">
             <h1><?php echo esc_html__('Simple Sitemap Exporter', 'simple-sitemap-exporter'); ?></h1>
@@ -88,11 +103,10 @@ class SSE_Admin
                 </form>
             </div>
 
-            <?php if (! empty($parts)) : ?>
+            <?php if (! empty($download_parts)) : ?>
                 <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px;">
                     <strong><?php echo esc_html__('Baixar partes do sitemap:', 'simple-sitemap-exporter'); ?></strong>
-                    <?php foreach ($parts as $part_filename => $part_data) : ?>
-                        <?php if ('sitemap.xml' === $part_filename) { continue; } ?>
+                    <?php foreach ($download_parts as $part_filename) : ?>
                         <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" style="display:inline-block;">
                             <input type="hidden" name="action" value="sse_download_part" />
                             <input type="hidden" name="part" value="<?php echo esc_attr($part_filename); ?>" />
@@ -283,6 +297,17 @@ class SSE_Admin
             $path = $this->sitemap->get_sitemap_file_path($part);
             if ($path && file_exists($path) && is_readable($path)) {
                 $xml = (string) file_get_contents($path);
+            }
+        }
+
+        if ('' === $xml) {
+            $urls = $this->storage->get_urls();
+            if (! empty($urls)) {
+                $payload = $this->sitemap->build_payload($urls);
+                $this->sitemap->persist_payload($payload);
+                if (! empty($payload['parts'][$part]['xml'])) {
+                    $xml = (string) $payload['parts'][$part]['xml'];
+                }
             }
         }
 
