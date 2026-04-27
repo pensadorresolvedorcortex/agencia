@@ -3380,15 +3380,28 @@ add_action('wp_footer', function (): void {
 
         function injectPublicSiteUrl() {
             if (!siteUrl) return;
-            var list = document.querySelector('.fr-c-details .fr-c-more-details ul, .fr-c-details .fr-ca-more-details ul, .fr-ca-details .fr-ca-more-details ul, .fr-ca-details .fr-c-more-details ul, .fr-ca-more-details ul, .fr-c-more-details ul');
-            if (!list || list.querySelector('[data-rma-site-url=\"1\"]')) return;
+            if (document.querySelector('[data-rma-site-url=\"1\"]')) return;
 
-            var detailsWrap = list.closest('.fr-c-more-details, .fr-ca-more-details');
-            var detailClass = (detailsWrap && detailsWrap.classList.contains('fr-ca-more-details')) ? 'fr-ca-full-details' : 'fr-c-full-details';
-            var li = document.createElement('li');
-            li.setAttribute('data-rma-site-url', '1');
-            li.innerHTML = '<div class=\"' + detailClass + '\"><span>URL do site</span><p><a href=\"' + siteUrl.replace(/\"/g, '&quot;') + '\" target=\"_blank\" rel=\"noopener\">' + siteUrl + '</a></p></div>';
-            list.appendChild(li);
+            var block = document.querySelector('.fr-c-details .fr-c-full-details, .fr-c-details .fr-ca-full-details, .fr-ca-details .fr-c-full-details, .fr-ca-details .fr-ca-full-details, .fr-c-full-details, .fr-ca-full-details');
+            if (!block) return;
+
+            var blockClass = block.classList.contains('fr-ca-full-details') ? 'fr-ca-full-details' : 'fr-c-full-details';
+            var holder = block.parentElement;
+            var wrapList = holder && holder.tagName === 'LI' ? holder.parentElement : null;
+
+            if (wrapList && wrapList.tagName === 'UL') {
+                var li = document.createElement('li');
+                li.setAttribute('data-rma-site-url', '1');
+                li.innerHTML = '<div class=\"' + blockClass + '\"><span>Site</span><p><a href=\"' + siteUrl.replace(/\"/g, '&quot;') + '\" target=\"_blank\" rel=\"noopener\">' + siteUrl + '</a></p></div>';
+                wrapList.appendChild(li);
+                return;
+            }
+
+            var item = document.createElement('div');
+            item.className = blockClass;
+            item.setAttribute('data-rma-site-url', '1');
+            item.innerHTML = '<span>Site</span><p><a href=\"' + siteUrl.replace(/\"/g, '&quot;') + '\" target=\"_blank\" rel=\"noopener\">' + siteUrl + '</a></p>';
+            holder.appendChild(item);
         }
 
         function setupEditProfileSiteField() {
