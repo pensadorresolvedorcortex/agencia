@@ -514,6 +514,19 @@ function rma_get_annual_dues_product_ids(): array {
         $ids[] = $legacy_id;
     }
 
+    if (empty($ids)) {
+        $requested_product_id = absint((int) ($_GET['add-to-cart'] ?? 0)); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $can_bootstrap_from_request = $requested_product_id > 0
+            && is_user_logged_in()
+            && function_exists('is_checkout')
+            && is_checkout();
+
+        if ($can_bootstrap_from_request) {
+            $ids[] = $requested_product_id;
+            update_option('rma_annual_dues_product_id', $requested_product_id, false);
+        }
+    }
+
     $ids = array_values(array_unique(array_filter(array_map('absint', $ids))));
     return $ids;
 }
