@@ -1,0 +1,13 @@
+{
+  "name": "nafloresta/nafloresta-buy",
+  "description": "WooCommerce product builder for matrix variation purchases.",
+  "type": "wordpress-plugin",
+  "autoload": {
+    "psr-4": {
+      "NaFlorestaBuy\\": "includes/"
+    }
+  },
+  "require": {
+    "php": ">=7.4"
+  }
+}
