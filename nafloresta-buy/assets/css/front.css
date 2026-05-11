@@ -1,0 +1,292 @@
+#nafb-native-layer .nafb-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 18, 35, 0.22);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .15s ease-out;
+  z-index: 10000;
+}
+
+#nafb-native-layer .nafb-modal-overlay.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#nafb-native-layer .nafb-modal {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -48%) scale(.99);
+  width: min(560px, calc(100vw - 36px));
+  border-radius: 20px;
+  border: 1px solid rgba(203, 213, 225, 0.65);
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.98), rgba(250, 252, 255, 0.95));
+  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.14);
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  padding: 22px;
+  opacity: 0;
+  pointer-events: none;
+  transition: transform .15s ease-out, opacity .15s ease-out;
+  z-index: 10001;
+}
+
+#nafb-native-layer .nafb-modal.is-open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+#nafb-native-layer .nafb-modal:not(.is-open) {
+  transition-duration: .12s;
+}
+
+#nafb-native-layer .nafb-modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+#nafb-native-layer .nafb-modal__header h4 {
+  margin: 0;
+  font-size: 32px;
+  line-height: 1.1;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+#nafb-native-layer .nafb-modal__subtitle {
+  margin: 6px 0 0;
+  font-size: 19px;
+  font-weight: 600;
+  color: #334155;
+}
+
+#nafb-native-layer .nafb-modal__trust {
+  margin: 4px 0 0;
+  font-size: 11px;
+  color: #94a3b8;
+  letter-spacing: .01em;
+}
+
+#nafb-native-layer .nafb-modal__helper {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: #64748b;
+  min-height: 18px;
+}
+
+#nafb-native-layer .nafb-modal__progress {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #94a3b8;
+  min-height: 16px;
+}
+
+#nafb-native-layer .nafb-modal__close {
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  background: rgba(255, 255, 255, 0.72);
+  color: #0f172a;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+#nafb-native-layer .nafb-modal__fields {
+  display: grid;
+  gap: 14px;
+  margin: 16px 0 20px;
+}
+
+#nafb-native-layer .nafb-modal__field {
+  display: grid;
+  gap: 8px;
+  animation: nafb-field-in .16s ease-out;
+}
+
+#nafb-native-layer .nafb-modal__label {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #334155;
+}
+
+#nafb-native-layer .nafb-modal__input {
+  width: 100%;
+  min-height: 58px;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  background: rgba(255, 255, 255, 0.84);
+  padding: 0 18px;
+  font-size: 19px;
+  color: #0f172a;
+  caret-color: #2563eb;
+  transition: border-color .12s ease, box-shadow .12s ease, background-color .12s ease;
+}
+
+#nafb-native-layer .nafb-modal__input::placeholder {
+  color: #94a3b8;
+}
+
+#nafb-native-layer .nafb-modal__input:focus {
+  outline: none;
+  border-color: rgba(37, 99, 235, 0.72);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.16);
+  background: #fff;
+}
+
+#nafb-native-layer .nafb-modal__error {
+  min-height: 16px;
+  margin: 0;
+  color: #b42318;
+  font-size: 12px;
+}
+
+#nafb-native-layer .nafb-modal__field.is-invalid .nafb-modal__input {
+  border-color: rgba(180, 35, 24, 0.72);
+  box-shadow: inset 0 -2px 0 rgba(180, 35, 24, 0.35);
+}
+
+#nafb-native-layer .nafb-modal__field.is-shaking {
+  animation: nafb-shake .2s ease;
+}
+
+#nafb-native-layer .nafb-modal__ok {
+  position: sticky;
+  bottom: 0;
+}
+
+#nafb-native-layer .vs-btn,
+.nafb-cart-edit.vs-btn,
+.nafb-drawer .vs-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  border: 0;
+  border-radius: 9999px;
+  padding: 18px 28px;
+  min-height: 58px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #1e40af, #2563eb);
+  box-shadow: 0 12px 24px rgba(29, 78, 216, 0.35);
+  transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+  cursor: pointer;
+}
+
+#nafb-native-layer .vs-btn:hover,
+.nafb-cart-edit.vs-btn:hover,
+.nafb-drawer .vs-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 28px rgba(29, 78, 216, 0.4);
+}
+
+#nafb-native-layer .vs-btn:active,
+.nafb-cart-edit.vs-btn:active,
+.nafb-drawer .vs-btn:active {
+  transform: scale(0.98);
+}
+
+#nafb-native-layer .vs-btn.is-complete {
+  background: linear-gradient(135deg, #166534, #16a34a);
+  box-shadow: 0 12px 24px rgba(22, 163, 74, 0.28);
+}
+
+#nafb-native-layer .vs-btn.is-complete::before {
+  content: '✓';
+  margin-right: 8px;
+  font-weight: 700;
+}
+
+#nafb-native-layer .vs-btn.is-loading {
+  opacity: .85;
+  pointer-events: none;
+}
+
+#nafb-native-layer .vs-btn.is-loading::after {
+  content: '';
+  width: 16px;
+  height: 16px;
+  margin-left: 10px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  border-top-color: #fff;
+  animation: nafb-spin .7s linear infinite;
+}
+
+.nafb-cart-actions {
+  margin-top: 8px;
+}
+
+.nafb-toast-container {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  z-index: 10030;
+  display: grid;
+  gap: 8px;
+}
+
+.nafb-toast {
+  min-width: 180px;
+  max-width: 280px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: #fff;
+  background: rgba(15, 23, 42, 0.92);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.2);
+  transform: translateY(8px);
+  opacity: 0;
+  transition: opacity .16s ease, transform .16s ease;
+}
+
+.nafb-toast.is-show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.nafb-toast.is-success { background: rgba(22, 163, 74, 0.95); }
+.nafb-toast.is-error { background: rgba(180, 35, 24, 0.95); }
+.nafb-toast.is-hide { opacity: 0; transform: translateY(4px); }
+
+@keyframes nafb-spin { to { transform: rotate(360deg); } }
+@keyframes nafb-field-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes nafb-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  50% { transform: translateX(3px); }
+  75% { transform: translateX(-2px); }
+}
+
+@media (max-width: 768px) {
+  #nafb-native-layer .nafb-modal {
+    width: calc(100vw - 16px);
+    left: 8px;
+    right: 8px;
+    top: auto;
+    bottom: 8px;
+    transform: translateY(12px);
+    border-radius: 18px;
+    max-height: 88vh;
+    overflow: visible;
+    padding: 14px;
+  }
+
+  #nafb-native-layer .nafb-modal.is-open {
+    transform: translateY(0);
+  }
+
+  #nafb-native-layer .nafb-modal__header h4 { font-size: 26px; }
+  #nafb-native-layer .nafb-modal__subtitle { font-size: 15px; }
+  #nafb-native-layer .nafb-modal__input { min-height: 56px; font-size: 17px; }
+}
