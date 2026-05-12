@@ -3526,7 +3526,7 @@ add_action('wp_footer', function (): void {
                 contactField.value = contactEmail;
             }
 
-            form.addEventListener('submit', function(){
+            function persistExtraFields() {
                 if (!siteField) return;
                 fetch(restUrl, {
                     method: 'POST',
@@ -3553,7 +3553,15 @@ add_action('wp_footer', function (): void {
                         body: formData.toString()
                     }).catch(function(){});
                 }
-            }, { passive: true });
+            }
+
+            form.addEventListener('submit', persistExtraFields, { passive: true });
+            var saveBtn = document.getElementById('employer_profile_btn');
+            if (saveBtn) {
+                saveBtn.addEventListener('click', function () {
+                    persistExtraFields();
+                });
+            }
         }
 
         function boot() {
