@@ -25,13 +25,6 @@ if(in_array('exertio-framework/index.php', apply_filters('active_plugins', get_o
 			}
 		}
 	}
-	if ($contact_email === '' || !is_email($contact_email)) {
-		$author_email = sanitize_email((string) $user_info->user_email);
-		if ($author_email !== '' && is_email($author_email)) {
-			$contact_email = $author_email;
-			update_post_meta($emp_id, 'email_contato', $contact_email);
-		}
-	}
 
 	/*Employer ID*/
 	$current_emp_id = ($user_info->ID);

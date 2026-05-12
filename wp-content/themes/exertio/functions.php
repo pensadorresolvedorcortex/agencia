@@ -3365,7 +3365,6 @@ add_action('wp_footer', function (): void {
         $author_email = sanitize_email((string) get_the_author_meta('user_email', (int) get_post_field('post_author', $entity_id)));
         if ($author_email !== '' && is_email($author_email)) {
             $contact_email = $author_email;
-            update_post_meta($entity_id, 'email_contato', $contact_email);
         }
     }
     $phone = (string) get_post_meta($entity_id, 'telefone_contato', true);
@@ -3446,12 +3445,6 @@ add_action('wp_footer', function (): void {
                 }) || null;
             }
 
-            var emailInput = form.querySelector('input[name=\"emp_email\"]');
-            if (emailInput) {
-                emailInput.removeAttribute('disabled');
-                emailInput.removeAttribute('readonly');
-            }
-
             var twitterLabel = findLabelByText(/URL do perfil do Twitter/i);
             if (twitterLabel) {
                 twitterLabel.textContent = 'URL do perfil do X (Twitter)';
@@ -3472,7 +3465,7 @@ add_action('wp_footer', function (): void {
             form.querySelectorAll('p').forEach(function (p) {
                 var text = (p.textContent || '').trim();
                 if (/N[ãa]o [ée] poss[ií]vel alterar seu endere[çc]o de e-?mail/i.test(text)) {
-                    p.textContent = 'E-mail editável.';
+                    p.textContent = 'Este é o e-mail de cadastro/login.';
                 }
             });
 
