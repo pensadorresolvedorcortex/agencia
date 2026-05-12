@@ -3607,6 +3607,40 @@ add_action('wp_ajax_rma_save_contact_email', function () {
     update_post_meta($entity_id, 'email_contato', $contact_email);
     wp_send_json_success();
 });
+
+add_action('wp_ajax_employer_profile', function () {
+    if (!is_user_logged_in()) {
+        return;
+    }
+
+    $post_id = isset($_POST['post_id']) ? (int) $_POST['post_id'] : 0;
+    if ($post_id <= 0) {
+        return;
+    }
+
+    $author_id = (int) get_post_field('post_author', $post_id);
+    if ($author_id !== get_current_user_id()) {
+        return;
+    }
+
+    $raw_form = isset($_POST['emp_data']) ? wp_unslash((string) $_POST['emp_data']) : '';
+    if ($raw_form === '') {
+        return;
+    }
+
+    parse_str($raw_form, $parsed_form);
+    if (!is_array($parsed_form) || !array_key_exists('rma_contact_email', $parsed_form)) {
+        return;
+    }
+
+    $contact_email_raw = (string) $parsed_form['rma_contact_email'];
+    $contact_email = sanitize_email($contact_email_raw);
+    if ($contact_email_raw !== '' && !is_email($contact_email)) {
+        return;
+    }
+
+    update_post_meta($post_id, 'email_contato', $contact_email);
+}, 1);
 // Remove "Obrigado por criar com WordPress"
 add_filter('admin_footer_text', '__return_empty_string');
 
