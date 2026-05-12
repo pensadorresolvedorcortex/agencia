@@ -3361,12 +3361,6 @@ add_action('wp_footer', function (): void {
             }
         }
     }
-    if (($contact_email === '' || !is_email($contact_email)) && $is_edit_profile) {
-        $author_email = sanitize_email((string) get_the_author_meta('user_email', (int) get_post_field('post_author', $entity_id)));
-        if ($author_email !== '' && is_email($author_email)) {
-            $contact_email = $author_email;
-        }
-    }
     $phone = (string) get_post_meta($entity_id, 'telefone_contato', true);
     ?>
     <script>
