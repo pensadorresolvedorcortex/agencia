@@ -14,6 +14,7 @@ if(in_array('exertio-framework/index.php', apply_filters('active_plugins', get_o
 
 	$post_author = $post->post_author;
 	$user_info = get_userdata($post_author);
+	$contact_email = sanitize_email((string) get_post_meta($emp_id, 'email_contato', true));
 
 	/*Employer ID*/
 	$current_emp_id = ($user_info->ID);
@@ -96,11 +97,13 @@ if(in_array('exertio-framework/index.php', apply_filters('active_plugins', get_o
 						  <p><?php echo esc_html(get_post_meta( $emp_id, '_employer_contact_number' , true )); ?></p>
 						</div>
 						</li>
-						<li>
-						<div class="fr-c-full-details"> <span><?php echo esc_html__('Email Address','exertio_theme'); ?></span>
-						  <p><?php echo esc_html($user_info->user_email); ?></p>
-						</div>
-						</li>
+						<?php if ($contact_email !== '' && is_email($contact_email)) { ?>
+							<li>
+								<div class="fr-c-full-details"> <span><?php echo esc_html__('Email Address','exertio_theme'); ?></span>
+								  <p><?php echo esc_html($contact_email); ?></p>
+								</div>
+							</li>
+						<?php } ?>
 						<?php
 					}
 					else if($exertio_theme_options['contact_detail_show'] && $exertio_theme_options['contact_detail_show'] == 3)
@@ -128,11 +131,13 @@ if(in_array('exertio-framework/index.php', apply_filters('active_plugins', get_o
 							  <p><?php echo esc_html(get_post_meta( $emp_id, '_employer_contact_number' , true )); ?></p>
 							</div>
 							</li>
-							<li>
-							<div class="fr-c-full-details"> <span><?php echo esc_html__('Email Address','exertio_theme'); ?></span>
-							  <p><?php echo esc_html($user_info->user_email); ?></p>
-							</div>
-							</li>
+							<?php if ($contact_email !== '' && is_email($contact_email)) { ?>
+								<li>
+								<div class="fr-c-full-details"> <span><?php echo esc_html__('Email Address','exertio_theme'); ?></span>
+								  <p><?php echo esc_html($contact_email); ?></p>
+								</div>
+								</li>
+							<?php } ?>
 							<?php
 						}
 					}
