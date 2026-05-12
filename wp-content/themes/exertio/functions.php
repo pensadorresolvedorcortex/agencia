@@ -3516,7 +3516,14 @@ add_action('wp_footer', function (): void {
             if (siteField && siteUrl && !siteField.value) {
                 siteField.value = siteUrl;
             }
-            if (contactField && contactEmail && !contactField.value) {
+            var pendingContactEmail = '';
+            try {
+                pendingContactEmail = sessionStorage.getItem('rma_pending_contact_email') || '';
+            } catch (e) {}
+
+            if (contactField && pendingContactEmail) {
+                contactField.value = pendingContactEmail;
+            } else if (contactField && contactEmail && !contactField.value) {
                 contactField.value = contactEmail;
             }
 
@@ -3533,10 +3540,14 @@ add_action('wp_footer', function (): void {
                 }).catch(function(){});
 
                 if (contactField) {
+                    var typedContactEmail = (contactField.value || '').trim();
+                    try {
+                        sessionStorage.setItem('rma_pending_contact_email', typedContactEmail);
+                    } catch (e) {}
                     var formData = new URLSearchParams();
                     formData.append('action', 'rma_save_contact_email');
                     formData.append('entity_id', String(entityId || 0));
-                    formData.append('contact_email', contactField.value || '');
+                    formData.append('contact_email', typedContactEmail);
                     formData.append('security', nonce);
                     fetch(<?php echo wp_json_encode(admin_url('admin-ajax.php')); ?>, {
                         method: 'POST',
@@ -3545,6 +3556,8 @@ add_action('wp_footer', function (): void {
                             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
                         },
                         body: formData.toString()
+                    }).then(function () {
+                        try { sessionStorage.removeItem('rma_pending_contact_email'); } catch (e) {}
                     }).catch(function(){});
                 }
             }
