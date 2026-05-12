@@ -3351,6 +3351,23 @@ add_action('wp_footer', function (): void {
 
     $site_url = esc_url_raw((string) get_post_meta($entity_id, 'rma_site_url', true));
     $contact_email = sanitize_email((string) get_post_meta($entity_id, 'email_contato', true));
+    if ($contact_email === '' || !is_email($contact_email)) {
+        $fallback_keys = array('contact_email', 'employer_contact_email', 'institutional_email', 'company_email');
+        foreach ($fallback_keys as $fallback_key) {
+            $candidate = sanitize_email((string) get_post_meta($entity_id, $fallback_key, true));
+            if ($candidate !== '' && is_email($candidate)) {
+                $contact_email = $candidate;
+                break;
+            }
+        }
+    }
+    if (($contact_email === '' || !is_email($contact_email)) && $is_edit_profile) {
+        $author_email = sanitize_email((string) get_the_author_meta('user_email', (int) get_post_field('post_author', $entity_id)));
+        if ($author_email !== '' && is_email($author_email)) {
+            $contact_email = $author_email;
+            update_post_meta($entity_id, 'email_contato', $contact_email);
+        }
+    }
     $phone = (string) get_post_meta($entity_id, 'telefone_contato', true);
     ?>
     <script>
@@ -3494,15 +3511,19 @@ add_action('wp_footer', function (): void {
 
             var contactField = form.querySelector('input[name=\"rma_contact_email\"]');
             if (!contactField && siteField) {
-                var siteCol = siteField.closest('.col-md-6,.col-sm-12,.form-group');
-                var siteRow = siteCol ? siteCol.parentElement : null;
-                if (siteRow && siteRow.classList.contains('row')) {
-                    var contactCol = document.createElement('div');
-                    contactCol.className = 'col-md-6 col-sm-12';
-                    contactCol.innerHTML = '<div class=\"form-group\"><label>E-mail de contato</label><input type=\"email\" name=\"rma_contact_email\" class=\"form-control\" placeholder=\"contato@entidade.org.br\"></div>';
-                    siteRow.appendChild(contactCol);
-                    contactField = contactCol.querySelector('input[name=\"rma_contact_email\"]');
+                var siteCol = siteField.closest('.col-md-6,.col-sm-12');
+                var contactCol = document.createElement('div');
+                contactCol.className = 'col-md-6 col-sm-12';
+                contactCol.innerHTML = '<div class=\"form-group\"><label>E-mail de contato</label><input type=\"email\" name=\"rma_contact_email\" class=\"form-control\" placeholder=\"contato@entidade.org.br\"></div>';
+                if (siteCol && siteCol.parentElement) {
+                    siteCol.insertAdjacentElement('afterend', contactCol);
+                } else {
+                    var siteGroup = siteField.closest('.form-group');
+                    if (siteGroup && siteGroup.parentElement) {
+                        siteGroup.parentElement.appendChild(contactCol);
+                    }
                 }
+                contactField = contactCol.querySelector('input[name=\"rma_contact_email\"]');
             }
 
             if (siteField && siteUrl && !siteField.value) {
