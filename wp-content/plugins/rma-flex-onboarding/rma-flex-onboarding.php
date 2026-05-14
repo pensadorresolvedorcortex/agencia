@@ -208,11 +208,16 @@ final class RMA_Flex_Onboarding {
         $account_path = (string) wp_parse_url($account_url, PHP_URL_PATH);
 
         $is_logo_redirect = strpos($location, 'rma_logo_required=1') !== false;
+        $is_assisted_dashboard_skip = strpos($location, 'rma_assisted_skip=1') !== false;
         $dashboard_path = untrailingslashit((string) wp_parse_url(home_url('/dashboard/'), PHP_URL_PATH));
         $is_dashboard_target = $dashboard_path !== '' && untrailingslashit($target_path) === $dashboard_path;
 
         if ($is_logo_redirect) {
             return false;
+        }
+
+        if ($is_assisted_dashboard_skip) {
+            return $location;
         }
 
         if ($is_dashboard_target && is_user_logged_in()) {
@@ -558,6 +563,7 @@ final class RMA_Flex_Onboarding {
         $request_uri = isset($_SERVER['REQUEST_URI']) ? (string) wp_unslash($_SERVER['REQUEST_URI']) : '';
         $request_path = (string) wp_parse_url($request_uri, PHP_URL_PATH);
         $allowed_paths = [
+            (string) wp_parse_url(home_url('/conta/'), PHP_URL_PATH),
             (string) wp_parse_url(home_url('/conta-da-entidade/'), PHP_URL_PATH),
             (string) wp_parse_url(home_url('/dashboard/'), PHP_URL_PATH),
             (string) wp_parse_url(home_url('/employer/'), PHP_URL_PATH),
