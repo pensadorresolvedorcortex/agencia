@@ -286,9 +286,7 @@ final class RMA_Flex_Onboarding {
         }
 
         $notice = isset($_GET['rma_notice']) ? sanitize_key((string) wp_unslash($_GET['rma_notice'])) : '';
-        $step = isset($_GET['rma_step']) ? sanitize_key((string) wp_unslash($_GET['rma_step'])) : '';
-
-        if ($notice !== 'entity-created' && $step !== 'setup') {
+        if ($notice !== 'entity-created') {
             return;
         }
 
@@ -583,7 +581,7 @@ final class RMA_Flex_Onboarding {
                 var restBase = <?php echo wp_json_encode(rest_url('rma-flex/v1/profile-site')); ?>;
                 var dashboardShortcut = <?php echo wp_json_encode(add_query_arg('rma_assisted_skip', '1', home_url('/dashboard/'))); ?>;
                 var params = new URLSearchParams(window.location.search || '');
-                if (params.get('rma_notice') === 'entity-created' || params.get('rma_step') === 'setup') {
+                if (params.get('rma_notice') === 'entity-created') {
                     window.location.replace(dashboardShortcut);
                     return;
                 }
