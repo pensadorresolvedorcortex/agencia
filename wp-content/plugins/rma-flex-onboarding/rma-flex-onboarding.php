@@ -230,18 +230,15 @@ final class RMA_Flex_Onboarding {
 
 
     private static function resolve_resume_url_for_user(int $user_id): string {
-        if ($user_id > 0 && function_exists('rma_get_onboarding_resume_url')) {
-            $resume = (string) rma_get_onboarding_resume_url($user_id);
-            if ($resume !== '') {
-                return $resume;
-            }
+        if (function_exists('rma_build_onboarding_step_url')) {
+            return (string) rma_build_onboarding_step_url('setup');
         }
 
         if (function_exists('rma_account_setup_url')) {
-            return (string) rma_account_setup_url();
+            return add_query_arg('rma_step', 'setup', (string) rma_account_setup_url());
         }
 
-        return (string) home_url('/conta/');
+        return add_query_arg('rma_step', 'setup', (string) home_url('/conta/'));
     }
 
     public static function force_registration_redirect_to_setup(string $redirect_to): string {
@@ -257,11 +254,7 @@ final class RMA_Flex_Onboarding {
             return $redirect_to;
         }
 
-        if (self::find_entity_id_for_user((int) $user->ID) > 0) {
-            return $redirect_to;
-        }
-
-        return self::resolve_resume_url_for_user(get_current_user_id());
+        return self::resolve_resume_url_for_user((int) $user->ID);
     }
 
     public static function filter_checkout_success_redirect(string $order_received_url, $order): string {
