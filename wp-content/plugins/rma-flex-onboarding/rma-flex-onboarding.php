@@ -17,7 +17,8 @@ final class RMA_Flex_Onboarding {
     public static function init(): void {
         add_action('init', [__CLASS__, 'migrate_wrong_theme_directory'], 1);
         add_action('admin_init', [__CLASS__, 'register_setting']);
-                add_action('rest_api_init', [__CLASS__, 'register_rest_routes']);
+        add_action('wp', [__CLASS__, 'maybe_disable_theme_dashboard_lock'], 1);
+        add_action('rest_api_init', [__CLASS__, 'register_rest_routes']);
 
         add_filter('wp_redirect', [__CLASS__, 'filter_redirects'], 999, 2);
         add_filter('registration_redirect', [__CLASS__, 'force_registration_redirect_to_setup'], 20, 1);
@@ -25,6 +26,7 @@ final class RMA_Flex_Onboarding {
         add_filter('rest_pre_dispatch', [__CLASS__, 'intercept_rest_routes'], 10, 3);
         add_filter('woocommerce_get_checkout_order_received_url', [__CLASS__, 'filter_checkout_success_redirect'], 10, 2);
         add_action('template_redirect', [__CLASS__, 'maybe_shortcut_entity_created_to_dashboard'], 0);
+        add_action('template_redirect', [__CLASS__, 'mark_assisted_dashboard_mode'], 0);
         add_action('template_redirect', [__CLASS__, 'force_resume_from_dashboard'], 0);
         add_action('template_redirect', [__CLASS__, 'force_dashboard_after_checkout_finish'], 1);
 
@@ -100,6 +102,30 @@ final class RMA_Flex_Onboarding {
                     remove_action('template_redirect', $fn, (int) $priority);
                 }
             }
+        }
+    }
+
+    public static function maybe_disable_theme_dashboard_lock(): void {
+        if (! self::is_enabled() || ! is_user_logged_in()) {
+            return;
+        }
+
+        $mode = (string) get_user_meta(get_current_user_id(), 'rma_flex_dashboard_mode', true);
+        if ($mode !== '1') {
+            return;
+        }
+
+        self::disable_theme_onboarding_redirect_hooks();
+    }
+
+    public static function mark_assisted_dashboard_mode(): void {
+        if (! self::is_enabled() || ! is_user_logged_in()) {
+            return;
+        }
+
+        $assisted_skip = isset($_GET['rma_assisted_skip']) ? sanitize_key((string) wp_unslash($_GET['rma_assisted_skip'])) : '';
+        if ($assisted_skip === '1') {
+            update_user_meta(get_current_user_id(), 'rma_flex_dashboard_mode', '1');
         }
     }
 
