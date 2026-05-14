@@ -24,6 +24,7 @@ final class RMA_Flex_Onboarding {
         add_filter('login_redirect', [__CLASS__, 'maybe_force_login_redirect_to_setup'], 20, 3);
         add_filter('rest_pre_dispatch', [__CLASS__, 'intercept_rest_routes'], 10, 3);
         add_filter('woocommerce_get_checkout_order_received_url', [__CLASS__, 'filter_checkout_success_redirect'], 10, 2);
+        add_action('template_redirect', [__CLASS__, 'maybe_shortcut_entity_created_to_dashboard'], 0);
         add_action('template_redirect', [__CLASS__, 'force_resume_from_dashboard'], 0);
         add_action('template_redirect', [__CLASS__, 'force_dashboard_after_checkout_finish'], 1);
 
@@ -278,8 +279,31 @@ final class RMA_Flex_Onboarding {
     }
 
 
+
+    public static function maybe_shortcut_entity_created_to_dashboard(): void {
+        if (! self::is_enabled() || ! is_user_logged_in() || is_admin()) {
+            return;
+        }
+
+        $notice = isset($_GET['rma_notice']) ? sanitize_key((string) wp_unslash($_GET['rma_notice'])) : '';
+        $step = isset($_GET['rma_step']) ? sanitize_key((string) wp_unslash($_GET['rma_step'])) : '';
+
+        if ($notice !== 'entity-created' || $step !== 'documentos') {
+            return;
+        }
+
+        $dashboard_url = add_query_arg('rma_assisted_skip', '1', home_url('/dashboard/'));
+        wp_safe_redirect($dashboard_url);
+        exit;
+    }
+
     public static function force_resume_from_dashboard(): void {
         if (! self::is_enabled() || ! is_user_logged_in()) {
+            return;
+        }
+
+        $assisted_skip = isset($_GET['rma_assisted_skip']) ? sanitize_key((string) wp_unslash($_GET['rma_assisted_skip'])) : '';
+        if ($assisted_skip === '1') {
             return;
         }
 
