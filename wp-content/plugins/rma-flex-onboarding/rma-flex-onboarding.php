@@ -24,6 +24,7 @@ final class RMA_Flex_Onboarding {
         add_filter('login_redirect', [__CLASS__, 'maybe_force_login_redirect_to_setup'], 20, 3);
         add_filter('rest_pre_dispatch', [__CLASS__, 'intercept_rest_routes'], 10, 3);
         add_filter('woocommerce_get_checkout_order_received_url', [__CLASS__, 'filter_checkout_success_redirect'], 10, 2);
+        add_action('template_redirect', [__CLASS__, 'force_resume_from_dashboard'], 0);
         add_action('template_redirect', [__CLASS__, 'force_dashboard_after_checkout_finish'], 1);
 
         add_action('wp_footer', [__CLASS__, 'inject_frontend_relaxations'], 999);
@@ -283,6 +284,28 @@ final class RMA_Flex_Onboarding {
             'rma_checkout_done' => '1',
             'rma_order_id' => $order_id > 0 ? $order_id : '',
         ], home_url('/dashboard/'));
+    }
+
+
+    public static function force_resume_from_dashboard(): void {
+        if (! self::is_enabled() || ! is_user_logged_in()) {
+            return;
+        }
+
+        $request_uri = isset($_SERVER['REQUEST_URI']) ? (string) wp_unslash($_SERVER['REQUEST_URI']) : '';
+        $request_path = untrailingslashit((string) wp_parse_url($request_uri, PHP_URL_PATH));
+        $dashboard_path = untrailingslashit((string) wp_parse_url(home_url('/dashboard/'), PHP_URL_PATH));
+
+        if ($request_path === '' || $dashboard_path === '' || $request_path !== $dashboard_path) {
+            return;
+        }
+
+        $resume_url = self::resolve_resume_url_for_user(get_current_user_id());
+        $resume_path = untrailingslashit((string) wp_parse_url($resume_url, PHP_URL_PATH));
+        if ($resume_url !== '' && $resume_path !== '' && $resume_path !== $dashboard_path) {
+            wp_safe_redirect($resume_url);
+            exit;
+        }
     }
 
     public static function force_dashboard_after_checkout_finish(): void {
