@@ -208,21 +208,47 @@ final class RMA_Flex_Onboarding {
         $is_logo_redirect = strpos($location, 'rma_logo_required=1') !== false;
         $is_account_lock = $account_path !== '' && untrailingslashit($target_path) === untrailingslashit($account_path);
         $is_auth_path = in_array(untrailingslashit($current_path), [untrailingslashit('/login'), untrailingslashit('/register'), untrailingslashit('/wp-login.php')], true);
+        $dashboard_path = untrailingslashit((string) wp_parse_url(home_url('/dashboard/'), PHP_URL_PATH));
+        $is_dashboard_target = $dashboard_path !== '' && untrailingslashit($target_path) === $dashboard_path;
 
         if ($is_logo_redirect || ($is_account_lock && ! $is_auth_path)) {
             return false;
+        }
+
+        if ($is_dashboard_target && is_user_logged_in()) {
+            $resume = self::resolve_resume_url_for_user(get_current_user_id());
+            $resume_path = (string) wp_parse_url($resume, PHP_URL_PATH);
+            if ($resume !== '' && untrailingslashit($resume_path) !== $dashboard_path) {
+                return $resume;
+            }
         }
 
         return $location;
     }
 
 
+
+    private static function resolve_resume_url_for_user(int $user_id): string {
+        if ($user_id > 0 && function_exists('rma_get_onboarding_resume_url')) {
+            $resume = (string) rma_get_onboarding_resume_url($user_id);
+            if ($resume !== '') {
+                return $resume;
+            }
+        }
+
+        if (function_exists('rma_account_setup_url')) {
+            return (string) rma_account_setup_url();
+        }
+
+        return (string) home_url('/conta/');
+    }
+
     public static function force_registration_redirect_to_setup(string $redirect_to): string {
         if (! self::is_enabled()) {
             return $redirect_to;
         }
 
-        return (string) (function_exists('rma_account_setup_url') ? rma_account_setup_url() : home_url('/conta-da-entidade/'));
+        return self::resolve_resume_url_for_user(get_current_user_id());
     }
 
     public static function maybe_force_login_redirect_to_setup(string $redirect_to, string $requested_redirect_to, $user): string {
@@ -234,7 +260,7 @@ final class RMA_Flex_Onboarding {
             return $redirect_to;
         }
 
-        return (string) (function_exists('rma_account_setup_url') ? rma_account_setup_url() : home_url('/conta-da-entidade/'));
+        return self::resolve_resume_url_for_user(get_current_user_id());
     }
 
     public static function filter_checkout_success_redirect(string $order_received_url, $order): string {
