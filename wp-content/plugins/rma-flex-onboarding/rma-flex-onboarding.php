@@ -94,11 +94,9 @@ final class RMA_Flex_Onboarding {
                 }
 
                 $file = (string) $ref->getFileName();
-                $line = (int) $ref->getStartLine();
                 $is_theme_functions = $file !== '' && substr(str_replace('\\', '/', $file), -strlen('/themes/exertio/functions.php')) === '/themes/exertio/functions.php';
-                $is_rma_block_redirect_closure = $line >= 3021 && $line <= 3180;
 
-                if ($is_theme_functions && $is_rma_block_redirect_closure) {
+                if ($is_theme_functions) {
                     remove_action('template_redirect', $fn, (int) $priority);
                 }
             }
