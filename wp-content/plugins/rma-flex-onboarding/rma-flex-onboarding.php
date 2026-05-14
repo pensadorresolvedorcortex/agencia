@@ -207,12 +207,10 @@ final class RMA_Flex_Onboarding {
         $account_path = (string) wp_parse_url($account_url, PHP_URL_PATH);
 
         $is_logo_redirect = strpos($location, 'rma_logo_required=1') !== false;
-        $is_account_lock = $account_path !== '' && untrailingslashit($target_path) === untrailingslashit($account_path);
-        $is_auth_path = in_array(untrailingslashit($current_path), [untrailingslashit('/login'), untrailingslashit('/register'), untrailingslashit('/wp-login.php')], true);
         $dashboard_path = untrailingslashit((string) wp_parse_url(home_url('/dashboard/'), PHP_URL_PATH));
         $is_dashboard_target = $dashboard_path !== '' && untrailingslashit($target_path) === $dashboard_path;
 
-        if ($is_logo_redirect || ($is_account_lock && ! $is_auth_path)) {
+        if ($is_logo_redirect) {
             return false;
         }
 
