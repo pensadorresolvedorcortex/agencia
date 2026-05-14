@@ -286,9 +286,11 @@ final class RMA_Flex_Onboarding {
         }
 
         $notice = isset($_GET['rma_notice']) ? sanitize_key((string) wp_unslash($_GET['rma_notice'])) : '';
-        $step = isset($_GET['rma_step']) ? sanitize_key((string) wp_unslash($_GET['rma_step'])) : '';
+        $request_uri = isset($_SERVER['REQUEST_URI']) ? (string) wp_unslash($_SERVER['REQUEST_URI']) : '';
+        $request_path = untrailingslashit((string) wp_parse_url($request_uri, PHP_URL_PATH));
+        $account_path = untrailingslashit((string) (function_exists('rma_account_setup_path') ? rma_account_setup_path() : wp_parse_url(home_url('/conta/'), PHP_URL_PATH)));
 
-        if ($notice !== 'entity-created' || $step !== 'documentos') {
+        if ($notice !== 'entity-created' || $request_path === '' || $account_path === '' || $request_path !== $account_path) {
             return;
         }
 
@@ -583,7 +585,7 @@ final class RMA_Flex_Onboarding {
                 var restBase = <?php echo wp_json_encode(rest_url('rma-flex/v1/profile-site')); ?>;
                 var dashboardShortcut = <?php echo wp_json_encode(add_query_arg('rma_assisted_skip', '1', home_url('/dashboard/'))); ?>;
                 var params = new URLSearchParams(window.location.search || '');
-                if (params.get('rma_notice') === 'entity-created' && params.get('rma_step') === 'documentos') {
+                if (params.get('rma_notice') === 'entity-created' && /\/conta\/?$/.test(window.location.pathname || '')) {
                     window.location.replace(dashboardShortcut);
                     return;
                 }
