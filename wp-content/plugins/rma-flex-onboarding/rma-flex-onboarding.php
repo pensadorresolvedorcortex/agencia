@@ -17,10 +17,11 @@ final class RMA_Flex_Onboarding {
     public static function init(): void {
         add_action('init', [__CLASS__, 'migrate_wrong_theme_directory'], 1);
         add_action('admin_init', [__CLASS__, 'register_setting']);
-        add_action('wp', [__CLASS__, 'disable_theme_onboarding_redirect_hooks'], 1);
-        add_action('rest_api_init', [__CLASS__, 'register_rest_routes']);
+                add_action('rest_api_init', [__CLASS__, 'register_rest_routes']);
 
         add_filter('wp_redirect', [__CLASS__, 'filter_redirects'], 999, 2);
+        add_filter('registration_redirect', [__CLASS__, 'force_registration_redirect_to_setup'], 20, 1);
+        add_filter('login_redirect', [__CLASS__, 'maybe_force_login_redirect_to_setup'], 20, 3);
         add_filter('rest_pre_dispatch', [__CLASS__, 'intercept_rest_routes'], 10, 3);
         add_filter('woocommerce_get_checkout_order_received_url', [__CLASS__, 'filter_checkout_success_redirect'], 10, 2);
         add_action('template_redirect', [__CLASS__, 'force_dashboard_after_checkout_finish'], 1);
@@ -213,6 +214,27 @@ final class RMA_Flex_Onboarding {
         }
 
         return $location;
+    }
+
+
+    public static function force_registration_redirect_to_setup(string $redirect_to): string {
+        if (! self::is_enabled()) {
+            return $redirect_to;
+        }
+
+        return (string) (function_exists('rma_account_setup_url') ? rma_account_setup_url() : home_url('/conta-da-entidade/'));
+    }
+
+    public static function maybe_force_login_redirect_to_setup(string $redirect_to, string $requested_redirect_to, $user): string {
+        if (! self::is_enabled() || ! ($user instanceof WP_User)) {
+            return $redirect_to;
+        }
+
+        if (self::find_entity_id_for_user((int) $user->ID) > 0) {
+            return $redirect_to;
+        }
+
+        return (string) (function_exists('rma_account_setup_url') ? rma_account_setup_url() : home_url('/conta-da-entidade/'));
     }
 
     public static function filter_checkout_success_redirect(string $order_received_url, $order): string {
