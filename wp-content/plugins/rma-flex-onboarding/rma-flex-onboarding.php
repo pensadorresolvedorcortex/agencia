@@ -825,6 +825,7 @@ final class RMA_Flex_Onboarding {
                 (function enhanceDashboardDocumentUpload() {
                     var path = window.location.pathname || '';
                     if (path.indexOf('/dashboard') === -1) return;
+                    var ext = (new URLSearchParams(window.location.search || '')).get('ext') || '';
 
                     var docMap = [
                         ['ficha_inscricao', 'Ficha de inscrição cadastral'],
@@ -862,6 +863,39 @@ final class RMA_Flex_Onboarding {
                         if (!select.value) {
                             select.required = true;
                         }
+                    });
+
+                    if (ext !== 'rma-governanca-upload') return;
+
+                    var docHints = [
+                        'Ficha de inscrição cadastral',
+                        'Comprovante de CNPJ',
+                        'Ata de fundação',
+                        'Ata da diretoria atual',
+                        'Estatuto e alterações',
+                        'Relatório de atividades',
+                        '2 cartas de recomendação'
+                    ];
+
+                    var fileInputs = Array.prototype.slice.call(document.querySelectorAll('input[type=\"file\"]'));
+                    if (!fileInputs.length) return;
+
+                    fileInputs.forEach(function (input, idx) {
+                        if (idx >= docHints.length) return;
+                        if (input.dataset.rmaDocHintApplied === '1') return;
+
+                        var wrapper = input.closest('.form-group,.rma-drop-item,.rma-dropzone,li,div') || input.parentElement;
+                        if (!wrapper) return;
+
+                        var hint = document.createElement('p');
+                        hint.className = 'rma-doc-type-hint';
+                        hint.style.margin = '0 0 6px';
+                        hint.style.fontWeight = '600';
+                        hint.style.color = '#334155';
+                        hint.textContent = 'Tipo de documento: ' + docHints[idx];
+
+                        wrapper.insertBefore(hint, input);
+                        input.dataset.rmaDocHintApplied = '1';
                     });
                 })();
             } catch (e) {}
