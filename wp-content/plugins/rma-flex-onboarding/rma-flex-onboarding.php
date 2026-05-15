@@ -821,6 +821,49 @@ final class RMA_Flex_Onboarding {
                     })
                     .catch(function () {});
                 })();
+
+                (function enhanceDashboardDocumentUpload() {
+                    var path = window.location.pathname || '';
+                    if (path.indexOf('/dashboard') === -1) return;
+
+                    var docMap = [
+                        ['ficha_inscricao', 'Ficha de inscrição cadastral'],
+                        ['comprovante_cnpj', 'Comprovante de CNPJ'],
+                        ['ata_fundacao', 'Ata de fundação'],
+                        ['ata_diretoria', 'Ata da diretoria atual'],
+                        ['estatuto', 'Estatuto e alterações'],
+                        ['relatorio_atividades', 'Relatório de atividades'],
+                        ['cartas_recomendacao', '2 cartas de recomendação']
+                    ];
+
+                    var docTypeSelects = document.querySelectorAll('select[name*=\"document_type\"],select[id*=\"document_type\"]');
+                    if (!docTypeSelects.length) return;
+
+                    docTypeSelects.forEach(function (select) {
+                        var currentValue = select.value || '';
+                        select.innerHTML = '';
+
+                        var placeholder = document.createElement('option');
+                        placeholder.value = '';
+                        placeholder.textContent = 'Selecione o tipo de documento';
+                        select.appendChild(placeholder);
+
+                        docMap.forEach(function (doc) {
+                            var opt = document.createElement('option');
+                            opt.value = doc[0];
+                            opt.textContent = doc[1];
+                            select.appendChild(opt);
+                        });
+
+                        if (currentValue) {
+                            select.value = currentValue;
+                        }
+
+                        if (!select.value) {
+                            select.required = true;
+                        }
+                    });
+                })();
             } catch (e) {}
         })();
         </script>
