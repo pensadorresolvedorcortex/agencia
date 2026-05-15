@@ -838,32 +838,32 @@ final class RMA_Flex_Onboarding {
                     ];
 
                     var docTypeSelects = document.querySelectorAll('select[name*=\"document_type\"],select[id*=\"document_type\"]');
-                    if (!docTypeSelects.length) return;
+                    if (docTypeSelects.length) {
+                        docTypeSelects.forEach(function (select) {
+                            var currentValue = select.value || '';
+                            select.innerHTML = '';
 
-                    docTypeSelects.forEach(function (select) {
-                        var currentValue = select.value || '';
-                        select.innerHTML = '';
+                            var placeholder = document.createElement('option');
+                            placeholder.value = '';
+                            placeholder.textContent = 'Selecione o tipo de documento';
+                            select.appendChild(placeholder);
 
-                        var placeholder = document.createElement('option');
-                        placeholder.value = '';
-                        placeholder.textContent = 'Selecione o tipo de documento';
-                        select.appendChild(placeholder);
+                            docMap.forEach(function (doc) {
+                                var opt = document.createElement('option');
+                                opt.value = doc[0];
+                                opt.textContent = doc[1];
+                                select.appendChild(opt);
+                            });
 
-                        docMap.forEach(function (doc) {
-                            var opt = document.createElement('option');
-                            opt.value = doc[0];
-                            opt.textContent = doc[1];
-                            select.appendChild(opt);
+                            if (currentValue) {
+                                select.value = currentValue;
+                            }
+
+                            if (!select.value) {
+                                select.required = true;
+                            }
                         });
-
-                        if (currentValue) {
-                            select.value = currentValue;
-                        }
-
-                        if (!select.value) {
-                            select.required = true;
-                        }
-                    });
+                    }
 
                     if (ext !== 'rma-governanca-upload') return;
 
