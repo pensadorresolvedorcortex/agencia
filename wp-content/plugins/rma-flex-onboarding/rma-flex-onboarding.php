@@ -877,26 +877,32 @@ final class RMA_Flex_Onboarding {
                         '2 cartas de recomendação'
                     ];
 
-                    var fileInputs = Array.prototype.slice.call(document.querySelectorAll('input[type=\"file\"]'));
-                    if (!fileInputs.length) return;
+                    function applyGovernanceHints() {
+                        var fileInputs = Array.prototype.slice.call(document.querySelectorAll('input[type=\"file\"]'));
+                        if (!fileInputs.length) return;
 
-                    fileInputs.forEach(function (input, idx) {
-                        if (idx >= docHints.length) return;
-                        if (input.dataset.rmaDocHintApplied === '1') return;
+                        fileInputs.forEach(function (input, idx) {
+                            if (idx >= docHints.length) return;
+                            if (input.dataset.rmaDocHintApplied === '1') return;
 
-                        var wrapper = input.closest('.form-group,.rma-drop-item,.rma-dropzone,li,div') || input.parentElement;
-                        if (!wrapper) return;
+                            var wrapper = input.closest('.form-group,.rma-drop-item,.rma-dropzone,.upload-btn-wrapper,li,div') || input.parentElement;
+                            if (!wrapper) return;
 
-                        var hint = document.createElement('p');
-                        hint.className = 'rma-doc-type-hint';
-                        hint.style.margin = '0 0 6px';
-                        hint.style.fontWeight = '600';
-                        hint.style.color = '#334155';
-                        hint.textContent = 'Tipo de documento: ' + docHints[idx];
+                            var hint = document.createElement('p');
+                            hint.className = 'rma-doc-type-hint';
+                            hint.style.margin = '0 0 6px';
+                            hint.style.fontWeight = '600';
+                            hint.style.color = '#334155';
+                            hint.textContent = 'Tipo de documento: ' + docHints[idx];
 
-                        wrapper.insertBefore(hint, input);
-                        input.dataset.rmaDocHintApplied = '1';
-                    });
+                            wrapper.insertBefore(hint, wrapper.firstChild);
+                            input.dataset.rmaDocHintApplied = '1';
+                        });
+                    }
+
+                    applyGovernanceHints();
+                    var observer = new MutationObserver(function () { applyGovernanceHints(); });
+                    observer.observe(document.body, { childList: true, subtree: true });
                 })();
             } catch (e) {}
         })();
