@@ -877,6 +877,23 @@ final class RMA_Flex_Onboarding {
                         '2 cartas de recomendação'
                     ];
 
+                    (function ensureGovernanceLegend() {
+                        if (document.getElementById('rma-governanca-legend')) return;
+                        var host = document.querySelector('form, .main-page, .dashboard-cont-wrapper, .content-wrapper, .container');
+                        if (!host) return;
+                        var box = document.createElement('div');
+                        box.id = 'rma-governanca-legend';
+                        box.style.border = '1px solid #dbe3ea';
+                        box.style.borderRadius = '10px';
+                        box.style.padding = '10px 12px';
+                        box.style.margin = '0 0 12px';
+                        box.style.background = '#f8fbff';
+                        box.innerHTML = '<strong style="display:block;margin-bottom:6px;">Tipos de documentos para upload</strong><ol style="margin:0 0 0 18px;padding:0;">'
+                            + docHints.map(function (d) { return '<li style="margin:2px 0;">' + d + '</li>'; }).join('')
+                            + '</ol>';
+                        host.insertBefore(box, host.firstChild);
+                    })();
+
                     function applyGovernanceHints() {
                         var fileInputs = Array.prototype.slice.call(document.querySelectorAll('input[type=\"file\"]'));
                         if (!fileInputs.length) return;
@@ -897,6 +914,12 @@ final class RMA_Flex_Onboarding {
 
                             wrapper.insertBefore(hint, wrapper.firstChild);
                             input.dataset.rmaDocHintApplied = '1';
+
+                            var btn = wrapper.querySelector('button, .button, .btn');
+                            if (btn && !btn.dataset.rmaDocBtnApplied) {
+                                btn.dataset.rmaDocBtnApplied = '1';
+                                btn.textContent = 'Enviar: ' + docHints[idx];
+                            }
                         });
                     }
 
