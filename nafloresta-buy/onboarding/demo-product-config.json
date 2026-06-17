@@ -1,0 +1,19 @@
+{
+  "enabled": true,
+  "builder_mode": "matrix",
+  "ui_mode": "drawer",
+  "variation_ids": [
+    111,
+    222,
+    333
+  ],
+  "fields_schema": [
+    {
+      "id": "student_names",
+      "type": "repeater",
+      "label": "Nome dos alunos",
+      "required": true,
+      "options": []
+    }
+  ]
+}
