@@ -1,14 +1,12 @@
 # Auditoria solicitada para o plugin Resenha Sagrada Bolão
 
-Não foi possível aplicar a atualização diretamente porque o arquivo solicitado `resenha-sagrada-bolao.zip` não está presente no checkout atual deste repositório. O branch atual contém apenas:
+A URL correta indicada é `https://github.com/DheniellGuimaraes/agencia/blob/main/resenha-sagrada-bolao.zip`. A página pública do GitHub confirma que o arquivo `resenha-sagrada-bolao.zip` existe no branch `main` e possui 323 KB.
 
-- `wp-content.zip`
-- `mudar.png`
-- `mudar2.png`
+## Bloqueio do checkout atual
 
-Também foi tentado obter o ZIP pela URL pública indicada, mas o ambiente retornou bloqueio HTTP 403 no proxy para GitHub/Raw GitHub.
+O checkout local disponível para edição ainda não contém `resenha-sagrada-bolao.zip`; ele contém apenas os artefatos anteriores do branch local. Também não foi possível sincronizar/baixar o arquivo diretamente por `git fetch`, `curl` ou GitHub Raw no terminal porque o proxy do ambiente retornou HTTP 403 para GitHub.
 
-## Pontos preservados
+## Pontos que permanecem preservados neste branch
 
 - Nenhuma alteração foi feita em lógica de banco de dados.
 - Nenhuma alteração foi feita em pontuação de palpites.
@@ -16,13 +14,13 @@ Também foi tentado obter o ZIP pela URL pública indicada, mas o ambiente retor
 - Nenhuma alteração visual foi aplicada.
 - Nenhum arquivo binário incompatível foi gerado.
 
-## Jogos informados para atualização pendente
+## Jogos informados para atualização pendente no ZIP correto
 
 - Quinta-feira, 9 de julho de 2026, 17h — França x Marrocos
 - Sexta-feira, 10 de julho de 2026, 16h — Espanha x Bélgica
 - Sábado, 11 de julho de 2026, 18h — Noruega x Inglaterra
 - Sábado, 11 de julho de 2026, 22h — Argentina x Suíça
 
-## Próximo passo necessário
+## Observação de segurança
 
-Adicionar o arquivo `resenha-sagrada-bolao.zip` ao checkout ou disponibilizar o conteúdo extraído do plugin para que a atualização seja feita mantendo a forma atual de inserção das seleções e apenas anexando as bandeiras aos confrontos indicados.
+Não gerei um ZIP substituto nem alterei outro plugin, porque isso poderia quebrar o bolão em produção e violar a regra de preservar pontuações e a forma atual de inserção das seleções. Para aplicar a mudança com segurança, o arquivo `resenha-sagrada-bolao.zip` precisa estar presente no checkout local ou o ambiente precisa permitir a sincronização com o `main` remoto.
