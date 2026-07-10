@@ -18,6 +18,7 @@ if (! class_exists('RSB_Bolao_Admin_Relatorios')) {
         public static function init()
         {
             add_action('admin_menu', array(__CLASS__, 'register_menu'));
+            add_action('network_admin_menu', array(__CLASS__, 'register_menu'));
             add_action('admin_post_rsb_relatorio_partida_pdf', array(__CLASS__, 'render_pdf_view'));
         }
 
@@ -30,7 +31,7 @@ if (! class_exists('RSB_Bolao_Admin_Relatorios')) {
             add_menu_page(
                 'Relatórios',
                 'Resenha Sagrada',
-                'manage_options',
+                self::menu_capability(),
                 self::MENU_SLUG,
                 array(__CLASS__, 'render_dashboard'),
                 'dashicons-awards',
@@ -41,7 +42,7 @@ if (! class_exists('RSB_Bolao_Admin_Relatorios')) {
                 self::MENU_SLUG,
                 'Relatórios',
                 'Relatórios',
-                'manage_options',
+                self::menu_capability(),
                 self::MENU_SLUG,
                 array(__CLASS__, 'render_dashboard')
             );
@@ -168,9 +169,14 @@ if (! class_exists('RSB_Bolao_Admin_Relatorios')) {
             exit;
         }
 
+        private static function menu_capability()
+        {
+            return is_network_admin() ? 'manage_network_options' : 'manage_options';
+        }
+
         private static function can_manage()
         {
-            return is_super_admin() || current_user_can('manage_options');
+            return is_super_admin() || current_user_can('manage_options') || current_user_can('manage_network_options');
         }
 
         private static function matches()
