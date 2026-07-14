@@ -280,7 +280,7 @@ class RSB_Copa2026_Bracket {
         global $wpdb;
         $warnings = [];
         $games = $wpdb->get_results($wpdb->prepare(
-            "SELECT * FROM " . rsb_table('jogos') . " WHERE bolao_id=%d AND codigo_jogo IN ('M097','M098','M099','M100','97','98','99','100') ORDER BY id",
+            "SELECT * FROM " . rsb_table('jogos') . " WHERE bolao_id=%d AND codigo_jogo IN ('M097','M098','M099','M100','M102','97','98','99','100','102') ORDER BY id",
             $bolao_id
         ));
         foreach ($games as $game) {
@@ -300,7 +300,7 @@ class RSB_Copa2026_Bracket {
     private static function defined_knockout_code($game): ?string {
         $code = strtoupper(trim((string)($game->codigo_jogo ?? '')));
         if (is_numeric($code)) { $code = 'M' . str_pad((string)(int)$code, 3, '0', STR_PAD_LEFT); }
-        if (preg_match('/^M0?(9[7-9]|100)$/', $code)) {
+        if (preg_match('/^M0?(9[7-9]|100|102)$/', $code)) {
             $num = (int) preg_replace('/\D+/', '', $code);
             return 'M' . str_pad((string)$num, 3, '0', STR_PAD_LEFT);
         }
@@ -313,6 +313,7 @@ class RSB_Copa2026_Bracket {
             'M098'=>['mandante'=>'Espanha','visitante'=>'Bélgica'],
             'M099'=>['mandante'=>'Noruega','visitante'=>'Inglaterra'],
             'M100'=>['mandante'=>'Argentina','visitante'=>'Suíça'],
+            'M102'=>['mandante'=>'Inglaterra','visitante'=>'Argentina'],
         ];
         $codigo_jogo = strtoupper(trim($codigo_jogo));
         if (is_numeric($codigo_jogo)) { $codigo_jogo = 'M' . str_pad((string) (int) $codigo_jogo, 3, '0', STR_PAD_LEFT); }
