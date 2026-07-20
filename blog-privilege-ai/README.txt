@@ -8,7 +8,7 @@ Auditoria aplicada antes das alterações:
 - Título editorial: BPV_Blog_Privilege::generate_unique_title().
 - Slug: BPV_Blog_Privilege::generate_slug().
 - Imagem destacada: BPV_Blog_Privilege::create_featured_image().
-- Motor de imagem: prioridade para fotografia real gratuita via Openverse; fallback gratuito via LoremFlickr; IA fotográfica com prompt premium apenas como última alternativa.
+- Motor de imagem: prioridade para fotografia real gratuita via Openverse; fallback gratuito via LoremFlickr; fallback editorial via Picsum; IA fotográfica com prompt premium apenas como última alternativa.
 - Prompt anterior: ai_image_prompt() já tentava fotografia realista, mas não usava briefing visual completo nem validação técnica antes de registrar a mídia.
 - Opções preservadas: enabled, topic index, total, last run, last post, last error, content hashes, phrase hashes, title hashes, image log e opções de direção de arte.
 - Transient preservado: bpv_blog_privilege_generation_lock.
@@ -28,4 +28,4 @@ Alterações v4.1.0:
 Compatibilidade:
 - Não recria o plugin do zero.
 - Não remove painel, cron, geração, histórico, anti-repetição, categorias, publicação WordPress, integração de imagem existente nem configurações atuais.
-- Mantém fallbacks fotográficos gratuitos para servidores com HTTP disponível e evita o antigo gerador local ilustrativo.
+- Mantém múltiplos fallbacks fotográficos gratuitos para servidores com HTTP disponível, salva a imagem original quando o editor de imagem do WordPress falhar e força _thumbnail_id se set_post_thumbnail não confirmar a capa e evita o antigo gerador local ilustrativo.

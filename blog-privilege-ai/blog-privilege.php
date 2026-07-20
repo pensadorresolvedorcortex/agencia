@@ -207,7 +207,7 @@ final class BPV_Blog_Privilege {
         $next       = wp_next_scheduled(self::CRON_HOOK);
         $topics     = self::topics();
         $next_topic = isset($topics[$index % count($topics)]) ? $topics[$index % count($topics)] : $topics[0];
-        $photo_engine = function_exists('wp_remote_get') ? 'Openverse + LoremFlickr + IA fotográfica' : 'HTTP indisponível';
+        $photo_engine = function_exists('wp_remote_get') ? 'Openverse + LoremFlickr + Picsum + IA fotográfica' : 'HTTP indisponível';
         $curl       = function_exists('wp_remote_get') ? 'Disponível' : 'Indisponível';
         $history    = is_array(get_option(self::OPTION_CONTENT_HASHES, array())) ? count(get_option(self::OPTION_CONTENT_HASHES, array())) : 0;
         $image_log  = get_option(self::OPTION_IMAGE_LOG, array());
@@ -216,11 +216,11 @@ final class BPV_Blog_Privilege {
         $last_diag = is_array($diagnostics) && !empty($diagnostics) ? end($diagnostics) : array();
 
         echo '<style>
-        .bpv-saas{margin:18px 20px 0 0;min-height:760px;color:#f8fbff;background:radial-gradient(circle at 8% 0%,rgba(20,184,166,.35),transparent 28%),radial-gradient(circle at 92% 6%,rgba(99,102,241,.38),transparent 32%),linear-gradient(135deg,#07111f 0%,#111827 48%,#020617 100%);border-radius:32px;padding:28px;overflow:hidden;position:relative;box-shadow:0 24px 80px rgba(2,6,23,.35)}
-        .bpv-saas:before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,255,255,.11),transparent 35%,rgba(255,255,255,.06));pointer-events:none}.bpv-hero,.bpv-card{position:relative;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);box-shadow:0 20px 60px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.24);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-radius:28px}.bpv-hero{padding:32px;margin-bottom:22px;display:grid;grid-template-columns:1.4fr .6fr;gap:20px}.bpv-kicker{text-transform:uppercase;letter-spacing:.16em;color:#67e8f9;font-size:12px;font-weight:800}.bpv-title{font-size:42px;line-height:1.04;margin:10px 0 12px;color:#fff}.bpv-sub{font-size:15px;max-width:760px;color:#cbd5e1}.bpv-orb{min-height:170px;border-radius:26px;background:radial-gradient(circle at 30% 28%,#fff 0 2%,transparent 3%),linear-gradient(135deg,rgba(34,211,238,.24),rgba(168,85,247,.22));border:1px solid rgba(255,255,255,.18);position:relative;overflow:hidden}.bpv-orb:after{content:"AI";position:absolute;right:24px;bottom:14px;font-size:74px;font-weight:900;color:rgba(255,255,255,.13)}.bpv-grid{position:relative;display:grid;grid-template-columns:repeat(5,minmax(130px,1fr));gap:14px;margin-bottom:18px}.bpv-metric{padding:18px;border-radius:22px;background:rgba(15,23,42,.45);border:1px solid rgba(255,255,255,.14)}.bpv-metric span{display:block;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:.08em}.bpv-metric strong{display:block;margin-top:8px;font-size:18px;color:#fff}.bpv-card{padding:22px;margin-top:18px}.bpv-card h2{color:#fff;margin-top:0}.bpv-table{width:100%;border-collapse:separate;border-spacing:0 10px}.bpv-table th{color:#93c5fd;text-align:left;width:210px}.bpv-table td{color:#e2e8f0}.bpv-badge{display:inline-flex;align-items:center;border-radius:999px;padding:6px 11px;background:rgba(34,197,94,.16);color:#bbf7d0;border:1px solid rgba(74,222,128,.26);font-weight:800}.bpv-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.bpv-saas .button{border-radius:999px!important;border:1px solid rgba(255,255,255,.24)!important;background:rgba(255,255,255,.12)!important;color:#fff!important;box-shadow:none!important}.bpv-saas .button-primary{background:linear-gradient(135deg,#22d3ee,#8b5cf6)!important;border:none!important}.bpv-art-card{border:1px solid rgba(34,211,238,.18);background:linear-gradient(135deg,rgba(15,23,42,.58),rgba(30,41,59,.35))}.bpv-art-card p{color:#cbd5e1}.bpv-form-table th{color:#bfdbfe}.bpv-form-table textarea,.bpv-form-table input{background:rgba(15,23,42,.72)!important;color:#fff!important;border:1px solid rgba(255,255,255,.22)!important;border-radius:16px!important}
+        .bpv-saas{margin:18px 20px 0 0;min-height:760px;color:#f8fbff;background:radial-gradient(circle at 8% 0%,rgba(20,184,166,.35),transparent 28%),radial-gradient(circle at 92% 6%,rgba(99,102,241,.38),transparent 32%),linear-gradient(135deg,#07111f 0%,#111827 48%,#020617 100%);border-radius:32px;padding:34px;overflow:hidden;position:relative;box-shadow:0 24px 80px rgba(2,6,23,.35)}.bpv-shell{max-width:1180px;margin:0 auto;position:relative;z-index:1}
+        .bpv-saas:before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,255,255,.11),transparent 35%,rgba(255,255,255,.06));pointer-events:none}.bpv-hero,.bpv-card{position:relative;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);box-shadow:0 20px 60px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.24);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-radius:28px}.bpv-hero{padding:32px;margin-bottom:22px;display:grid;grid-template-columns:1.4fr .6fr;gap:20px}.bpv-kicker{text-transform:uppercase;letter-spacing:.16em;color:#67e8f9;font-size:12px;font-weight:800}.bpv-title{font-size:42px;line-height:1.04;margin:10px 0 12px;color:#fff}.bpv-sub{font-size:15px;max-width:760px;color:#cbd5e1}.bpv-orb{min-height:170px;border-radius:26px;background:radial-gradient(circle at 30% 28%,#fff 0 2%,transparent 3%),linear-gradient(135deg,rgba(34,211,238,.24),rgba(168,85,247,.22));border:1px solid rgba(255,255,255,.18);position:relative;overflow:hidden}.bpv-orb:after{content:"AI";position:absolute;right:24px;bottom:14px;font-size:74px;font-weight:900;color:rgba(255,255,255,.13)}.bpv-grid{position:relative;display:grid;grid-template-columns:repeat(5,minmax(130px,1fr));gap:16px;margin:0 auto 20px}.bpv-metric{padding:20px;border-radius:24px;background:linear-gradient(135deg,rgba(34,211,238,.18),rgba(139,92,246,.14));border:1px solid rgba(255,255,255,.18);box-shadow:0 18px 45px rgba(2,6,23,.22),inset 0 1px 0 rgba(255,255,255,.22)}.bpv-metric span{display:block;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:.08em}.bpv-metric strong{display:block;margin-top:8px;font-size:18px;color:#fff}.bpv-card{padding:22px;margin-top:18px}.bpv-card h2{color:#fff;margin-top:0}.bpv-table{width:100%;border-collapse:separate;border-spacing:0 10px}.bpv-table th{color:#93c5fd;text-align:left;width:210px}.bpv-table td{color:#e2e8f0}.bpv-badge{display:inline-flex;align-items:center;border-radius:999px;padding:6px 11px;background:rgba(34,197,94,.16);color:#bbf7d0;border:1px solid rgba(74,222,128,.26);font-weight:800}.bpv-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.bpv-saas .button{border-radius:999px!important;border:1px solid rgba(255,255,255,.24)!important;background:rgba(255,255,255,.12)!important;color:#fff!important;box-shadow:none!important}.bpv-saas .button-primary{background:linear-gradient(135deg,#22d3ee,#8b5cf6)!important;border:none!important}.bpv-art-card{border:1px solid rgba(34,211,238,.18);background:linear-gradient(135deg,rgba(15,23,42,.58),rgba(30,41,59,.35))}.bpv-art-card p{color:#cbd5e1}.bpv-form-table th{color:#bfdbfe}.bpv-form-table textarea,.bpv-form-table input{background:rgba(15,23,42,.72)!important;color:#fff!important;border:1px solid rgba(255,255,255,.22)!important;border-radius:16px!important}
         @media(max-width:1100px){.bpv-hero{grid-template-columns:1fr}.bpv-grid{grid-template-columns:repeat(2,1fr)}}
         </style>';
-        echo '<div class="wrap"><div class="bpv-saas">';
+        echo '<div class="wrap"><div class="bpv-saas"><div class="bpv-shell">';
         settings_errors('bpv_blog_privilege');
         echo '<section class="bpv-hero"><div><div class="bpv-kicker">Blog Privilège AI • Premium SaaS 2026</div><h1 class="bpv-title">Centro editorial autônomo com fotografia real e SEO limpo</h1><p class="bpv-sub">Dashboard glassmorphism ultra para operar geração automática, publicação WordPress, diagnóstico por etapa e direção de arte fotográfica premium sem fallback ilustrativo.</p></div><div class="bpv-orb"></div></section>';
         echo '<div class="bpv-grid">';
@@ -270,7 +270,7 @@ final class BPV_Blog_Privilege {
         echo '<button class="button button-primary">Salvar identidade visual</button>';
         echo '</form>';
         echo '</section>';
-        echo '</div></div>';
+        echo '</div></div></div>';
     }
 public static function generate_scheduled_post($force = false) {
         if (!$force && get_option(self::OPTION_ENABLED, 'yes') !== 'yes') {
@@ -910,6 +910,9 @@ public static function generate_scheduled_post($force = false) {
             $image_meta = self::try_loremflickr_business_photo($filepath, $topic, $seed);
         }
         if (is_wp_error($image_meta)) {
+            $image_meta = self::try_picsum_editorial_photo($filepath, $topic, $seed);
+        }
+        if (is_wp_error($image_meta)) {
             for ($image_attempt = 0; $image_attempt < 3; $image_attempt++) {
                 $image_meta = self::try_ai_contextual_photo($filepath, $topic, $category, $title, $excerpt, $seed . '|image-attempt-' . $image_attempt);
                 if (!is_wp_error($image_meta)) {
@@ -940,7 +943,9 @@ public static function generate_scheduled_post($force = false) {
         wp_update_attachment_metadata($attach_id, $attach_data);
         update_post_meta($attach_id, '_wp_attachment_image_alt', sanitize_text_field('Imagem humanizada relacionada a ' . $topic));
         update_post_meta($attach_id, '_bpv_image_meta', $image_meta);
-        set_post_thumbnail($post_id, $attach_id);
+        if (!set_post_thumbnail($post_id, $attach_id)) {
+            update_post_meta($post_id, '_thumbnail_id', $attach_id);
+        }
 
         self::remember_image_log(!empty($image_meta['source']) ? $image_meta['source'] : 'imagem-humanizada');
         return $attach_id;
@@ -1191,8 +1196,8 @@ public static function generate_scheduled_post($force = false) {
         require_once ABSPATH . 'wp-admin/includes/file.php';
         require_once ABSPATH . 'wp-admin/includes/image.php';
 
-        $keywords = rawurlencode('business,team,office,laptop,people,meeting');
-        $url = 'https://loremflickr.com/1920/1080/' . $keywords . '?lock=' . (abs(crc32($topic . $seed)) % 99999);
+        $keywords = 'business,team,office,laptop,people,meeting';
+        $url = 'https://loremflickr.com/1920/1080/' . $keywords . '/all?lock=' . (abs(crc32($topic . $seed)) % 99999);
         $saved = self::download_crop_save_image($url, $filepath);
         if (is_wp_error($saved) || !self::validate_generated_image($filepath, 'business team', $topic)) {
             return is_wp_error($saved) ? $saved : new WP_Error('bpv_loremflickr_validation', 'Foto gratuita reprovada na validação técnica.');
@@ -1201,6 +1206,27 @@ public static function generate_scheduled_post($force = false) {
             'source' => 'loremflickr-business-photo',
             'query' => 'business team office laptop people meeting',
             'attribution' => 'Foto gratuita obtida via LoremFlickr para padrão editorial corporativo.',
+        );
+    }
+
+
+
+    private static function try_picsum_editorial_photo($filepath, $topic, $seed) {
+        if (!function_exists('wp_remote_get')) {
+            return new WP_Error('bpv_no_http', 'HTTP do WordPress indisponível.');
+        }
+        require_once ABSPATH . 'wp-admin/includes/file.php';
+        require_once ABSPATH . 'wp-admin/includes/image.php';
+
+        $url = 'https://picsum.photos/seed/' . rawurlencode('blog-privilege-' . sanitize_title($topic) . '-' . substr(md5($seed), 0, 8)) . '/1920/1080';
+        $saved = self::download_crop_save_image($url, $filepath);
+        if (is_wp_error($saved) || !self::validate_generated_image($filepath, 'editorial business photo', $topic)) {
+            return is_wp_error($saved) ? $saved : new WP_Error('bpv_picsum_validation', 'Foto editorial gratuita reprovada na validação técnica.');
+        }
+        return array(
+            'source' => 'picsum-editorial-photo',
+            'query' => 'editorial business photo fallback',
+            'attribution' => 'Foto editorial gratuita obtida via Picsum como fallback fotográfico.',
         );
     }
 
@@ -1231,6 +1257,10 @@ public static function generate_scheduled_post($force = false) {
 
         $editor = wp_get_image_editor($tmp);
         if (is_wp_error($editor)) {
+            if (@copy($tmp, $filepath)) {
+                @unlink($tmp);
+                return true;
+            }
             @unlink($tmp);
             return $editor;
         }
