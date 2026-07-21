@@ -16,6 +16,7 @@ delete_option('bpv_blog_privilege_content_hashes');
 delete_option('bpv_blog_privilege_phrase_hashes');
 delete_option('bpv_blog_privilege_title_hashes');
 delete_option('bpv_blog_privilege_image_log');
+delete_option('bpv_blog_privilege_image_hashes');
 delete_option('bpv_blog_privilege_diagnostic_log');
 delete_option('bpv_ai_art_style');
 delete_option('bpv_ai_brand_profile');

@@ -12,7 +12,7 @@ Auditoria aplicada antes das alterações:
 - Prompt anterior: ai_image_prompt() já tentava fotografia realista, mas não usava briefing visual completo nem validação técnica antes de registrar a mídia.
 - Opções preservadas: enabled, topic index, total, last run, last post, last error, content hashes, phrase hashes, title hashes, image log e opções de direção de arte.
 - Transient preservado e fortalecido: bpv_blog_privilege_generation_lock agora usa token, expiração curta, liberação no shutdown, botão manual e limpeza automática a cada 15 minutos para destravar gerações órfãs.
-- Logs existentes preservados e ampliados com diagnóstico por etapa.
+- Logs existentes preservados e ampliados com diagnóstico por etapa e memória anti-repetição de imagens por hash/attachment.
 
 Alterações v4.1.0:
 - Novo SEO Engine 4.1 para slugs de 3 a 6 palavras, até 60 caracteres, sem repetição, datas, IDs, hashes e stopwords.
@@ -28,4 +28,4 @@ Alterações v4.1.0:
 Compatibilidade:
 - Não recria o plugin do zero.
 - Não remove painel, cron, geração, histórico, anti-repetição, categorias, publicação WordPress, integração de imagem existente nem configurações atuais.
-- Mantém múltiplos fallbacks fotográficos gratuitos para servidores com HTTP disponível, reaproveita mídia local existente quando serviços externos/IA falham, salva a imagem original quando o editor de imagem do WordPress falhar e força _thumbnail_id se set_post_thumbnail não confirmar a capa, evitando o antigo gerador local ilustrativo.
+- Mantém múltiplos fallbacks fotográficos gratuitos para servidores com HTTP disponível, rejeita imagens repetidas já usadas por hash/attachment, reaproveita mídia local existente quando serviços externos/IA falham, salva a imagem original quando o editor de imagem do WordPress falhar e força _thumbnail_id se set_post_thumbnail não confirmar a capa, evitando o antigo gerador local ilustrativo.

@@ -30,6 +30,7 @@ final class BPV_Blog_Privilege {
     const OPTION_PHRASE_HASHES  = 'bpv_blog_privilege_phrase_hashes';
     const OPTION_TITLE_HASHES   = 'bpv_blog_privilege_title_hashes';
     const OPTION_IMAGE_LOG      = 'bpv_blog_privilege_image_log';
+    const OPTION_IMAGE_HASHES   = 'bpv_blog_privilege_image_hashes';
     const OPTION_DIAGNOSTIC_LOG = 'bpv_blog_privilege_diagnostic_log';
     const LOCK_KEY              = 'bpv_blog_privilege_generation_lock';
     const AI_IMAGE_BACKOFF_KEY = 'bpv_blog_privilege_ai_image_backoff';
@@ -68,6 +69,9 @@ final class BPV_Blog_Privilege {
         }
         if (get_option(self::OPTION_IMAGE_LOG, null) === null) {
             add_option(self::OPTION_IMAGE_LOG, array(), '', false);
+        }
+        if (get_option(self::OPTION_IMAGE_HASHES, null) === null) {
+            add_option(self::OPTION_IMAGE_HASHES, array(), '', false);
         }
         if (get_option(self::OPTION_DIAGNOSTIC_LOG, null) === null) {
             add_option(self::OPTION_DIAGNOSTIC_LOG, array(), '', false);
@@ -204,6 +208,7 @@ final class BPV_Blog_Privilege {
             update_option(self::OPTION_PHRASE_HASHES, array(), false);
             update_option(self::OPTION_TITLE_HASHES, array(), false);
             update_option(self::OPTION_IMAGE_LOG, array(), false);
+            update_option(self::OPTION_IMAGE_HASHES, array(), false);
             update_option(self::OPTION_DIAGNOSTIC_LOG, array(), false);
             add_settings_error('bpv_blog_privilege', 'bpv_cleared', 'Histórico de anti-repetição limpo.', 'updated');
         }
@@ -1002,18 +1007,23 @@ public static function generate_scheduled_post($force = false) {
         $filepath = trailingslashit($upload_dir['path']) . $filename;
 
         $image_meta = self::try_openverse_human_photo($filepath, $topic, $seed);
+        $image_meta = self::reject_repeated_image_file($image_meta, $filepath);
         if (is_wp_error($image_meta)) {
             $image_meta = self::try_wikimedia_business_photo($filepath, $topic, $seed);
         }
+        $image_meta = self::reject_repeated_image_file($image_meta, $filepath);
         if (is_wp_error($image_meta)) {
             $image_meta = self::try_loremflickr_business_photo($filepath, $topic, $seed);
         }
+        $image_meta = self::reject_repeated_image_file($image_meta, $filepath);
         if (is_wp_error($image_meta)) {
             $image_meta = self::try_picsum_editorial_photo($filepath, $topic, $seed);
         }
+        $image_meta = self::reject_repeated_image_file($image_meta, $filepath);
         if (is_wp_error($image_meta)) {
             $image_meta = self::try_curated_unsplash_photo($filepath, $topic, $seed);
         }
+        $image_meta = self::reject_repeated_image_file($image_meta, $filepath);
         if (is_wp_error($image_meta)) {
             $existing_id = self::try_existing_media_featured_image($post_id, $topic);
             if (!is_wp_error($existing_id)) {
@@ -1024,6 +1034,7 @@ public static function generate_scheduled_post($force = false) {
         if (is_wp_error($image_meta)) {
             for ($image_attempt = 0; $image_attempt < 3; $image_attempt++) {
                 $image_meta = self::try_ai_contextual_photo($filepath, $topic, $category, $title, $excerpt, $seed . '|image-attempt-' . $image_attempt);
+                $image_meta = self::reject_repeated_image_file($image_meta, $filepath);
                 if (!is_wp_error($image_meta)) {
                     break;
                 }
@@ -1056,6 +1067,7 @@ public static function generate_scheduled_post($force = false) {
             update_post_meta($post_id, '_thumbnail_id', $attach_id);
         }
 
+        self::remember_image_signature($filepath, !empty($image_meta['source']) ? $image_meta['source'] : 'imagem-humanizada');
         self::remember_image_log(!empty($image_meta['source']) ? $image_meta['source'] : 'imagem-humanizada');
         return $attach_id;
     }
@@ -1419,8 +1431,9 @@ public static function generate_scheduled_post($force = false) {
             $candidates = array_merge($candidates, array_map('absint', $attachments));
         }
         $candidates = array_values(array_unique(array_filter($candidates)));
+        $candidates = array_values(array_filter($candidates, array(__CLASS__, 'attachment_image_is_fresh')));
         if (empty($candidates)) {
-            return new WP_Error('bpv_no_existing_media', 'Não há imagens existentes na biblioteca de mídia para fallback.');
+            return new WP_Error('bpv_no_existing_media', 'Não há imagens inéditas na biblioteca de mídia para fallback.');
         }
         $index = abs(crc32($topic . '|' . $post_id)) % count($candidates);
         $attach_id = $candidates[$index];
@@ -1428,6 +1441,7 @@ public static function generate_scheduled_post($force = false) {
             update_post_meta($post_id, '_thumbnail_id', $attach_id);
         }
         update_post_meta($attach_id, '_wp_attachment_image_alt', sanitize_text_field('Imagem editorial relacionada a ' . $topic));
+        self::remember_image_signature('attachment:' . $attach_id, 'existing-media-library');
         return $attach_id;
     }
 
@@ -1595,6 +1609,59 @@ public static function generate_scheduled_post($force = false) {
         $used[md5(self::lower(remove_accents($title)))] = time();
         $used = self::trim_assoc($used, 1000);
         update_option(self::OPTION_TITLE_HASHES, $used, false);
+    }
+
+
+    private static function reject_repeated_image_file($image_meta, $filepath) {
+        if (is_wp_error($image_meta)) {
+            return $image_meta;
+        }
+        if (self::image_signature_was_used($filepath)) {
+            if (file_exists($filepath)) {
+                @unlink($filepath);
+            }
+            return new WP_Error('bpv_repeated_image', 'Imagem descartada porque já foi usada em publicação anterior.');
+        }
+        return $image_meta;
+    }
+
+    private static function image_signature_was_used($source) {
+        $signature = self::image_signature($source);
+        if (!$signature) {
+            return false;
+        }
+        $hashes = get_option(self::OPTION_IMAGE_HASHES, array());
+        if (!is_array($hashes)) {
+            $hashes = array();
+        }
+        return isset($hashes[$signature]);
+    }
+
+    private static function remember_image_signature($source, $label = '') {
+        $signature = self::image_signature($source);
+        if (!$signature) {
+            return;
+        }
+        $hashes = get_option(self::OPTION_IMAGE_HASHES, array());
+        if (!is_array($hashes)) {
+            $hashes = array();
+        }
+        $hashes[$signature] = array('time' => time(), 'label' => sanitize_text_field($label));
+        update_option(self::OPTION_IMAGE_HASHES, self::trim_assoc($hashes, 500), false);
+    }
+
+    private static function image_signature($source) {
+        if (is_string($source) && strpos($source, 'attachment:') === 0) {
+            return sha1($source);
+        }
+        if (is_string($source) && file_exists($source) && is_readable($source)) {
+            return sha1_file($source);
+        }
+        return '';
+    }
+
+    private static function attachment_image_is_fresh($attach_id) {
+        return !self::image_signature_was_used('attachment:' . absint($attach_id));
     }
 
     private static function remember_image_log($source) {
