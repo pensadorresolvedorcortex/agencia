@@ -1148,8 +1148,43 @@ public static function generate_scheduled_post($force = false) {
         if (!in_array((int) $size[2], $allowed_types, true) || $ratio < 1.55 || $ratio > 1.95) {
             return false;
         }
+        if (self::image_has_ocr_red_flags($filepath)) {
+            return false;
+        }
         // Validação técnica objetiva antes de salvar: formato real, proporção editorial e arquivo não vazio.
         return filesize($filepath) > 80000;
+    }
+
+    private static function image_has_ocr_red_flags($filepath) {
+        if (!function_exists('shell_exec') || !function_exists('escapeshellarg') || !is_readable($filepath)) {
+            return false;
+        }
+
+        $tesseract = trim((string) @shell_exec('command -v tesseract 2>/dev/null'));
+        if (!$tesseract) {
+            return false;
+        }
+
+        $text = (string) @shell_exec(escapeshellarg($tesseract) . ' ' . escapeshellarg($filepath) . ' stdout -l por+eng --psm 6 2>/dev/null');
+        $text = self::normalize_spaces($text);
+        if (!$text) {
+            return false;
+        }
+
+        $normalized = self::lower(remove_accents($text));
+        $compact = preg_replace('/[^a-z0-9]/', '', $normalized);
+        if (strlen($compact) > 30) {
+            return true;
+        }
+
+        $blocked_terms = array('logo', 'watermark', 'marca d agua', 'sample', 'preview', 'stock', 'copyright', 'unsplash', 'freepik', 'shutterstock', 'adobe');
+        foreach ($blocked_terms as $term) {
+            if (strpos($normalized, $term) !== false) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static function image_context_for_topic($topic) {
@@ -1300,12 +1335,12 @@ public static function generate_scheduled_post($force = false) {
     private static function openverse_queries($topic, $seed) {
         $t = self::lower($topic);
         $base = array(
-            'business person laptop office website',
-            'entrepreneur working laptop digital marketing',
-            'small business owner laptop online store',
-            'marketing team office laptop meeting',
-            'designer working website laptop office',
-            'business people planning website strategy',
+            'marketing agency team laptop office',
+            'premium brand strategy workshop office',
+            'digital marketing team meeting laptop',
+            'web design ux team office laptop',
+            'advertising agency creative team office',
+            'business people planning digital strategy laptop',
         );
 
         if (strpos($t, 'e-commerce') !== false || strpos($t, 'woocommerce') !== false || strpos($t, 'lojas virtuais') !== false) {
@@ -1405,24 +1440,8 @@ public static function generate_scheduled_post($force = false) {
         require_once ABSPATH . 'wp-admin/includes/file.php';
         require_once ABSPATH . 'wp-admin/includes/image.php';
 
-        $photo_ids = array(
-            '1556761175-b413da4baf72', // equipe em reunião criativa.
-            '1521737604893-d14cc237f11d', // time trabalhando em mesa de agência.
-            '1551434678-e076c223a692', // profissionais em laptop no escritório.
-            '1552664730-d307ca884978', // planejamento e colaboração corporativa.
-            '1517245386807-bb43f82c33c4', // reunião em agência moderna.
-            '1542744173-8e7e53415bb0', // mesa de trabalho colaborativa.
-            '1497366754035-f200968a6e72', // escritório moderno com profissionais.
-            '1517048676732-d65bc937f952', // equipe de negócios em workshop.
-            '1551836022-d5d88e9218df', // agência digital discutindo projeto.
-            '1600880292203-757bb62b4baf', // profissionais colaborando em laptop.
-            '1556761175-4b46a572b786', // ambiente corporativo premium.
-            '1573164713988-8665fc963095', // reunião executiva com notebook.
-            '1557804506-669a67965ba0', // apresentação de estratégia.
-            '1556761175-5973dc0f32e7', // equipe de marketing em escritório.
-            '1519389950473-47ba0277781c', // time criativo em mesa de trabalho.
-            '1556761175-129418cb2dfe', // equipe analisando projeto digital.
-        );
+        $visual_category = self::visual_topic_category($topic);
+        $photo_ids = self::curated_unsplash_photo_ids($topic);
         $offset = abs(crc32($topic . $seed . '|unsplash')) % count($photo_ids);
         $photo_ids = array_merge(array_slice($photo_ids, $offset), array_slice($photo_ids, 0, $offset));
         foreach ($photo_ids as $photo_id) {
@@ -1435,13 +1454,80 @@ public static function generate_scheduled_post($force = false) {
             if (!is_wp_error($saved) && self::validate_generated_image($filepath, 'curated business team photo', $topic)) {
                 return array(
                     'source' => 'curated-unsplash-photo',
-                    'query' => 'premium brand digital authority modern marketing agency office team photography',
+                    'query' => $visual_category,
                     'source_key' => $source_key,
                     'attribution' => 'Foto editorial curada do Unsplash como fallback fotográfico.',
                 );
             }
         }
         return new WP_Error('bpv_unsplash_not_found', 'Não foi possível obter foto curada do Unsplash.');
+    }
+
+    private static function visual_topic_category($topic) {
+        $t = self::lower(remove_accents($topic));
+        if (strpos($t, 'ux') !== false || strpos($t, 'ui') !== false || strpos($t, 'web design') !== false || strpos($t, 'site') !== false || strpos($t, 'landing') !== false) {
+            return 'web design and ui ux agency office team photography';
+        }
+        if (strpos($t, 'program') !== false || strpos($t, 'desenvolv') !== false || strpos($t, 'wordpress') !== false || strpos($t, 'tecnologia') !== false || strpos($t, 'automacao') !== false) {
+            return 'programming and development team in modern agency office photography';
+        }
+        if (strpos($t, 'marketing') !== false || strpos($t, 'trafego') !== false || strpos($t, 'ads') !== false || strpos($t, 'social') !== false || strpos($t, 'seo') !== false) {
+            return 'marketing agency strategy team laptop office photography';
+        }
+        if (strpos($t, 'marca') !== false || strpos($t, 'branding') !== false || strpos($t, 'identidade') !== false || strpos($t, 'premium') !== false) {
+            return 'premium brand strategy workshop marketing agency photography';
+        }
+        return 'premium brand digital authority modern marketing agency office team photography';
+    }
+
+    private static function curated_unsplash_photo_ids($topic) {
+        $default = array(
+            '1556761175-b413da4baf72', // equipe real em reunião criativa.
+            '1521737604893-d14cc237f11d', // time trabalhando em mesa de agência.
+            '1551434678-e076c223a692', // profissionais em laptop no escritório.
+            '1552664730-d307ca884978', // planejamento e colaboração corporativa.
+            '1517048676732-d65bc937f952', // equipe de negócios em workshop.
+            '1551836022-d5d88e9218df', // agência digital discutindo projeto.
+            '1600880292203-757bb62b4baf', // profissionais colaborando em laptop.
+            '1573164713988-8665fc963095', // reunião executiva com notebook.
+            '1557804506-669a67965ba0', // apresentação de estratégia.
+            '1519389950473-47ba0277781c', // time criativo em mesa de trabalho.
+        );
+
+        $category = self::visual_topic_category($topic);
+        if (strpos($category, 'ui ux') !== false) {
+            return array_merge(array(
+                '1547658719-da2b51169166',
+                '1518005020951-eccb494ad742',
+                '1581291518857-4e27b48ff24e',
+                '1467232004584-a241de8bcf5d',
+            ), $default);
+        }
+        if (strpos($category, 'programming') !== false) {
+            return array_merge(array(
+                '1498050108023-c5249f4df085',
+                '1515879218367-8466d910aaa4',
+                '1531482615713-2afd69097998',
+                '1516321318423-f06f85e504b3',
+            ), $default);
+        }
+        if (strpos($category, 'marketing') !== false) {
+            return array_merge(array(
+                '1557804506-669a67965ba0',
+                '1552664730-d307ca884978',
+                '1556761175-b413da4baf72',
+                '1551836022-d5d88e9218df',
+            ), $default);
+        }
+        if (strpos($category, 'brand') !== false) {
+            return array_merge(array(
+                '1517245386807-bb43f82c33c4',
+                '1542744173-8e7e53415bb0',
+                '1556761175-4b46a572b786',
+                '1556761175-5973dc0f32e7',
+            ), $default);
+        }
+        return $default;
     }
 
     private static function try_existing_media_featured_image($post_id, $topic) {
