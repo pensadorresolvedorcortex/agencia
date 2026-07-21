@@ -1021,6 +1021,10 @@ public static function generate_scheduled_post($force = false) {
         }
         $image_meta = self::reject_repeated_image_file($image_meta, $filepath);
         if (is_wp_error($image_meta)) {
+            $image_meta = self::try_unique_picsum_id_photo($filepath, $topic, $seed);
+        }
+        $image_meta = self::reject_repeated_image_file($image_meta, $filepath);
+        if (is_wp_error($image_meta)) {
             $image_meta = self::try_curated_unsplash_photo($filepath, $topic, $seed);
         }
         $image_meta = self::reject_repeated_image_file($image_meta, $filepath);
@@ -1068,6 +1072,9 @@ public static function generate_scheduled_post($force = false) {
         }
 
         self::remember_image_signature($filepath, !empty($image_meta['source']) ? $image_meta['source'] : 'imagem-humanizada');
+        if (!empty($image_meta['source_key'])) {
+            self::remember_image_signature('source:' . $image_meta['source_key'], !empty($image_meta['source']) ? $image_meta['source'] : 'imagem-humanizada');
+        }
         self::remember_image_log(!empty($image_meta['source']) ? $image_meta['source'] : 'imagem-humanizada');
         return $attach_id;
     }
@@ -1096,6 +1103,10 @@ public static function generate_scheduled_post($force = false) {
             'safe'        => 'true',
         );
         $url = 'https://image.pollinations.ai/prompt/' . rawurlencode($prompt) . '?' . http_build_query($params, '', '&');
+        $source_key = 'pollinations:' . md5($url);
+        if (self::image_signature_was_used('source:' . $source_key)) {
+            return new WP_Error('bpv_ai_repeated_source', 'IA retornaria uma origem já usada; tentando outra alternativa.');
+        }
         $saved = self::download_crop_save_image($url, $filepath);
         if (!is_wp_error($saved) && !self::validate_generated_image($filepath, $title, $topic)) {
             return new WP_Error('bpv_image_validation', 'Imagem gerada por IA reprovada na validação editorial.');
@@ -1111,6 +1122,7 @@ public static function generate_scheduled_post($force = false) {
         return array(
             'source'      => 'ai-contextual-realistic',
             'prompt'      => $prompt,
+            'source_key'  => $source_key,
             'attribution' => 'Imagem realista gerada por IA para o contexto editorial: ' . $topic,
         );
     }
@@ -1236,6 +1248,10 @@ public static function generate_scheduled_post($force = false) {
                     if (self::openverse_result_looks_illustrative($result)) {
                         continue;
                     }
+                    $source_key = 'openverse:' . md5((isset($result['id']) ? $result['id'] : '') . '|' . $result['url'] . '|' . (isset($result['foreign_landing_url']) ? $result['foreign_landing_url'] : ''));
+                    if (self::image_signature_was_used('source:' . $source_key)) {
+                        continue;
+                    }
 
                     $saved = self::download_crop_save_image($result['url'], $filepath);
                     if (is_wp_error($saved)) {
@@ -1251,6 +1267,7 @@ public static function generate_scheduled_post($force = false) {
                         'license'             => isset($result['license']) ? sanitize_text_field($result['license']) : '',
                         'license_url'         => isset($result['license_url']) ? esc_url_raw($result['license_url']) : '',
                         'foreign_landing_url' => isset($result['foreign_landing_url']) ? esc_url_raw($result['foreign_landing_url']) : '',
+                        'source_key'          => $source_key,
                         'attribution'         => $attribution,
                     );
                 }
@@ -1368,12 +1385,17 @@ public static function generate_scheduled_post($force = false) {
                 if (self::openverse_result_looks_illustrative(array('title' => $page['title'] ?? '', 'url' => $candidate))) {
                     continue;
                 }
+                $source_key = 'wikimedia:' . md5($candidate . '|' . (isset($page['title']) ? $page['title'] : ''));
+                if (self::image_signature_was_used('source:' . $source_key)) {
+                    continue;
+                }
                 $saved = self::download_crop_save_image($candidate, $filepath);
                 if (!is_wp_error($saved) && self::validate_generated_image($filepath, 'wikimedia business team photo', $topic)) {
                     return array(
                         'source' => 'wikimedia-commons-photo',
                         'query' => $query,
                         'title' => isset($page['title']) ? sanitize_text_field($page['title']) : '',
+                        'source_key' => $source_key,
                         'attribution' => 'Foto gratuita obtida via Wikimedia Commons para imagem destacada editorial.',
                     );
                 }
@@ -1391,20 +1413,34 @@ public static function generate_scheduled_post($force = false) {
         require_once ABSPATH . 'wp-admin/includes/file.php';
         require_once ABSPATH . 'wp-admin/includes/image.php';
 
-        $photos = array(
-            'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1920&h=1080&q=85',
-            'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1920&h=1080&q=85',
-            'https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1920&h=1080&q=85',
-            'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1920&h=1080&q=85',
+        $photo_ids = array(
+            '1556761175-b413da4baf72',
+            '1521737604893-d14cc237f11d',
+            '1551434678-e076c223a692',
+            '1552664730-d307ca884978',
+            '1517245386807-bb43f82c33c4',
+            '1542744173-8e7e53415bb0',
+            '1497366754035-f200968a6e72',
+            '1517048676732-d65bc937f952',
+            '1551836022-d5d88e9218df',
+            '1600880292203-757bb62b4baf',
+            '1556761175-4b46a572b786',
+            '1573164713988-8665fc963095',
         );
-        $offset = abs(crc32($topic . $seed . '|unsplash')) % count($photos);
-        $photos = array_merge(array_slice($photos, $offset), array_slice($photos, 0, $offset));
-        foreach ($photos as $url) {
+        $offset = abs(crc32($topic . $seed . '|unsplash')) % count($photo_ids);
+        $photo_ids = array_merge(array_slice($photo_ids, $offset), array_slice($photo_ids, 0, $offset));
+        foreach ($photo_ids as $photo_id) {
+            $source_key = 'unsplash:' . $photo_id;
+            if (self::image_signature_was_used('source:' . $source_key)) {
+                continue;
+            }
+            $url = 'https://images.unsplash.com/photo-' . $photo_id . '?auto=format&fit=crop&w=1920&h=1080&q=85';
             $saved = self::download_crop_save_image($url, $filepath);
             if (!is_wp_error($saved) && self::validate_generated_image($filepath, 'curated business team photo', $topic)) {
                 return array(
                     'source' => 'curated-unsplash-photo',
                     'query' => 'curated business team office photography',
+                    'source_key' => $source_key,
                     'attribution' => 'Foto editorial curada do Unsplash como fallback fotográfico.',
                 );
             }
@@ -1442,6 +1478,7 @@ public static function generate_scheduled_post($force = false) {
         }
         update_post_meta($attach_id, '_wp_attachment_image_alt', sanitize_text_field('Imagem editorial relacionada a ' . $topic));
         self::remember_image_signature('attachment:' . $attach_id, 'existing-media-library');
+        self::remember_image_signature('source:attachment-' . $attach_id, 'existing-media-library');
         return $attach_id;
     }
 
@@ -1454,6 +1491,10 @@ public static function generate_scheduled_post($force = false) {
 
         $keywords = 'business,team,office,laptop,people,meeting';
         $url = 'https://loremflickr.com/1920/1080/' . $keywords . '/all?lock=' . (abs(crc32($topic . $seed)) % 99999);
+        $source_key = 'loremflickr:' . md5($url);
+        if (self::image_signature_was_used('source:' . $source_key)) {
+            return new WP_Error('bpv_loremflickr_repeated_source', 'LoremFlickr repetiria uma origem já usada.');
+        }
         $saved = self::download_crop_save_image($url, $filepath);
         if (is_wp_error($saved) || !self::validate_generated_image($filepath, 'business team', $topic)) {
             return is_wp_error($saved) ? $saved : new WP_Error('bpv_loremflickr_validation', 'Foto gratuita reprovada na validação técnica.');
@@ -1461,6 +1502,7 @@ public static function generate_scheduled_post($force = false) {
         return array(
             'source' => 'loremflickr-business-photo',
             'query' => 'business team office laptop people meeting',
+            'source_key' => $source_key,
             'attribution' => 'Foto gratuita obtida via LoremFlickr para padrão editorial corporativo.',
         );
     }
@@ -1475,6 +1517,10 @@ public static function generate_scheduled_post($force = false) {
         require_once ABSPATH . 'wp-admin/includes/image.php';
 
         $url = 'https://picsum.photos/seed/' . rawurlencode('blog-privilege-' . sanitize_title($topic) . '-' . substr(md5($seed), 0, 8)) . '/1920/1080';
+        $source_key = 'picsum-seed:' . md5($url);
+        if (self::image_signature_was_used('source:' . $source_key)) {
+            return new WP_Error('bpv_picsum_repeated_source', 'Picsum seed repetiria uma origem já usada.');
+        }
         $saved = self::download_crop_save_image($url, $filepath);
         if (is_wp_error($saved) || !self::validate_generated_image($filepath, 'editorial business photo', $topic)) {
             return is_wp_error($saved) ? $saved : new WP_Error('bpv_picsum_validation', 'Foto editorial gratuita reprovada na validação técnica.');
@@ -1482,8 +1528,40 @@ public static function generate_scheduled_post($force = false) {
         return array(
             'source' => 'picsum-editorial-photo',
             'query' => 'editorial business photo fallback',
+            'source_key' => $source_key,
             'attribution' => 'Foto editorial gratuita obtida via Picsum como fallback fotográfico.',
         );
+    }
+
+    private static function try_unique_picsum_id_photo($filepath, $topic, $seed) {
+        if (!function_exists('wp_remote_get')) {
+            return new WP_Error('bpv_no_http', 'HTTP do WordPress indisponível.');
+        }
+        require_once ABSPATH . 'wp-admin/includes/file.php';
+        require_once ABSPATH . 'wp-admin/includes/image.php';
+
+        $ids = array(0, 10, 100, 1000, 1001, 1002, 1003, 1004, 1005, 1006, 1008, 1010, 1011, 1012, 1013, 1015, 1016, 1018, 1019, 1020, 1021, 1022, 1025, 1027, 1028, 1029, 1031, 1033, 1035, 1036, 1037, 1038, 1039, 1040, 1041, 1042, 1043, 1044, 1047, 1048, 1049, 1050, 1051, 1052, 1053, 1054, 1060, 1062, 1063, 1064, 1065, 1066, 1067, 1070, 1071, 1072, 1073, 1074, 1080, 1081, 1082, 1083, 1084);
+        $offset = abs(crc32($topic . $seed . '|picsum-id')) % count($ids);
+        $ids = array_merge(array_slice($ids, $offset), array_slice($ids, 0, $offset));
+
+        foreach ($ids as $id) {
+            $source_key = 'picsum-id:' . absint($id);
+            if (self::image_signature_was_used('source:' . $source_key)) {
+                continue;
+            }
+            $url = 'https://picsum.photos/id/' . absint($id) . '/1920/1080';
+            $saved = self::download_crop_save_image($url, $filepath);
+            if (!is_wp_error($saved) && self::validate_generated_image($filepath, 'unique editorial photo', $topic)) {
+                return array(
+                    'source' => 'picsum-unique-id-photo',
+                    'query' => 'unique editorial photo fallback',
+                    'source_key' => $source_key,
+                    'attribution' => 'Foto editorial gratuita obtida via Picsum ID único para evitar repetição visual.',
+                );
+            }
+        }
+
+        return new WP_Error('bpv_picsum_unique_not_found', 'Não há foto inédita disponível no pool Picsum ID.');
     }
 
     private static function prioritize_photo_results($results, $seed) {
@@ -1616,6 +1694,12 @@ public static function generate_scheduled_post($force = false) {
         if (is_wp_error($image_meta)) {
             return $image_meta;
         }
+        if (!empty($image_meta['source_key']) && self::image_signature_was_used('source:' . $image_meta['source_key'])) {
+            if (file_exists($filepath)) {
+                @unlink($filepath);
+            }
+            return new WP_Error('bpv_repeated_image_source', 'Imagem descartada porque a mesma origem visual já foi usada em publicação anterior.');
+        }
         if (self::image_signature_was_used($filepath)) {
             if (file_exists($filepath)) {
                 @unlink($filepath);
@@ -1651,7 +1735,15 @@ public static function generate_scheduled_post($force = false) {
     }
 
     private static function image_signature($source) {
+        if (is_string($source) && strpos($source, 'source:') === 0) {
+            return sha1($source);
+        }
         if (is_string($source) && strpos($source, 'attachment:') === 0) {
+            $attach_id = absint(substr($source, strlen('attachment:')));
+            $file = $attach_id ? get_attached_file($attach_id) : '';
+            if ($file && file_exists($file) && is_readable($file)) {
+                return sha1_file($file);
+            }
             return sha1($source);
         }
         if (is_string($source) && file_exists($source) && is_readable($source)) {
@@ -1661,7 +1753,8 @@ public static function generate_scheduled_post($force = false) {
     }
 
     private static function attachment_image_is_fresh($attach_id) {
-        return !self::image_signature_was_used('attachment:' . absint($attach_id));
+        $attach_id = absint($attach_id);
+        return !self::image_signature_was_used('attachment:' . $attach_id) && !self::image_signature_was_used('source:attachment-' . $attach_id);
     }
 
     private static function remember_image_log($source) {
