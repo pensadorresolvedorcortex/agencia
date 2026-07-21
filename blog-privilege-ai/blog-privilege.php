@@ -1673,6 +1673,23 @@ public static function generate_scheduled_post($force = false) {
         return $items[$key % count($items)];
     }
 
+
+    private static function truncate_text($text, $max) {
+        $text = self::normalize_spaces($text);
+        if (self::strlen($text) <= $max) {
+            return $text;
+        }
+        $max = max(1, (int) $max);
+        $suffix = '…';
+        $limit = max(1, $max - self::strlen($suffix));
+        $cut = self::safe_substr($text, 0, $limit);
+        $last_space = strrpos($cut, ' ');
+        if ($last_space !== false && $last_space >= 8) {
+            $cut = substr($cut, 0, $last_space);
+        }
+        return self::normalize_spaces(rtrim($cut, " \t\n\r\0\x0B.,;:-") . $suffix);
+    }
+
     private static function limit_text($text, $max) {
         $text = self::normalize_spaces($text);
         if (self::strlen($text) <= $max) {
