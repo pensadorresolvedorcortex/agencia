@@ -181,6 +181,12 @@ final class BPV_Blog_Privilege {
             add_settings_error('bpv_blog_privilege', 'bpv_rescheduled', 'Agendamento recriado para execução a cada 2 minutos.', 'updated');
         }
 
+        if ($action === 'clear_lock') {
+            delete_transient(self::LOCK_KEY);
+            update_option(self::OPTION_LAST_ERR, '');
+            add_settings_error('bpv_blog_privilege', 'bpv_lock_cleared', 'Trava de geração liberada manualmente.', 'updated');
+        }
+
         if ($action === 'clear_history') {
             update_option(self::OPTION_CONTENT_HASHES, array(), false);
             update_option(self::OPTION_PHRASE_HASHES, array(), false);
@@ -214,6 +220,8 @@ final class BPV_Blog_Privilege {
         $last_image = is_array($image_log) && !empty($image_log) ? end($image_log) : 'Nenhuma imagem gerada ainda';
         $diagnostics = get_option(self::OPTION_DIAGNOSTIC_LOG, array());
         $last_diag = is_array($diagnostics) && !empty($diagnostics) ? end($diagnostics) : array();
+        $current_lock = get_transient(self::LOCK_KEY);
+        $lock_age = $current_lock ? max(0, time() - self::lock_started_at($current_lock)) : 0;
 
         echo '<style>
         .bpv-saas{margin:18px 20px 0 0;min-height:760px;color:#f8fbff;background:radial-gradient(circle at 8% 0%,rgba(20,184,166,.35),transparent 28%),radial-gradient(circle at 92% 6%,rgba(99,102,241,.38),transparent 32%),linear-gradient(135deg,#07111f 0%,#111827 48%,#020617 100%);border-radius:32px;padding:34px;overflow:hidden;position:relative;box-shadow:0 24px 80px rgba(2,6,23,.35)}.bpv-shell{max-width:1180px;margin:0 auto;position:relative;z-index:1}
@@ -238,13 +246,14 @@ final class BPV_Blog_Privilege {
         echo '<tr><th>Motor de imagem</th><td>' . esc_html($photo_engine) . ' — somente fotografia real/editorial; fallback ilustrativo local removido.</td></tr>';
         echo '<tr><th>Última imagem</th><td>' . esc_html($last_image) . '</td></tr>';
         echo '<tr><th>Último erro</th><td>' . esc_html($last_error ? $last_error : 'Nenhum') . '</td></tr>';
+        echo '<tr><th>Trava de geração</th><td>' . esc_html($current_lock ? 'Ativa há ' . human_time_diff(time() - $lock_age, time()) : 'Livre') . '</td></tr>';
         echo '</tbody></table>';
         echo '<div class="bpv-actions">';
         echo '<form method="post" class="bpv-actions">';
         wp_nonce_field('bpv_blog_privilege_action', 'bpv_blog_privilege_nonce');
         echo '<button class="button button-primary" name="bpv_blog_privilege_action" value="generate_now">Gerar post agora</button>';
         echo $enabled === 'yes' ? '<button class="button" name="bpv_blog_privilege_action" value="pause">Pausar automático</button>' : '<button class="button" name="bpv_blog_privilege_action" value="resume">Retomar automático</button>';
-        echo '<button class="button" name="bpv_blog_privilege_action" value="reschedule">Recriar agendamento</button><button class="button" name="bpv_blog_privilege_action" value="clear_history">Limpar histórico</button></form></div></section>';
+        echo '<button class="button" name="bpv_blog_privilege_action" value="reschedule">Recriar agendamento</button><button class="button" name="bpv_blog_privilege_action" value="clear_lock">Liberar trava</button><button class="button" name="bpv_blog_privilege_action" value="clear_history">Limpar histórico</button></form></div></section>';
         echo '<section class="bpv-card"><h2>Diagnóstico da última geração</h2><table class="bpv-table"><tbody>';
         foreach (array('Artigo','SEO','Slug','Imagem','Publicação') as $label) {
             $key = sanitize_key($label);
@@ -279,17 +288,20 @@ public static function generate_scheduled_post($force = false) {
 
         $lock = get_transient(self::LOCK_KEY);
         if ($lock) {
-            // Evita travamento permanente caso uma geração seja interrompida.
-            // Locks antigos são liberados automaticamente após 10 minutos.
-            if (is_numeric($lock) && (time() - (int) $lock) > 600) {
+            // Evita travamento permanente caso uma geração seja interrompida por timeout, fatal error ou limite externo.
+            // Locks acima de 5 minutos são considerados órfãos porque o cron roda a cada 2 minutos.
+            if (self::lock_is_stale($lock)) {
                 delete_transient(self::LOCK_KEY);
             } else {
-                return new WP_Error('bpv_locked', 'Já existe uma geração em andamento.');
+                $age = max(0, time() - self::lock_started_at($lock));
+                return new WP_Error('bpv_locked', 'Já existe uma geração em andamento há ' . human_time_diff(time() - $age, time()) . '. Se estiver travado, use Liberar trava no painel.');
             }
         }
 
-        // Guarda o horário de início para permitir recuperação automática.
-        set_transient(self::LOCK_KEY, time(), 900);
+        // Guarda token e horário para permitir liberação segura, inclusive no shutdown da requisição.
+        $lock_token = self::new_lock_token();
+        set_transient(self::LOCK_KEY, array('time' => time(), 'token' => $lock_token), 360);
+        register_shutdown_function(array(__CLASS__, 'release_generation_lock'), $lock_token);
 
         self::ensure_terms();
 
@@ -319,7 +331,7 @@ public static function generate_scheduled_post($force = false) {
         $excerpt = self::generate_excerpt($topic, $attempt_seed);
         if (!self::validate_article_quality($title, $content)) {
             update_option(self::OPTION_LAST_ERR, 'Validação editorial reprovada antes da publicação.');
-            delete_transient(self::LOCK_KEY);
+            self::release_generation_lock($lock_token);
             return new WP_Error('bpv_article_quality', 'Validação editorial reprovada antes da publicação.');
         }
 
@@ -345,7 +357,7 @@ public static function generate_scheduled_post($force = false) {
 
         if (is_wp_error($post_id)) {
             update_option(self::OPTION_LAST_ERR, $post_id->get_error_message());
-            delete_transient(self::LOCK_KEY);
+            self::release_generation_lock($lock_token);
             return $post_id;
         }
 
@@ -366,8 +378,44 @@ public static function generate_scheduled_post($force = false) {
         update_option(self::OPTION_LAST_POST, $post_id);
         self::remember_generation_diagnostic($post_id, $slug, $seo, $image_result);
 
-        delete_transient(self::LOCK_KEY);
+        self::release_generation_lock($lock_token);
         return $post_id;
+    }
+
+
+    public static function release_generation_lock($token = '') {
+        $lock = get_transient(self::LOCK_KEY);
+        if (!$lock) {
+            return;
+        }
+        if (is_array($lock) && !empty($lock['token']) && $token && hash_equals((string) $lock['token'], (string) $token)) {
+            delete_transient(self::LOCK_KEY);
+            return;
+        }
+        if (!is_array($lock) && $token === '') {
+            delete_transient(self::LOCK_KEY);
+        }
+    }
+
+    private static function lock_started_at($lock) {
+        if (is_array($lock) && !empty($lock['time'])) {
+            return (int) $lock['time'];
+        }
+        if (is_numeric($lock)) {
+            return (int) $lock;
+        }
+        return time();
+    }
+
+    private static function lock_is_stale($lock) {
+        return (time() - self::lock_started_at($lock)) > 300;
+    }
+
+    private static function new_lock_token() {
+        if (function_exists('wp_generate_uuid4')) {
+            return wp_generate_uuid4();
+        }
+        return md5(uniqid('', true) . '|' . wp_rand());
     }
 
     private static function ensure_terms() {

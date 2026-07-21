@@ -11,7 +11,7 @@ Auditoria aplicada antes das alterações:
 - Motor de imagem: prioridade para fotografia real gratuita via Openverse; fallback gratuito via LoremFlickr; fallback editorial via Picsum; IA fotográfica com prompt premium apenas como última alternativa.
 - Prompt anterior: ai_image_prompt() já tentava fotografia realista, mas não usava briefing visual completo nem validação técnica antes de registrar a mídia.
 - Opções preservadas: enabled, topic index, total, last run, last post, last error, content hashes, phrase hashes, title hashes, image log e opções de direção de arte.
-- Transient preservado: bpv_blog_privilege_generation_lock.
+- Transient preservado e fortalecido: bpv_blog_privilege_generation_lock agora usa token, expiração curta, liberação no shutdown e botão manual para destravar gerações órfãs.
 - Logs existentes preservados e ampliados com diagnóstico por etapa.
 
 Alterações v4.1.0:
@@ -23,7 +23,7 @@ Alterações v4.1.0:
 - Validação técnica da imagem antes do registro na mídia: formato JPG/PNG/WebP, proporção editorial, dimensões mínimas e tamanho mínimo.
 - Fallback ilustrativo/local GD removido para impedir imagens cartoon/vetor; o fluxo usa somente fotografia gratuita ou IA fotográfica estritamente bloqueada contra ilustração, com filtro de resultados Openverse contra tags/títulos de illustration, vector, cartoon, avatar, icon, render, logo e text.
 - Validação editorial básica do artigo antes do fechamento da geração.
-- Painel administrativo ampliado com visual SaaS premium glassmorphism, diagnóstico da última geração: Artigo, SEO, Slug, Imagem e Publicação, com erro técnico quando existir.
+- Painel administrativo ampliado com visual SaaS premium glassmorphism, diagnóstico da última geração, status da trava de geração, botão Liberar trava, Artigo, SEO, Slug, Imagem e Publicação, com erro técnico quando existir.
 
 Compatibilidade:
 - Não recria o plugin do zero.
