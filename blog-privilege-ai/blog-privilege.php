@@ -254,7 +254,7 @@ final class BPV_Blog_Privilege {
         $next       = wp_next_scheduled(self::CRON_HOOK);
         $topics     = self::topics();
         $next_topic = isset($topics[$index % count($topics)]) ? $topics[$index % count($topics)] : $topics[0];
-        $photo_engine = function_exists('wp_remote_get') ? 'Openverse + Wikimedia + LoremFlickr + Picsum + mídia local + IA fotográfica' : 'Mídia local disponível';
+        $photo_engine = function_exists('wp_remote_get') ? 'Openverse + Wikimedia + LoremFlickr + Unsplash curado + mídia local + IA fotográfica' : 'Mídia local disponível';
         $curl       = function_exists('wp_remote_get') ? 'Disponível' : 'Indisponível';
         $history    = is_array(get_option(self::OPTION_CONTENT_HASHES, array())) ? count(get_option(self::OPTION_CONTENT_HASHES, array())) : 0;
         $image_log  = get_option(self::OPTION_IMAGE_LOG, array());
@@ -1017,14 +1017,6 @@ public static function generate_scheduled_post($force = false) {
         }
         $image_meta = self::reject_repeated_image_file($image_meta, $filepath);
         if (is_wp_error($image_meta)) {
-            $image_meta = self::try_picsum_editorial_photo($filepath, $topic, $seed);
-        }
-        $image_meta = self::reject_repeated_image_file($image_meta, $filepath);
-        if (is_wp_error($image_meta)) {
-            $image_meta = self::try_unique_picsum_id_photo($filepath, $topic, $seed);
-        }
-        $image_meta = self::reject_repeated_image_file($image_meta, $filepath);
-        if (is_wp_error($image_meta)) {
             $image_meta = self::try_curated_unsplash_photo($filepath, $topic, $seed);
         }
         $image_meta = self::reject_repeated_image_file($image_meta, $filepath);
@@ -1296,7 +1288,7 @@ public static function generate_scheduled_post($force = false) {
             }
         }
         $haystack = self::lower(remove_accents(implode(' ', $haystack_parts)));
-        $blocked = array('illustration', 'illustrator', 'vector', 'cartoon', 'clipart', 'clip art', 'avatar', 'icon', '3d render', 'render', 'drawing', 'sketch', 'anime', 'mascot', 'logo', 'watermark', 'typography', 'text');
+        $blocked = array('illustration', 'illustrator', 'vector', 'cartoon', 'clipart', 'clip art', 'avatar', 'icon', '3d render', 'render', 'drawing', 'sketch', 'anime', 'mascot', 'logo', 'watermark', 'typography', 'text', 'mountain', 'snow', 'landscape', 'farm', 'field', 'agriculture', 'vineyard', 'forest', 'beach', 'lake', 'river', 'animal', 'bird', 'flower', 'food', 'building exterior', 'road', 'sky');
         foreach ($blocked as $term) {
             if (strpos($haystack, $term) !== false) {
                 return true;
@@ -1414,18 +1406,22 @@ public static function generate_scheduled_post($force = false) {
         require_once ABSPATH . 'wp-admin/includes/image.php';
 
         $photo_ids = array(
-            '1556761175-b413da4baf72',
-            '1521737604893-d14cc237f11d',
-            '1551434678-e076c223a692',
-            '1552664730-d307ca884978',
-            '1517245386807-bb43f82c33c4',
-            '1542744173-8e7e53415bb0',
-            '1497366754035-f200968a6e72',
-            '1517048676732-d65bc937f952',
-            '1551836022-d5d88e9218df',
-            '1600880292203-757bb62b4baf',
-            '1556761175-4b46a572b786',
-            '1573164713988-8665fc963095',
+            '1556761175-b413da4baf72', // equipe em reunião criativa.
+            '1521737604893-d14cc237f11d', // time trabalhando em mesa de agência.
+            '1551434678-e076c223a692', // profissionais em laptop no escritório.
+            '1552664730-d307ca884978', // planejamento e colaboração corporativa.
+            '1517245386807-bb43f82c33c4', // reunião em agência moderna.
+            '1542744173-8e7e53415bb0', // mesa de trabalho colaborativa.
+            '1497366754035-f200968a6e72', // escritório moderno com profissionais.
+            '1517048676732-d65bc937f952', // equipe de negócios em workshop.
+            '1551836022-d5d88e9218df', // agência digital discutindo projeto.
+            '1600880292203-757bb62b4baf', // profissionais colaborando em laptop.
+            '1556761175-4b46a572b786', // ambiente corporativo premium.
+            '1573164713988-8665fc963095', // reunião executiva com notebook.
+            '1557804506-669a67965ba0', // apresentação de estratégia.
+            '1556761175-5973dc0f32e7', // equipe de marketing em escritório.
+            '1519389950473-47ba0277781c', // time criativo em mesa de trabalho.
+            '1556761175-129418cb2dfe', // equipe analisando projeto digital.
         );
         $offset = abs(crc32($topic . $seed . '|unsplash')) % count($photo_ids);
         $photo_ids = array_merge(array_slice($photo_ids, $offset), array_slice($photo_ids, 0, $offset));
@@ -1439,7 +1435,7 @@ public static function generate_scheduled_post($force = false) {
             if (!is_wp_error($saved) && self::validate_generated_image($filepath, 'curated business team photo', $topic)) {
                 return array(
                     'source' => 'curated-unsplash-photo',
-                    'query' => 'curated business team office photography',
+                    'query' => 'premium brand digital authority modern marketing agency office team photography',
                     'source_key' => $source_key,
                     'attribution' => 'Foto editorial curada do Unsplash como fallback fotográfico.',
                 );
@@ -1508,61 +1504,6 @@ public static function generate_scheduled_post($force = false) {
     }
 
 
-
-    private static function try_picsum_editorial_photo($filepath, $topic, $seed) {
-        if (!function_exists('wp_remote_get')) {
-            return new WP_Error('bpv_no_http', 'HTTP do WordPress indisponível.');
-        }
-        require_once ABSPATH . 'wp-admin/includes/file.php';
-        require_once ABSPATH . 'wp-admin/includes/image.php';
-
-        $url = 'https://picsum.photos/seed/' . rawurlencode('blog-privilege-' . sanitize_title($topic) . '-' . substr(md5($seed), 0, 8)) . '/1920/1080';
-        $source_key = 'picsum-seed:' . md5($url);
-        if (self::image_signature_was_used('source:' . $source_key)) {
-            return new WP_Error('bpv_picsum_repeated_source', 'Picsum seed repetiria uma origem já usada.');
-        }
-        $saved = self::download_crop_save_image($url, $filepath);
-        if (is_wp_error($saved) || !self::validate_generated_image($filepath, 'editorial business photo', $topic)) {
-            return is_wp_error($saved) ? $saved : new WP_Error('bpv_picsum_validation', 'Foto editorial gratuita reprovada na validação técnica.');
-        }
-        return array(
-            'source' => 'picsum-editorial-photo',
-            'query' => 'editorial business photo fallback',
-            'source_key' => $source_key,
-            'attribution' => 'Foto editorial gratuita obtida via Picsum como fallback fotográfico.',
-        );
-    }
-
-    private static function try_unique_picsum_id_photo($filepath, $topic, $seed) {
-        if (!function_exists('wp_remote_get')) {
-            return new WP_Error('bpv_no_http', 'HTTP do WordPress indisponível.');
-        }
-        require_once ABSPATH . 'wp-admin/includes/file.php';
-        require_once ABSPATH . 'wp-admin/includes/image.php';
-
-        $ids = array(0, 10, 100, 1000, 1001, 1002, 1003, 1004, 1005, 1006, 1008, 1010, 1011, 1012, 1013, 1015, 1016, 1018, 1019, 1020, 1021, 1022, 1025, 1027, 1028, 1029, 1031, 1033, 1035, 1036, 1037, 1038, 1039, 1040, 1041, 1042, 1043, 1044, 1047, 1048, 1049, 1050, 1051, 1052, 1053, 1054, 1060, 1062, 1063, 1064, 1065, 1066, 1067, 1070, 1071, 1072, 1073, 1074, 1080, 1081, 1082, 1083, 1084);
-        $offset = abs(crc32($topic . $seed . '|picsum-id')) % count($ids);
-        $ids = array_merge(array_slice($ids, $offset), array_slice($ids, 0, $offset));
-
-        foreach ($ids as $id) {
-            $source_key = 'picsum-id:' . absint($id);
-            if (self::image_signature_was_used('source:' . $source_key)) {
-                continue;
-            }
-            $url = 'https://picsum.photos/id/' . absint($id) . '/1920/1080';
-            $saved = self::download_crop_save_image($url, $filepath);
-            if (!is_wp_error($saved) && self::validate_generated_image($filepath, 'unique editorial photo', $topic)) {
-                return array(
-                    'source' => 'picsum-unique-id-photo',
-                    'query' => 'unique editorial photo fallback',
-                    'source_key' => $source_key,
-                    'attribution' => 'Foto editorial gratuita obtida via Picsum ID único para evitar repetição visual.',
-                );
-            }
-        }
-
-        return new WP_Error('bpv_picsum_unique_not_found', 'Não há foto inédita disponível no pool Picsum ID.');
-    }
 
     private static function prioritize_photo_results($results, $seed) {
         usort($results, function($a, $b) use ($seed) {

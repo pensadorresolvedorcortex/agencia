@@ -8,7 +8,7 @@ Auditoria aplicada antes das alterações:
 - Título editorial: BPV_Blog_Privilege::generate_unique_title().
 - Slug: BPV_Blog_Privilege::generate_slug().
 - Imagem destacada: BPV_Blog_Privilege::create_featured_image().
-- Motor de imagem: prioridade para fotografia real gratuita via Openverse; fallback Wikimedia Commons; fallback gratuito via LoremFlickr; fallback editorial via Picsum seed; fallback por pool Picsum ID único; fallback curado Unsplash ampliado; mídia local existente antes da IA; IA fotográfica com prompt premium apenas como última alternativa e backoff automático quando houver rate limit.
+- Motor de imagem: prioridade para fotografia real gratuita via Openverse; fallback Wikimedia Commons; fallback gratuito via LoremFlickr; fallback curado Unsplash ampliado e temático de agência; mídia local existente antes da IA; IA fotográfica com prompt premium apenas como última alternativa e backoff automático quando houver rate limit.
 - Prompt anterior: ai_image_prompt() já tentava fotografia realista, mas não usava briefing visual completo nem validação técnica antes de registrar a mídia.
 - Opções preservadas: enabled, topic index, total, last run, last post, last error, content hashes, phrase hashes, title hashes, image log e opções de direção de arte.
 - Transient preservado e fortalecido: bpv_blog_privilege_generation_lock agora usa token, expiração curta, liberação no shutdown, botão manual e limpeza automática a cada 15 minutos para destravar gerações órfãs.
@@ -21,8 +21,9 @@ Alterações v4.1.0:
 - Prompt final obrigatório com REALISTIC EDITORIAL PHOTOGRAPHY, REAL PEOPLE, NATURAL HUMAN EXPRESSIONS, PROFESSIONAL BUSINESS ENVIRONMENT, CORPORATE LIFESTYLE PHOTOGRAPHY, CINEMATIC LIGHTING, 35MM CAMERA, SHALLOW DEPTH OF FIELD, HIGH DETAIL e PREMIUM MAGAZINE STYLE.
 - Bloqueios explícitos contra cartoon, illustration, vector art, flat design, 3D characters, avatars, fake people, AI looking faces, text inside image, logos e watermarks.
 - Validação técnica da imagem antes do registro na mídia: formato JPG/PNG/WebP, proporção editorial, dimensões mínimas e tamanho mínimo.
-- Anti-repetição visual reforçado: cada fonte retorna source_key própria (Openverse, Wikimedia, LoremFlickr, Picsum seed, Picsum ID, Unsplash e Pollinations), o plugin rejeita a origem antes/depois do download e grava também o hash real do arquivo salvo.
-- Novo pool Picsum ID com dezenas de IDs fotográficos rotacionados e ignorando IDs já usados, reduzindo dependência de APIs que devolvem sempre a mesma imagem.
+- Anti-repetição visual reforçado: cada fonte retorna source_key própria (Openverse, Wikimedia, LoremFlickr, Unsplash e Pollinations), o plugin rejeita a origem antes/depois do download e grava também o hash real do arquivo salvo.
+- Remoção do fallback Picsum genérico porque ele podia entregar paisagens, plantações e montanhas sem nexo com artigos de marca premium, autoridade digital e negócios modernos.
+- Pool Unsplash ampliado com fotos temáticas de equipes reais em escritórios de marketing, publicidade, branding e estratégia digital.
 - Fallback ilustrativo/local GD removido para impedir imagens cartoon/vetor; o fluxo usa somente fotografia gratuita ou IA fotográfica estritamente bloqueada contra ilustração, com filtro de resultados Openverse contra tags/títulos de illustration, vector, cartoon, avatar, icon, render, logo e text.
 - Validação editorial básica do artigo antes do fechamento da geração.
 - Painel administrativo ampliado com visual SaaS premium branco glassmorphism, fonte Maven Pro 800, cards compactos para caber em telas de 800px de altura, cores neon por finalidade, preview da última imagem destacada, diagnóstico da última geração, status da trava de geração, botão Liberar trava, Artigo, SEO, Slug, Imagem e Publicação, com erro técnico quando existir.
