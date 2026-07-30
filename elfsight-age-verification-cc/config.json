@@ -1,0 +1,496 @@
+{
+	"observerUrl": "./preview/dist/age-verification-observer.js",
+	"preferences": {
+		"previewUpdateTimeout": 0,
+		"enableCustomCSS": true
+	},
+	"settings": {
+		"tabs": [
+			{
+				"id": "settings",
+				"name": "Settings",
+				"active": true
+			},
+			{
+				"id": "content",
+				"name": "Content"
+			},
+			{
+				"id": "style",
+				"name": "Style"
+			}
+		],
+		"properties": [
+			{
+				"id": "minimumAge",
+				"name": "Minimum Age",
+				"description": "Enter the lowest age restriction for your website visitors.",
+				"tab": "settings",
+				"type": "number",
+				"defaultValue": 18
+			},
+			{
+				"id": "verificationMethod",
+				"name": "Verification Method",
+				"description": "Choose the verification method you prefer. The available options are: providing the date of birth, providing year of birth or choosing yes/no answer.",
+				"tab": "settings",
+				"type": "select",
+				"select": {
+					"options": [
+						{
+							"value": "date",
+							"name": "Date of Birth"
+						},
+						{
+							"value": "year",
+							"name": "Year of Birth"
+						},
+						{
+							"value": "buttons",
+							"name": "Yes/No Buttons"
+						}
+					]
+				},
+				"defaultValue": "buttons"
+			},
+			{
+				"id": "dateType",
+				"name": "Date format",
+				"description": "Select the right date format - Auto, North America, Europe. With Auto, the date format will be pulled in from your browser",
+				"tab": "settings",
+				"type": "select",
+				"select": {
+					"options": [
+						{
+							"value": "auto",
+							"name": "auto"
+						},
+						{
+							"value": "MM/DD/YYYY",
+							"name": "MM/DD/YYYY"
+						},
+						{
+							"value": "DD/MM/YYYY",
+							"name": "DD/MM/YYYY"
+						}
+					]
+				},
+				"defaultValue": "auto"
+			},
+			{
+				"id": "rememberSubgroup",
+				"name": "Remember Visitor",
+				"tab": "settings",
+				"type": "subgroup",
+				"subgroup": {
+					"properties": [
+						{
+							"id": "rememberDuration",
+							"name": "Remember Visitor (Days)",
+							"description": "Set the number of days to remember a visitor's age, in order for the visitor not to undergo the verification process again on their next visit.",
+							"type": "number",
+							"defaultValue": 30
+						}
+					]
+				}
+			},
+			{
+				"id": "underageActionSubgroup",
+				"name": "Underage Action",
+				"tab": "settings",
+				"type": "subgroup",
+				"subgroup": {
+					"properties": [
+						{
+							"id": "underAgeAction",
+							"name": "Underage Action",
+							"description": "Select an action when a user's age is less than the lowest permitted age.",
+							"type": "select-inline",
+							"selectInline": {
+								"options": [
+									{
+										"value": "message",
+										"name": "Show Message"
+									},
+									{
+										"value": "redirect",
+										"name": "Redirect to URL"
+									}
+								]
+							},
+							"defaultValue": "message"
+						},
+						{
+							"id": "underAgeMessage",
+							"name": "Message",
+							"description": "Set a message to be displayed for underage visitors.",
+							"type": "textarea",
+							"textarea": {
+								"enableRichEdit": true,
+								"enableRichEditHtml": true
+							},
+							"defaultValue": "You are not old enough to view this content"
+						},
+						{
+							"id": "underAgeRedirectUrl",
+							"name": "Redirect URL",
+							"description": "Set the URL to redirect underage visitors to.",
+							"type": "text",
+							"defaultValue": ""
+						}
+					]
+				}
+			},
+			{
+				"id": "whereToDisplaySubgroup",
+				"name": "Where to Display",
+				"tab": "settings",
+				"type": "subgroup",
+				"subgroup": {
+					"properties": [
+						{
+							"id": "whereToDisplay",
+							"name": "Where to Display",
+							"caption": "This setting is used in case you've installed the widget to your website template, and it's available on each page of your website.",
+							"type": "radio",
+							"radio": {
+								"options": [
+									{
+										"value": "allPages",
+										"name": "All pages"
+									},
+									{
+										"value": "excludedPages",
+										"name": "Excluded Pages"
+									},
+									{
+										"value": "specificPages",
+										"name": "Specific Pages"
+									}
+								]
+							},
+							"defaultValue": "allPages",
+							"description": "Choose the pages where you need to enable age verification."
+						},
+						{
+							"id": "excludedPages",
+							"name": "Disable age verification for these pages",
+							"type": "complex",
+							"complex": {
+								"properties": [
+									{
+										"id": "url",
+										"name": "URL",
+										"type": "text",
+										"defaultValue": "",
+										"description": "Set the URL of the page where you want to disable age verification."
+									}
+								]
+							},
+							"defaultValue": [],
+							"description": "List the pages where you want to disable age verification."
+						},
+						{
+							"id": "specificPages",
+							"name": "Enable age verification only on these pages",
+							"type": "complex",
+							"complex": {
+								"properties": [
+									{
+										"id": "url",
+										"name": "URL",
+										"type": "text",
+										"defaultValue": "",
+										"description": "Set the URl of the page that requires age verification."
+									}
+								]
+							},
+							"defaultValue": [],
+							"description": "List all the pages that require age verification."
+						}
+					]
+				}
+			},
+			{
+				"id": "message",
+				"name": "Message",
+				"description": "Let your visitors know how old they need to be to enter your website.",
+				"tab": "content",
+				"type": "text",
+				"defaultValue": "You must be over 18 years old to visit this site.",
+				"allowEmpty": true
+			},
+			{
+				"id": "caption",
+				"name": "Caption",
+				"description": "Explain how your visitors can verify their age and let them know anything else they need before entering your website.",
+				"tab": "content",
+				"type": "textarea",
+				"textarea": {
+					"enableRichEdit": true,
+					"enableRichEditHtml": true
+				},
+				"defaultValue": "Please, enter your date of birth"
+			},
+			{
+				"id": "submitButtonText",
+				"name": "Submit Button Text",
+				"description": "Set the text for the submit button.",
+				"tab": "content",
+				"type": "text",
+				"defaultValue": "Enter"
+			},
+			{
+				"id": "yesButtonText",
+				"name": "Yes Button Text",
+				"description": "Set the text for Yes button.",
+				"tab": "content",
+				"type": "text",
+				"defaultValue": "Yes"
+			},
+			{
+				"id": "noButtonText",
+				"name": "No Button Text",
+				"description": "Set the text for No button.",
+				"tab": "content",
+				"type": "text",
+				"defaultValue": "No"
+			},
+			{
+				"id": "additionalInfo",
+				"name": "Additional Info (terms of entry, etc)",
+				"description": "Add any disclaimer, links to your terms of use or privacy policy, or any other relevant information. This information will be displayed in the bottom of the verification window.",
+				"tab": "content",
+				"type": "textarea",
+				"textarea": {
+					"enableRichEdit": true,
+					"enableRichEditHtml": true
+				},
+				"defaultValue": "",
+				"allowEmpty": true
+			},
+			{
+				"id": "logo",
+				"name": "Logo",
+				"tab": "content",
+				"description": "Upload your logo picture to be displayed at the top of your verification window.",
+				"type": "file",
+				"file": {
+					"accept": "image/*",
+					"tabs": [
+						{
+							"name": "Upload File",
+							"value": "upload"
+						},
+						{
+							"name": "Recently Uploaded",
+							"value": "files"
+						},
+						{
+							"name": "File by URL",
+							"value": "link"
+						}
+					]
+				},
+				"defaultValue": null,
+				"allowEmpty": true
+			},
+			{
+				"id": "image",
+				"name": "Verification Window Image",
+				"tab": "content",
+				"description": "Upload an image to be displayed in your verification window. You can add any theme-related image.",
+				"type": "file",
+				"file": {
+					"accept": "image/*",
+					"tabs": [
+						{
+							"name": "Upload File",
+							"value": "upload"
+						},
+						{
+							"name": "Recently Uploaded",
+							"value": "files"
+						},
+						{
+							"name": "File by URL",
+							"value": "link"
+						}
+					]
+				},
+				"defaultValue": null,
+				"allowEmpty": true
+			},
+			{
+				"id": "overlayBackgroundImage",
+				"name": "Overlay Background Image",
+				"tab": "style",
+				"description": "Upload a background image that will cover your website until a visitor passes age verification.",
+				"type": "file",
+				"file": {
+					"accept": "image/*",
+					"tabs": [
+						{
+							"name": "Upload File",
+							"value": "upload"
+						},
+						{
+							"name": "Recently Uploaded",
+							"value": "files"
+						},
+						{
+							"name": "File by URL",
+							"value": "link"
+						}
+					]
+				},
+				"defaultValue": null,
+				"allowEmpty": true
+			},
+			{
+				"id": "align",
+				"name": "Align",
+				"type": "select-inline",
+				"tab": "style",
+				"selectInline": {
+					"options": [
+						{
+							"value": "left",
+							"name": "Left"
+						},
+						{
+							"value": "center",
+							"name": "Center"
+						}
+					]
+				},
+				"defaultValue": "center"
+			},
+			{
+				"id": "shape",
+				"name": "Shape",
+				"type": "select-inline",
+				"tab": "style",
+				"selectInline": {
+					"options": [
+						{
+							"value": "rectangle",
+							"name": "Rectangle"
+						},
+						{
+							"value": "rounded",
+							"name": "Rounded"
+						}
+					]
+				},
+				"defaultValue": "rectangle"
+			},
+			{
+				"id": "overlayBackgroundColor",
+				"name": "Overlay Background Color",
+				"description": "Set the overlay background color.",
+				"tab": "style",
+				"type": "color",
+				"allowEmpty": true,
+				"defaultValue": "rgba(17, 17, 17, 0.7)"
+			},
+			{
+				"id": "popupBackgroundColor",
+				"name": "Popup Background Color",
+				"description": "Set the popup background color.",
+				"tab": "style",
+				"type": "color",
+				"allowEmpty": true,
+				"defaultValue": "rgb(255, 255, 255)"
+			},
+			{
+				"id": "textColor",
+				"name": "Text Color",
+				"description": "Set the text color.",
+				"tab": "style",
+				"type": "color",
+				"allowEmpty": true,
+				"defaultValue": "rgb(17, 17, 17)"
+			},
+			{
+				"id": "submitButtonColor",
+				"name": "Submit Button Color",
+				"description": "Set the submit button color.",
+				"tab": "style",
+				"type": "color",
+				"allowEmpty": true,
+				"defaultValue": "rgb(28, 91, 255)"
+			},
+			{
+				"id": "yesButtonColor",
+				"name": "Yes Button Color",
+				"description": "Set Yes button color.",
+				"tab": "style",
+				"type": "color",
+				"allowEmpty": true,
+				"defaultValue": "rgb(28, 91, 255)"
+			},
+			{
+				"id": "noButtonColor",
+				"name": "No Button Color",
+				"description": "Set No button color.",
+				"tab": "style",
+				"type": "color",
+				"allowEmpty": true,
+				"defaultValue": "rgb(17, 17, 17)"
+			},
+			{
+				"id": "fontsSubgroup",
+				"name": "Fonts",
+				"tab": "style",
+				"type": "subgroup",
+				"subgroup": {
+					"properties": [
+						{
+							"id": "messageFontSize",
+							"name": "Message Font Size (px)",
+							"description": "Set the message font size in pixels.",
+							"type": "slider",
+							"slider": {
+								"minLimit": 10,
+								"maxLimit": 40,
+								"floor": 10,
+								"ceil": 40,
+								"step": 1
+							},
+							"defaultValue": 24
+						},
+						{
+							"id": "textFontSize",
+							"name": "Text Font Size (px)",
+							"description": "Set the text font size in pixels.",
+							"type": "slider",
+							"slider": {
+								"minLimit": 10,
+								"maxLimit": 20,
+								"floor": 10,
+								"ceil": 20,
+								"step": 1
+							},
+							"defaultValue": 16
+						},
+						{
+							"id": "additionalTextFontSize",
+							"name": "Additional Text Font Size (px)",
+							"description": "Set the additional text font size in pixels.",
+							"type": "slider",
+							"slider": {
+								"minLimit": 10,
+								"maxLimit": 20,
+								"floor": 10,
+								"ceil": 20,
+								"step": 1
+							},
+							"defaultValue": 12
+						}
+					]
+				}
+			}
+		]
+	}
+}
