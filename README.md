@@ -153,3 +153,7 @@ O ZIP instalável é um artefato reproduzível e não é versionado no Git. Exec
 ### Modal de autenticação e OTP
 
 `[pgw_entrar]` e `[pgw_criar_conta]` exibem o mesmo modal responsivo com abas **Entrar** e **Cadastre-se**, alterando apenas a aba inicialmente ativa. Depois do cadastro ou login, o fluxo encaminha para `[pgw_confirmar_codigo]`; quando o tema já enviou os headers, há fallback visual e client-side em vez de uma página vazia.
+
+### Dashboard visual
+
+A página principal de **Portal Grupos** apresenta métricas e atalhos dos módulos em uma superfície SaaS glassmorphism isolada por `.pgw-admin`, com Maven Pro em peso 800, layout responsivo e sem alterar o restante do WordPress.
