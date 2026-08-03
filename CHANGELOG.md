@@ -1,0 +1,70 @@
+# Changelog
+
+## 1.0.0 - 2026-08-02
+
+- Cadastro e login com código por e-mail, conta, avatar e privacidade.
+- CPT, taxonomias, moderação, destaques, catálogo, denúncias e métricas.
+- Rotas de convite restritas, proteção de área administrativa e sitemap público seguro.
+- Migrações idempotentes e rotinas de manutenção.
+- Validador de convites isolado e coberto por casos automatizados de segurança.
+- Conteúdo demo sem links externos e catálogo de demonstração extraído para arquivo próprio.
+- Empacotamento recursivo do código de produção, licença, dados, assets e idiomas.
+- Catálogo corrigido para não excluir grupos comuns e para exigir estado de negócio aprovado.
+- Showcase determinístico nas prioridades 2–1–3 e elevação exclusiva da prioridade 1.
+- Capacidades primitivas do CPT adicionadas ao administrador por migration v3.
+- Paginação assíncrona migrada para offset absoluto, eliminando repetição quando os tamanhos inicial e incremental diferem.
+- Ordenação pública estabilizada por data e ID, com cursor e término testáveis.
+- Provas de formulário assinadas, honeypot fora da tela e tempos mínimos adicionados ao cadastro, login e envio de grupos.
+- Oito testes de segurança cobrem adulteração, finalidade, expiração, preenchimento do honeypot e submissões rápidas.
+- Provas públicas agora possuem identificador aleatório assinado e consumo atômico no banco, impedindo replay concorrente ou posterior.
+- Contextos de OTP deixaram de expor ID de usuário e finalidade na URL; agora usam token opaco HMAC com expiração de 15 minutos.
+- Reenvio de OTP implementado no frontend e vinculado ao mesmo contexto assinado, com feedback acessível e cooldown visual.
+- Exclusão de conta concluída após OTP: sessões revogadas, usuário nativo removido, grupos desativados e histórico preservado para revisão.
+- Fluxos sensíveis de e-mail, senha e exclusão agora exigem a mesma sessão autenticada que iniciou a solicitação.
+- Alteração de senha convertida para fluxo em duas fases: senha atual, OTP e autorização descartável antes da nova senha.
+- Nova senha nunca é armazenada temporariamente; autorização expira em dez minutos e todas as sessões anteriores são revogadas.
+- Minha Conta agora mostra total de sessões ativas, próxima expiração e ações para revogar outras sessões ou todas as sessões.
+- Revogações possuem nonce, rate limit, auditoria e não expõem tokens, IPs ou user-agents.
+- Página individual agora oferece formulário acessível de denúncia com dez motivos, detalhes, feedback assíncrono e sem reload.
+- Denúncias exigem nonce, prova anti-replay, honeypot, tempo mínimo, rate limit e grupo realmente aprovado.
+- Painel de denúncias ganhou filtros por estado, detalhes, vínculo ao grupo e ações protegidas para análise, resolução e improcedência.
+- Implementado handler administrativo anteriormente ausente, com capability, nonce, queries preparadas e auditoria de transição.
+- Verificador de links agora usa política conservadora: 404/410 só expiram após três falhas, erros de transporte/5xx são temporários e 401/403/429 permanecem possivelmente ativos.
+- Checagem em lotes respeita próxima execução, faz fallback GET limitado para HEAD 405 e registra confirmação real separadamente.
+- Adicionado painel Pendentes e Correções com aprovação, rejeição, solicitação de correção e desativação.
+- Moderação agora exige motivo para rejeição/correção, preserva estado anterior, registra aprovação, audita e notifica o proprietário.
+- Destaques agora aceitam prioridade explícita, início/fim, estado atual e expiração automática sem excluir o grupo.
+- Painel de destaques passa a listar todos os grupos aprovados, inclusive os que ainda não possuem metadado de prioridade.
+- Registrados tamanhos de imagem 800x800, hero 1000x500 e avatar 512x512, todos gerados pela mídia nativa do WordPress.
+- Uploads agora usam limite configurável, MIME real, allowlist JPEG/PNG/WebP, ponto focal e SVG local de ícones estruturais.
+- Metadados de grupos alinhados ao contrato `_pgw_*` do briefing, com registro tipado e migration v4 dos nomes legados.
+- Migration preserva valores existentes, não sobrescreve chaves canônicas e remove somente a cópia legada após sucesso.
+- Catálogo ganhou filtros compartilháveis por busca, categoria, tipo, localização, destaque e estado do link, além de cinco ordenações.
+- Carregar Mais agora preserva todos os filtros e a ordenação entre requisições, com normalização centralizada e testada.
+- Meus Grupos agora permite editar e reenviar nome, convite, categoria, tipo, descrição, regras e imagem pelo proprietário.
+- Alterações críticas voltam para moderação, validam duplicidade pelo hash canônico e preservam/auditam o estado anterior.
+- Adicionado login Google OIDC servidor com authorization code, PKCE S256, state, nonce, expiração, tokeninfo oficial e OTP obrigatório.
+- Colisões de e-mail exigem OTP antes de vincular `sub`; credenciais podem vir de constantes ou painel com secret mascarado.
+- Minha Conta agora permite vincular e desvincular Google com state/PKCE e OTP; a remoção é bloqueada quando eliminaria o último método de acesso.
+- Fotos verificadas do Google podem ser importadas com allowlist HTTPS, limite de bytes e validação MIME, sem sobrescrever avatar manual.
+- Recuperação de senha agora permanece na interface pública do portal, usa resposta genérica, proteção antirreplay, rate limit e revogação nativa de sessões.
+- Cadastro público ganhou sobrenome, telefone E.164, confirmação de senha, consentimentos separados, auditoria e limites por origem/e-mail.
+- Troca de e-mail agora envia OTP ao endereço novo, limita solicitações, expira em dez minutos, avisa ambos os endereços e revoga sessões anteriores.
+- Minha Conta ganhou exportação JSON autenticada e limitada com dados permitidos da conta e dos grupos, sem sessões, senhas, OTPs ou secrets.
+- Exclusão de conta passou a aceitar usuários somente Google sem senha desconhecida, mantendo confirmação textual, OTP, rate limit, auditoria e desativação dos grupos.
+- Adicionado assistente administrativo que cria somente páginas explicitamente selecionadas, sem sobrescrever páginas existentes.
+- SEO passou a aplicar noindex centralizado a áreas privadas/demo/redirecionamentos e ganhou Twitter Cards sem duplicar tags de plugins SEO conhecidos.
+- Perfil da conta ganhou nome público e biografia curta, com validação centralizada, telefone E.164 e auditoria das atualizações.
+- Conteúdo Demo agora gera e recria artes PNG abstratas 800×800 e 1000×500, associadas à mídia nativa e removidas junto com os demos.
+- Adicionado diagnóstico administrativo para versões, HTTPS, cron, banco, imagens e Google, com desbloqueio pontual de rate limits sem revelar hashes.
+
+- Cards do catálogo e do showcase receberam composição visual de produto, hierarquia tipográfica Maven Pro, palco de imagem, metadados, CTA cápsula e destaque central responsivo.
+- Conteúdo Demo ampliado para 40 cards e importação idempotente de 12 páginas com shortcodes, sem sobrescrever ou remover páginas preexistentes.
+- O ZIP instalável deixou de ser versionado como binário; continua sendo gerado localmente por `npm run build` e validado antes da entrega.
+- Login e cadastro foram unificados em um modal acessível com abas, e o redirecionamento ao OTP ganhou fallback para evitar tela branca quando o shortcode é processado após os headers do tema.
+- Shortcodes superiores ganharam respiro visual e o catálogo passou a consultar também o conteúdo demo aprovado para avaliação dos cards.
+- O processamento de login e cadastro foi movido para `template_redirect`, antes de qualquer saída do tema, eliminando a tela branca e garantindo o encaminhamento ao OTP.
+- A autenticação ganhou um modal premium sem sidebar, e o dashboard recebeu uma interface SaaS ultra-glass com métricas e cards de módulos.
+- Páginas com `[pgw_mostrar_grupos]`, inclusive em dados do Elementor, agora são marcadas como dinâmicas; a importação demo limpa caches do WordPress, Elementor e caches populares para sincronizar editor e frontend.
+- Salvamentos do Elementor e de páginas com catálogo agora invalidam automaticamente o cache; o painel demo diagnostica homepage, publicação e shortcode salvo e oferece sincronização manual.
+- Auditoria do catálogo corrigiu a normalização dupla dos filtros, passou a aceitar posts publicados legados sem `_pgw_status`, alinhou `_pgw_featured_active` e invalida caches anônimos em qualquer publicação ou moderação de grupo.
