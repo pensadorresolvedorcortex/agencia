@@ -149,3 +149,7 @@ Em **Portal Grupos > Conteúdo Demo**, a ação **Importar 40 cards e páginas**
 ### Artefato ZIP
 
 O ZIP instalável é um artefato reproduzível e não é versionado no Git. Execute `npm run build` para gerar `build/portal-grupos-whatsapp-1.0.0.zip`; a regra em `.gitignore` evita que o binário seja incluído em commits ou pull requests.
+
+### Modal de autenticação e OTP
+
+`[pgw_entrar]` e `[pgw_criar_conta]` exibem o mesmo modal responsivo com abas **Entrar** e **Cadastre-se**, alterando apenas a aba inicialmente ativa. Depois do cadastro ou login, o fluxo encaminha para `[pgw_confirmar_codigo]`; quando o tema já enviou os headers, há fallback visual e client-side em vez de uma página vazia.

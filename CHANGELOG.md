@@ -61,3 +61,5 @@
 - Cards do catálogo e do showcase receberam composição visual de produto, hierarquia tipográfica Maven Pro, palco de imagem, metadados, CTA cápsula e destaque central responsivo.
 - Conteúdo Demo ampliado para 40 cards e importação idempotente de 12 páginas com shortcodes, sem sobrescrever ou remover páginas preexistentes.
 - O ZIP instalável deixou de ser versionado como binário; continua sendo gerado localmente por `npm run build` e validado antes da entrega.
+- Login e cadastro foram unificados em um modal acessível com abas, e o redirecionamento ao OTP ganhou fallback para evitar tela branca quando o shortcode é processado após os headers do tema.
+- Shortcodes superiores ganharam respiro visual e o catálogo passou a consultar também o conteúdo demo aprovado para avaliação dos cards.
