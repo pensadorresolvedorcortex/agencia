@@ -1,0 +1,10 @@
+{
+  "name": "portal-grupos-whatsapp",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "php scripts/build.php",
+    "lint": "php -l portal-grupos-whatsapp.php",
+    "test": "php tests/DemoDatasetTest.php && php tests/InviteUrlValidatorTest.php && php tests/FeaturedOrderTest.php && php tests/PaginationWindowTest.php && php tests/FormProofTest.php && php tests/FlowTokenTest.php && php tests/DeletionPolicyTest.php && php tests/DeletionRequestPolicyTest.php && php tests/PasswordPolicyTest.php && php tests/SessionPolicyTest.php && php tests/ReportPolicyTest.php && php tests/LinkCheckPolicyTest.php && php tests/ModerationPolicyTest.php && php tests/FeaturedScheduleTest.php && php tests/UploadPolicyTest.php && php tests/GroupMetaTest.php && php tests/CatalogFiltersTest.php && php tests/SubmissionPolicyTest.php && php tests/GoogleClaimsTest.php && php tests/ProviderPolicyTest.php && php tests/GooglePicturePolicyTest.php && php tests/PasswordResetLinkTest.php && php tests/RegistrationPolicyTest.php && php tests/EmailChangePolicyTest.php && php tests/AccountExportPolicyTest.php && php tests/PageBlueprintsTest.php && php tests/RobotsPolicyTest.php && php tests/ProfilePolicyTest.php && php tests/ArtworkPaletteTest.php && php tests/DiagnosticsTest.php"
+  }
+}
