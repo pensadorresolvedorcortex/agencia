@@ -201,3 +201,7 @@ Na versão de banco 5, o upgrade recria de forma idempotente as tabelas de desaf
 ### Fluxo OTP e retorno ao grupo
 
 O link de confirmação agora preserva o destino solicitado (`pgw_redirect_to`) e o formulário de 2 fatores mantém esse destino em campo oculto. Após validar o código, o plugin consome o destino pendente do usuário ou usa o fallback seguro da página de origem para levar a pessoa ao grupo selecionado; páginas de autenticação como `/entrar/` e `/confirmar-codigo/` — ou qualquer URL que ainda carregue `pgw_flow` — são rejeitadas como destino final por uma política testável (`Auth\PostOtpRedirectPolicy`) para impedir loop ou tela travada. O e-mail do OTP é HTML, usa o logo configurado no tema quando disponível e inclui header, código em destaque e footer.
+
+### Auditoria de cadastro
+
+O cadastro diferencia falhas de proteção expirada, dados inválidos, limite de tentativas, e-mail existente e falha de criação. O telefone permanece opcional: se informado em formato inválido, ele é descartado sem impedir o envio do OTP. A prova HMAC/honeypot continua ativa, mas sem idade mínima no formulário de cadastro para evitar falso negativo em preenchimento rápido, autofill ou modal recarregado por cache.

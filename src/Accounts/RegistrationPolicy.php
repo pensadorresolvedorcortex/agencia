@@ -11,9 +11,10 @@ final class RegistrationPolicy {
         $rawPhone = trim((string) ($input['phone'] ?? ''));
         $phone = $this->normalizePhone($rawPhone);
         $validEmail = filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
+        if ($rawPhone !== '' && $phone === '') $phone = '';
         $valid = $firstName !== '' && mb_strlen($firstName) <= 100 && mb_strlen($lastName) <= 100
             && $validEmail && strlen($password) >= $minimumPasswordLength && hash_equals($password, $confirmation)
-            && ($rawPhone === '' || $phone !== '') && !empty($input['terms']) && !empty($input['privacy']);
+            && !empty($input['terms']) && !empty($input['privacy']);
         return compact('firstName', 'lastName', 'email', 'password', 'phone', 'valid');
     }
 

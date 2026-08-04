@@ -85,3 +85,4 @@
 - E-mail de OTP convertido para HTML com header, suporte ao logo do site, bloco visual agressivo para o código e footer institucional.
 - Blindagem adicional no pós-OTP impede redirecionamento para páginas de autenticação (`entrar`, `criar-conta`, `confirmar-codigo`) e usa a página de origem segura como fallback, evitando loop/travamento em `/confirmar-codigo`.
 - Auditoria do 2FA adicionou uma política pura para bloquear destinos pós-OTP que apontem para telas de autenticação ou contenham `pgw_flow`, com teste automatizado dedicado para evitar regressões no retorno ao grupo.
+- Cadastro ficou mais resiliente: telefone inválido não bloqueia mais a criação da conta, a prova de formulário de cadastro não exige idade mínima e erros de cadastro passaram a diferenciar dados, proteção expirada, limite, e-mail existente e falha de criação.
