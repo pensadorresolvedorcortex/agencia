@@ -110,6 +110,8 @@ final class Plugin {
         add_action('wp_ajax_pgw_report_group', [self::class, 'ajax_report']);
         add_action('wp_enqueue_scripts', [self::class, 'frontend_runtime'], 20);
         add_action('wp_footer', [self::class, 'render_global_auth_modal'], 30);
+        add_action('add_meta_boxes_' . self::CPT, [self::class, 'add_group_link_metabox']);
+        add_action('save_post_' . self::CPT, [self::class, 'save_group_link_metabox'], 10, 3);
         add_action('save_post_' . self::CPT, [self::class, 'sync_business_status'], 20, 3);
         add_action('save_post_page', [self::class, 'sync_catalog_page_cache'], 20, 3);
         add_action('elementor/editor/after_save', [self::class, 'sync_elementor_catalog_cache'], 20, 2);
@@ -512,6 +514,41 @@ final class Plugin {
         return $validator->normalize((string) $value);
     }
 
+    public static function add_group_link_metabox(): void {
+        add_meta_box('pgw-group-link', 'Link do grupo WhatsApp', [self::class, 'render_group_link_metabox'], self::CPT, 'normal', 'high');
+    }
+
+    public static function render_group_link_metabox(\WP_Post $post): void {
+        $invite = (string) get_post_meta($post->ID, '_pgw_invite_url', true);
+        $protected = $post->post_name ? home_url('/ir/' . $post->post_name . '/') : '';
+        wp_nonce_field('pgw_group_link_' . $post->ID, 'pgw_group_link_nonce');
+        echo '<p><label for="pgw-admin-invite-url"><strong>Link de convite do WhatsApp</strong></label></p>';
+        echo '<input id="pgw-admin-invite-url" class="widefat" type="url" name="pgw_admin_invite_url" value="' . esc_attr($invite) . '" placeholder="https://chat.whatsapp.com/..." autocomplete="off">';
+        echo '<p class="description">Cole aqui o link real do grupo, comunidade ou canal. Ele fica protegido: visitantes deslogados veem apenas o modal de entrar/cadastrar, e usuários logados passam pelo link público <code>/ir/slug/</code>.</p>';
+        if ($protected) echo '<p><strong>Link protegido no frontend:</strong> <a href="' . esc_url($protected) . '" target="_blank" rel="noopener">' . esc_html($protected) . '</a></p>';
+    }
+
+    public static function save_group_link_metabox(int $post_id, \WP_Post $post, bool $update): void {
+        if ($post->post_type !== self::CPT || wp_is_post_revision($post_id) || (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)) return;
+        if (!isset($_POST['pgw_group_link_nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['pgw_group_link_nonce'])), 'pgw_group_link_' . $post_id)) return;
+        if (!current_user_can('edit_post', $post_id)) return;
+        $raw = trim((string) wp_unslash($_POST['pgw_admin_invite_url'] ?? ''));
+        if ($raw === '') {
+            delete_post_meta($post_id, '_pgw_invite_url');
+            delete_post_meta($post_id, '_pgw_invite_hash');
+            update_post_meta($post_id, '_pgw_link_status', 'missing');
+            return;
+        }
+        $url = self::sanitize_invite($raw);
+        if (!$url) {
+            update_post_meta($post_id, '_pgw_link_status', 'invalid');
+            return;
+        }
+        update_post_meta($post_id, '_pgw_invite_url', $url);
+        update_post_meta($post_id, '_pgw_invite_hash', hash_hmac('sha256', $url, wp_salt('auth')));
+        if (!get_post_meta($post_id, '_pgw_link_status', true) || get_post_meta($post_id, '_pgw_link_status', true) === 'invalid' || get_post_meta($post_id, '_pgw_link_status', true) === 'missing') update_post_meta($post_id, '_pgw_link_status', 'pending');
+    }
+
     public static function restrict_member_admin(): void {
         if (!is_user_logged_in() || current_user_can('manage_options') || wp_doing_ajax() || wp_doing_cron() || (defined('REST_REQUEST') && REST_REQUEST) || (defined('WP_CLI') && WP_CLI)) return;
         $user = wp_get_current_user();
@@ -626,7 +663,9 @@ final class Plugin {
 
     private static function card(int $id,bool $showcase=false): string { $title=self::trim_text(get_the_title($id),(int)get_option('pgw_card_title_limit',52));$desc=self::trim_text(get_post_field('post_content',$id),(int)get_option('pgw_card_description_limit',145));$terms=get_the_terms($id,self::CAT);$term=$terms&&!is_wp_error($terms)?$terms[0]:null;$cat=$term?$term->name:'Comunidade';$category_style=$term?self::category_color_style($term):'';$types=get_the_terms($id,self::TYPE);$type=$types&&!is_wp_error($types)?$types[0]->name:'Grupo';$featured=self::is_featured_active($id);$priority=$featured?max(1,min(3,absint(get_post_meta($id,'_pgw_featured_priority',true))?:3)):0;$verified=(string)get_post_meta($id,'_pgw_link_status',true)==='active';$focal_x=(new Images\UploadPolicy())->focal(get_post_meta($id,'_pgw_focal_x',true));$focal_y=(new Images\UploadPolicy())->focal(get_post_meta($id,'_pgw_focal_y',true));$image=has_post_thumbnail($id)?get_the_post_thumbnail($id,'pgw-square',['loading'=>'lazy','decoding'=>'async','alt'=>esc_attr($title),'style'=>'object-position:'.$focal_x.'% '.$focal_y.'%']):'<div class="pgw-placeholder" aria-hidden="true">'.esc_html(mb_strtoupper(mb_substr($title,0,1))).'</div>';$classes=['pgw-card','pgw-group-card--'.($showcase?'showcase':'catalog')];if($featured){$classes[]='pgw-card--featured';$classes[]='pgw-card--priority-'.$priority;}return '<article class="'.esc_attr(implode(' ',$classes)).'" data-group-id="'.absint($id).'"><header class="pgw-card__header"><span class="pgw-card__category"'.$category_style.'>'.esc_html($cat).'</span>'.($featured?'<span class="pgw-badge">Destaque</span>':'').'</header><div class="pgw-card__visual"><span class="pgw-card__backplate" aria-hidden="true"></span><div class="pgw-card__media">'.$image.'</div></div><div class="pgw-card__body"><h3><a href="'.esc_url(get_permalink($id)).'">'.esc_html($title).'</a></h3><p>'.esc_html($desc).'</p><div class="pgw-card__meta"><span>'.esc_html($type).' <i aria-hidden="true"></i> '.esc_html($cat).'</span>'.($verified?'<span class="pgw-card__verified">Link verificado</span>':'').'</div></div>'.self::group_join_button($id,'pgw-card__button').'</article>'; }
 
-    private static function group_join_button(int $id,string $extra_class=''): string { $redirect=home_url('/ir/'.get_post_field('post_name',$id).'/');$classes=trim('pgw-button '.$extra_class);if(is_user_logged_in())return '<a class="'.esc_attr($classes).'" href="'.esc_url($redirect).'" rel="nofollow noopener noreferrer external">Entrar no Grupo</a>';$login=add_query_arg('pgw_redirect_to',$redirect,home_url('/entrar/'));return '<a class="'.esc_attr($classes.' pgw-open-login').'" href="'.esc_url($login).'" data-pgw-auth-redirect="'.esc_url($redirect).'" rel="nofollow">Entrar no Grupo</a>'; }
+    private static function whatsapp_icon(): string { return '<svg class="pgw-button__icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16.05 3.5A12.36 12.36 0 0 0 5.31 22l-1.43 5.21 5.34-1.4a12.3 12.3 0 0 0 6.83 2.06h.01A12.36 12.36 0 0 0 16.05 3.5Zm0 22.28h-.01a10.24 10.24 0 0 1-5.22-1.43l-.37-.22-3.17.83.85-3.09-.24-.39a10.25 10.25 0 1 1 8.16 4.3Zm5.62-7.67c-.31-.15-1.82-.9-2.1-1s-.49-.15-.69.15-.79 1-.97 1.17-.36.23-.67.08a8.37 8.37 0 0 1-2.47-1.52 9.28 9.28 0 0 1-1.71-2.13c-.18-.31-.02-.47.13-.63.14-.14.31-.36.46-.54.15-.18.21-.31.31-.51.1-.2.05-.38-.03-.54-.08-.15-.69-1.66-.95-2.28-.25-.6-.5-.52-.69-.53h-.59c-.2 0-.54.08-.82.38s-1.08 1.05-1.08 2.56 1.1 2.97 1.26 3.17c.15.2 2.17 3.31 5.25 4.64.73.32 1.31.51 1.76.65.74.23 1.41.2 1.94.12.59-.09 1.82-.74 2.08-1.46.26-.72.26-1.33.18-1.46-.08-.13-.28-.2-.59-.35Z"/></svg>'; }
+
+    private static function group_join_button(int $id,string $extra_class=''): string { $redirect=home_url('/ir/'.get_post_field('post_name',$id).'/');$classes=trim('pgw-button '.$extra_class);$label=self::whatsapp_icon().'<span>Entrar no Grupo</span>';if(is_user_logged_in())return '<a class="'.esc_attr($classes).'" href="'.esc_url($redirect).'" rel="nofollow noopener noreferrer external">'.$label.'</a>';$login=add_query_arg('pgw_redirect_to',$redirect,home_url('/entrar/'));return '<a class="'.esc_attr($classes.' pgw-open-login').'" href="'.esc_url($login).'" data-pgw-auth-redirect="'.esc_url($redirect).'" rel="nofollow">'.$label.'</a>'; }
 
     private static function category_color_style(\WP_Term $term): string { $policy=new Taxonomy\CategoryColor();$color=$policy->normalize(get_term_meta($term->term_id,'_pgw_color',true))?:$policy->fallback((int)$term->term_id,(string)$term->slug);return ' style="--pgw-category-color:'.esc_attr($color).';--pgw-category-ink:'.esc_attr($policy->ink($color)).'"'; }
 
