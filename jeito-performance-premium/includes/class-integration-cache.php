@@ -47,14 +47,20 @@ final class Integration_Cache {
 
 	/** Disable the unvalidated CLS-sensitive feature once when upgrading. */
 	private function migrate_features( $installed_version ) {
-		if ( '' === $installed_version || version_compare( $installed_version, '2.2.1', '>=' ) ) {
+		if ( '' === $installed_version ) {
 			return;
 		}
 		$features = get_option( 'jpp_features', array() );
 		if ( ! is_array( $features ) ) {
 			$features = array();
 		}
-		$features['content_visibility'] = false;
+		if ( version_compare( $installed_version, '2.2.1', '<' ) ) {
+			$features['content_visibility'] = false;
+		}
+		if ( version_compare( $installed_version, '3.1.0', '<' ) ) {
+			$features['aiko_home_css'] = true;
+			$features['builder_home_css'] = true;
+		}
 		update_option( 'jpp_features', $features, false );
 	}
 

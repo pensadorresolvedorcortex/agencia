@@ -11,7 +11,8 @@ final class Feature_Flags {
 		'content_visibility' => false,
 		'deferred_grid'      => true,
 		'font_axes'          => true,
-		'aiko_home_css'       => false,
+		'aiko_home_css'       => true,
+		'builder_home_css'    => true,
 	);
 
 	public static function enabled( $feature ) {

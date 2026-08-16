@@ -33,7 +33,7 @@ python3 tools/build_package.py --output /tmp/jeito-performance-premium-3.0.0.zip
 SHA-256 determinístico atual:
 
 ```text
-e907ad22e88eed72d7932f0322559510d0767b45e01118bd2e38c56e23676cdb
+b61379c0d823cb56d9c60c574d2a37eb4cb88f53207ed1f84f586938ae5c33e0
 ```
 
 ## Limites honestos

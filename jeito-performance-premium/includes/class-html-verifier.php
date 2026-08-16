@@ -29,6 +29,7 @@ final class HTML_Verifier {
 			'deferred_grid'       => ! ( Compatibility::bold_builder() && Feature_Flags::enabled( 'deferred_grid' ) ) || false === strpos( $html, 'bt_bb_css_post_grid' ) || false !== strpos( $html, 'jppDeferredGridEnqueued' ),
 			'font_axes'           => ! ( Compatibility::aiko() && Feature_Flags::enabled( 'font_axes' ) ) || $font_axes_are_limited,
 			'aiko_home_css'        => ! ( Compatibility::aiko() && Feature_Flags::enabled( 'aiko_home_css' ) ) || false !== strpos( $html, 'assets/aiko-home.css' ),
+			'builder_home_css'     => ! ( Compatibility::bold_builder() && Feature_Flags::enabled( 'builder_home_css' ) ) || false !== strpos( $html, 'assets/builder-home.css' ),
 		);
 		return array( 'passed' => ! in_array( false, $checks, true ), 'checks' => $checks, 'bytes' => strlen( $html ) );
 	}

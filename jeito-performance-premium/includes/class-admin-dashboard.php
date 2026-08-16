@@ -80,6 +80,7 @@ final class Admin_Dashboard {
 					<?php $this->toggle( 'deferred_grid', __( 'Post Grid tardio', 'jeito-performance-premium' ), $features ); ?>
 					<?php $this->toggle( 'font_axes', __( 'Eixos de fontes da Home', 'jeito-performance-premium' ), $features ); ?>
 					<?php $this->toggle( 'aiko_home_css', __( 'Aiko Home CSS modular (experimental)', 'jeito-performance-premium' ), $features ); ?>
+					<?php $this->toggle( 'builder_home_css', __( 'Builder Home CSS modular', 'jeito-performance-premium' ), $features ); ?>
 				</div>
 				<?php submit_button( __( 'Salvar intervenções', 'jeito-performance-premium' ), 'primary jpp-save' ); ?>
 			</form>

@@ -59,4 +59,4 @@ Como o CLS mobile observado é 0,094, acima da meta de 0,05, `content-visibility
 
 ## Limite da medição
 
-As capturas são execuções individuais, não a mediana de três runs. Após instalar 3.0.0, repetir três execuções mobile e desktop e comparar FCP, LCP, CLS, Speed Index e o tempo de reflow. Nenhum delta pós-3.0.0 é declarado antes disso.
+As capturas são execuções individuais, não a mediana de três runs. Após instalar 3.1.0, repetir três execuções mobile e desktop e comparar FCP, LCP, CLS, Speed Index e o tempo de reflow. Nenhum delta pós-3.1.0 é declarado antes disso.

@@ -1,7 +1,7 @@
 <?php
 require __DIR__ . '/bootstrap.php';
 
-define( 'JPP_VERSION', '3.0.0' );
+define( 'JPP_VERSION', '3.1.0' );
 define( 'BT_BB_VERSION', '5.9.6' );
 class WP_CLI_Command {}
 class WP_Error {
@@ -30,7 +30,7 @@ require dirname( __DIR__ ) . '/jeito-performance-premium/includes/class-cli-comm
 
 $GLOBALS['jpp_http_response'] = array(
 	'status' => 200,
-	'body'   => '<div class="bt_bb_parallax"></div><picture><source media="(max-width:767px)" srcset="https://example.test/hero.webp"><img class="jpp-mobile-lcp" src="data:image/gif;base64,AA" loading="eager" fetchpriority="high"></picture><style>contain-intrinsic-size:auto 800px</style><script>window.jppDeferredGridEnqueued=true</script><div class="bt_bb_css_post_grid"></div><link href="https://fonts.googleapis.com/css2?family=x:wght@300;400;500;700">',
+	'body'   => '<div class="bt_bb_parallax"></div><picture><source media="(max-width:767px)" srcset="https://example.test/hero.webp"><img class="jpp-mobile-lcp" src="data:image/gif;base64,AA" loading="eager" fetchpriority="high"></picture><style>contain-intrinsic-size:auto 800px</style><script>window.jppDeferredGridEnqueued=true</script><div class="bt_bb_css_post_grid"></div><link href="https://fonts.googleapis.com/css2?family=x:wght@300;400;500;700"><link href="/assets/aiko-home.css"><link href="/assets/builder-home.css">',
 );
 ( new JPP\CLI_Command() )->verify();
 $success = json_decode( WP_CLI::$lines[0], true );

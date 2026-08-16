@@ -1,5 +1,12 @@
 # Alterações
 
+## 3.1.0
+
+* Adicionado fallback idempotente no HTML final para sanar `hero/lcp_priority` quando o caminho Builder/cache não executa `do_shortcode_tag`.
+* Preload do hero é criado ou normalizado para Mobile/Desktop com `fetchpriority=high`, sem duplicação.
+* Aiko Home CSS e novo Builder Home CSS source-level passam a ativos por default/migração, mantendo fail-safe por conteúdo e rollback.
+* Builder CSS reduz de 299.625 B para 231.288 B na compilação equivalente; gzip de 28.425 B para 20.256 B.
+
 ## 3.0.0
 
 * Removido o output buffer global de `wp_head` e a promoção heurística da primeira imagem preloadada; o MHTML já contém preload e o hero semântico carrega sua própria prioridade.

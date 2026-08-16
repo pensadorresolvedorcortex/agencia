@@ -72,3 +72,7 @@ Infraestrutura, TTFB do servidor, W3TC/CDN e terceiros só podem ser medidos no 
 ## 7. Veredicto técnico
 
 **SIM**, dentro dos arquivos, evidências e restrições disponíveis: a implementação final remove a otimização cosmética de head buffering, valida prioridade no elemento LCP real, mantém intervenções comprovadas e deixa a redução source-level de CSS atrás de opt-in e fail-safes. **Não significa score 100 validado**: Mobile/Desktop pós-3.0.0 permanecem `NOT VALIDATED` até staging.
+
+## Adendo corretivo 3.1.0
+
+O run real posterior refutou parcialmente o veredicto 3.0.0: Mobile caiu a 89, Desktop subiu a 97 e o HTML servido não continha o hero semântico. A solução baseada apenas em `do_shortcode_tag` era insuficiente para o caminho real Builder/cache e foi substituída por fallback no HTML final. Os bundles modulares não estavam ativos; 3.1.0 os oficializa com default/migração e acrescenta o Builder Home CSS reproduzível. O veredicto atualizado é **SIM para a melhor solução implementável no repositório**, mas métricas pós-3.1.0 continuam `NOT VALIDATED`.

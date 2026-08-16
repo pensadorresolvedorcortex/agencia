@@ -5,14 +5,15 @@
 ```bash
 find jeito-performance-premium tests -name '*.php' -print0 | xargs -0 -n1 php -l
 php -d zend.assertions=1 -d assert.exception=1 tests/run.php
-python3 tools/build_package.py --output /tmp/jeito-performance-premium-3.0.0.zip
-unzip -t /tmp/jeito-performance-premium-3.0.0.zip
+python3 tools/build_package.py --output /tmp/jeito-performance-premium-3.1.0.zip
+unzip -t /tmp/jeito-performance-premium-3.1.0.zip
 python3 tools/analyze_inputs.py
 python3 tests/test_analyzer.py
 node tests/deferred-grid.test.js
 php -d zend.assertions=1 -d assert.exception=1 tests/cli-command.test.php
 python3 tests/test_package.py
 python3 tests/test_aiko_css.py
+python3 tests/test_builder_css.py
 ```
 
 ## Staging obrigatório (NOT VALIDATED)
@@ -39,7 +40,8 @@ python3 tests/test_aiko_css.py
 20. Inserir temporariamente `[products]` e um bloco WooCommerce na Home e confirmar, em ambos os casos, que o HTML volta ao `style.css` original; remover o conteúdo e confirmar que o bundle modular retorna após purge.
 21. Ativar mini-cart/widget WooCommerce em header ou sidebar e confirmar o fallback; testar também a hipótese de Shop/Carrinho/Checkout/Conta ser configurada como Home.
 22. Mover o widget WooCommerce para “Widgets inativos” e confirmar que o bundle modular volta a ser usado; widgets órfãos também não devem bloquear a feature.
-23. Confirmar no HTML pós-W3TC que `aiko-home.css` contém `?ver=3.0.0`; uma atualização posterior deve mudar a query e não reutilizar o CSS antigo do navegador/CDN.
+23. Confirmar no HTML pós-W3TC que os bundles Home contêm `?ver=3.1.0`; uma atualização posterior deve mudar a query.
 24. Confirmar que o `<img class="jpp-mobile-lcp">` possui `loading="eager"` e `fetchpriority="high"`; preload correspondente é opcional e não deve ser duplicado.
+25. Exigir `aiko-home.css` e `builder-home.css` no verificador; inserir `[bt_bb_tabs]` e confirmar fallback apenas do Builder para `content_elements.crush.css`.
 
 Não há alegação de score ou equivalência visual sem esses passos.
