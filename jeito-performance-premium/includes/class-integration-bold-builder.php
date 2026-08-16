@@ -9,9 +9,47 @@ final class Integration_Bold_Builder {
 
 	public function register() {
 		add_filter( 'do_shortcode_tag', array( $this, 'render_mobile_lcp_image' ), 10, 4 );
+		// Some Builder releases render cached templates without do_shortcode_tag.
+		// Filtering the rendered post content keeps the image in the initial HTML
+		// (unlike a client-side patch) and runs before page-cache capture.
+		add_filter( 'the_content', array( $this, 'transform_front_page_content' ), 12 );
 		add_filter( 'style_loader_src', array( $this, 'home_stylesheet_src' ), 20, 2 );
+		add_filter( 'style_loader_tag', array( $this, 'home_stylesheet_tag' ), 20, 4 );
 		add_action( 'template_redirect', array( $this, 'start_front_page_buffer' ), 0 );
 		add_action( 'wp_footer', array( $this, 'enqueue_deferred_grid' ), 1 );
+	}
+
+	public function transform_front_page_content( $content ) {
+		if ( $this->hero_done || ! Compatibility::bold_builder() || ! Feature_Flags::enabled( 'mobile_hero' ) || ! is_front_page() ) {
+			return $content;
+		}
+		if ( function_exists( 'is_main_query' ) && ! is_main_query() ) {
+			return $content;
+		}
+		if ( function_exists( 'in_the_loop' ) && ! in_the_loop() ) {
+			return $content;
+		}
+		$transformed = $this->transform_first_parallax( $content );
+		$this->hero_done = $transformed !== $content;
+		return $transformed;
+	}
+
+	/**
+	 * W3TC can read the stylesheet URL from the generated tag after
+	 * style_loader_src has run. Replace that tag as a defensive, server-side
+	 * fallback so the original Builder bundle cannot re-enter the minify group.
+	 */
+	public function home_stylesheet_tag( $html, $handle, $href = '', $media = '' ) {
+		$source = $this->home_stylesheet_src( $href, $handle );
+		if ( $source === $href || '' === $href ) {
+			return $html;
+		}
+		return preg_replace(
+			'/(\bhref=)(["\']).*?\2/i',
+			'$1$2' . esc_attr( $source ) . '$2',
+			$html,
+			1
+		);
 	}
 
 	public function home_stylesheet_src( $src, $handle ) {
@@ -48,14 +86,14 @@ final class Integration_Bold_Builder {
 		if ( ! Compatibility::bold_builder() || ! Feature_Flags::enabled( 'deferred_grid' ) || ! wp_script_is( 'bt_bb_css_post_grid', 'enqueued' ) ) {
 			return;
 		}
-		wp_enqueue_script(
-			'jpp-deferred-post-grid',
-			plugin_dir_url( JPP_FILE ) . 'assets/deferred-post-grid.js',
-			array( 'bt_bb_css_post_grid' ),
-			JPP_VERSION,
-			true
-		);
-		wp_add_inline_script( 'jpp-deferred-post-grid', 'window.jppDeferredGridEnqueued=true;', 'before' );
+		$adapter = file_get_contents( dirname( __DIR__ ) . '/assets/deferred-post-grid.js' );
+		if ( false === $adapter ) {
+			return;
+		}
+		// At 0.75 KiB a separate dependent request costs more than parsing the
+		// adapter. Attach it to the already-enqueued Builder handle and remove a
+		// complete network-chain node.
+		wp_add_inline_script( 'bt_bb_css_post_grid', 'window.jppDeferredGridEnqueued=true;' . $adapter, 'after' );
 	}
 
 	/** Convert only the first parallax background into a discoverable mobile img. */

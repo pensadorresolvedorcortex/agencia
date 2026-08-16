@@ -2,14 +2,14 @@
 /**
  * Plugin Name: Jeito Performance Premium
  * Description: Integrações conservadoras de performance para Aiko e Bold Page Builder.
- * Version: 3.1.0
+ * Version: 3.2.0
  * Requires PHP: 7.4
  * Text Domain: jeito-performance-premium
  */
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'JPP_VERSION', '3.1.0' );
+define( 'JPP_VERSION', '3.2.0' );
 define( 'JPP_FILE', __FILE__ );
 
 require_once __DIR__ . '/includes/class-plugin.php';

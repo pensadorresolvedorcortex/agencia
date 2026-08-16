@@ -1,7 +1,7 @@
 <?php
 require __DIR__ . '/bootstrap.php';
 
-define( 'JPP_VERSION', '3.1.0' );
+define( 'JPP_VERSION', '3.2.0' );
 define( 'BT_BB_VERSION', '5.9.6' );
 class WP_CLI_Command {}
 class WP_Error {

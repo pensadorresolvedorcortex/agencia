@@ -1,5 +1,12 @@
 # Alterações
 
+## 3.2.0
+
+* Move a transformação de descoberta do hero também para o HTML de `the_content`, antes do page cache, corrigindo os caminhos do Builder que ignoram `do_shortcode_tag`.
+* Adiciona fallback no `style_loader_tag` para impedir que o CSS Builder original volte ao grupo W3TC quando `style_loader_src` não for respeitado.
+* Incorpora o adapter de Post Grid no handle Builder já existente, removendo uma requisição e um nó da cadeia crítica.
+* Documenta separadamente os números reais do run Mobile 81 e não atribui métricas ainda não medidas à versão nova.
+
 ## 3.1.0
 
 * Adicionado fallback idempotente no HTML final para sanar `hero/lcp_priority` quando o caminho Builder/cache não executa `do_shortcode_tag`.
