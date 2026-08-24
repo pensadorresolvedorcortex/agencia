@@ -42,6 +42,9 @@ class Optimizacao_Performance_99 {
         // Adiar JavaScript não crítico
         add_filter('script_loader_tag', array($this, 'defer_non_critical_js'), 10, 3);
         
+        // Corrigir wp_localize_script para evitar warnings
+        add_action('wp_enqueue_scripts', array($this, 'corrigir_localize_script'), 1);
+        
         // Remover emojis WordPress
         remove_action('wp_head', 'print_emoji_detection_script', 7);
         remove_action('admin_print_scripts', 'print_emoji_detection_script');
@@ -283,6 +286,25 @@ class Optimizacao_Performance_99 {
     }
 
     /**
+     * Corrigir wp_localize_script para evitar warnings de array inválido
+     */
+    public function corrigir_localize_script() {
+        // Suprimir warnings de wp_localize_script com parâmetros inválidos
+        add_filter('wp_localize_script', array($this, 'validar_localize_script'), 10, 3);
+    }
+    
+    /**
+     * Validar e corrigir dados do localize_script
+     */
+    public function validar_localize_script($handle, $object_name, $l10n_data) {
+        // Garantir que $l10n_data seja sempre um array
+        if (!is_array($l10n_data)) {
+            $l10n_data = array();
+        }
+        return $l10n_data;
+    }
+
+    /**
      * Preconnect para CDN se existir
      */
     public function cdn_preconnect() {
@@ -401,14 +423,18 @@ function controlar_heartbeat($period) {
 add_filter('heartbeat_settings', 'controlar_heartbeat');
 
 /**
- * Limitar revisões de posts
+ * Limitar revisões de posts (apenas se não estiver definido)
  */
-define('WP_POST_REVISIONS', 5);
+if (!defined('WP_POST_REVISIONS')) {
+    define('WP_POST_REVISIONS', 5);
+}
 
 /**
  * Intervalo de lixo automático (em dias)
  */
-define('EMPTY_TRASH_DAYS', 7);
+if (!defined('EMPTY_TRASH_DAYS')) {
+    define('EMPTY_TRASH_DAYS', 7);
+}
 
 /**
  * Otimizar banco de dados automaticamente

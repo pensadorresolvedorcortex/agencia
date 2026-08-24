@@ -1,10 +1,10 @@
 ```
-# WordPress specific ignores
+# WordPress specific
 wp-content/cache/
 wp-content/uploads/
 wp-content/upgrade/
-*.sql
 *.log
+*.tmp
 
 # Dependencies
 node_modules/
@@ -15,20 +15,19 @@ vendor/
 .env.local
 .env.*
 
-# Editor/IDE
+# Editors
 .vscode/
 .idea/
 *.swp
 *.swo
-*.tmp
 
-# Logs
-*.log
+# OS
+.DS_Store
+Thumbs.db
 
 # Build artifacts
-dist/
 build/
-target/
+dist/
 *.o
 *.obj
 *.exe
@@ -37,31 +36,120 @@ target/
 *.a
 *.out
 
-# Python specific
+# Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 .Python
-env/
-venv/
-.venv/
-pip-log.txt
-pip-delete-this-directory.txt
-.tox/
+*.egg-info/
+.eggs/
 .coverage
-.coverage.*
-.cache
+htmlcov/
+.mypy_cache/
+.pytest_cache/
+.tox/
+.coverage*
 nosetests.xml
 coverage.xml
 *.cover
 *.log
-.git/
-.mypy_cache/
-.pytest_cache/
-.hypothesis/
+*.pot
+*.pyc
+*.pyo
+*.rej
+*~
+**/__pycache__/
+**/*.py[cod]
+**/$py.class
+**/.DS_Store
+**/Thumbs.db
 
-# Compressed files
+# Node.js
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+node_modules/
+jspm_packages/
+*.js.map
+*.ts.map
+*.tsx.map
+*.jsx.map
+*.cjs.map
+*.mjs.map
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+hs_err_pid*
+.recommenders
+target/
+.gradle/
+build/
+
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.prof
+*.out
+bin/
+
+# C/C++
+*.o
+*.a
+*.so
+*.obj
+*.exe
+*.dll
+*.dylib
+*.plist
+*.dSYM
+*.dwarf
+*.ilk
+*.pdb
+*.ipdb
+*.iobj
+*.ipch
+*.aps
+*.ncb
+*.opt
+*.plg
+*.pgc
+*.pgd
+*.bsc
+
+# Ruby
+*.gem
+*.rbc
+.bundle/
+.coverage
+InstalledFiles
+pkg/
+spec/reports/
+spec/examples.txt
+test/tmp/
+test/version_tmp/
+tmp/
+.ruby-version
+.rbenv-vars
+~>.lock
+Gemfile.lock
+
+# PHP
+*.phar
+.php_cs.cache
+.php_history
+composer.lock
+vendor/
+
+# Compression
 *.zip
 *.gz
 *.tar
@@ -85,7 +173,42 @@ coverage.xml
 *.tar.xz
 *.tar.zst
 
-# System files
-.DS_Store
-Thumbs.db
+# Coverage
+coverage/
+*.lcov
+*.info
+*.gcda
+*.gcno
+*.gcov
+*.profraw
+*.profdata
+
+# Testing
+*.tmp
+*.temp
+*.log
+*.out
+*.pid
+*.seed
+*.id
+*.core
+*.dump
+*.stackdump
+*.crash
+*.crashreport
+*.crash_report
+*.minidump
+*.dmp
+*.heap
+*.trace
+*.trc
+*.log.*
+*.log-*
+*.log_*
+*.log*
+*log
+*log.*
+*log-*
+*log_*
+*log*
 ```
