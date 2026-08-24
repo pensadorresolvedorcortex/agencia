@@ -28,6 +28,7 @@ Thumbs.db
 # Build artifacts
 build/
 dist/
+target/
 *.o
 *.obj
 *.exe
@@ -42,6 +43,8 @@ __pycache__/
 *.pyo
 *.pyd
 .Python
+*.so
+.Python
 *.egg-info/
 .eggs/
 .coverage
@@ -49,34 +52,11 @@ htmlcov/
 .mypy_cache/
 .pytest_cache/
 .tox/
-.coverage*
-nosetests.xml
-coverage.xml
-*.cover
-*.log
-*.pot
-*.pyc
-*.pyo
-*.rej
-*~
-**/__pycache__/
-**/*.py[cod]
-**/$py.class
-**/.DS_Store
-**/Thumbs.db
 
-# Node.js
+# JavaScript/Node
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-node_modules/
-jspm_packages/
-*.js.map
-*.ts.map
-*.tsx.map
-*.jsx.map
-*.cjs.map
-*.mjs.map
 
 # Java
 *.class
@@ -84,8 +64,6 @@ jspm_packages/
 *.war
 *.ear
 *.nar
-hs_err_pid*
-.recommenders
 target/
 .gradle/
 build/
@@ -96,58 +74,16 @@ build/
 *.dll
 *.so
 *.dylib
-*.test
-*.prof
-*.out
-bin/
 
 # C/C++
 *.o
-*.a
-*.so
 *.obj
-*.exe
-*.dll
+*.a
+*.lib
+*.so
 *.dylib
-*.plist
-*.dSYM
-*.dwarf
-*.ilk
-*.pdb
-*.ipdb
-*.iobj
-*.ipch
-*.aps
-*.ncb
-*.opt
-*.plg
-*.pgc
-*.pgd
-*.bsc
-
-# Ruby
-*.gem
-*.rbc
-.bundle/
-.coverage
-InstalledFiles
-pkg/
-spec/reports/
-spec/examples.txt
-test/tmp/
-test/version_tmp/
-tmp/
-.ruby-version
-.rbenv-vars
-~>.lock
-Gemfile.lock
-
-# PHP
-*.phar
-.php_cs.cache
-.php_history
-composer.lock
-vendor/
+*.dll
+*.exe
 
 # Compression
 *.zip
@@ -172,43 +108,4 @@ vendor/
 *.tar.bz2
 *.tar.xz
 *.tar.zst
-
-# Coverage
-coverage/
-*.lcov
-*.info
-*.gcda
-*.gcno
-*.gcov
-*.profraw
-*.profdata
-
-# Testing
-*.tmp
-*.temp
-*.log
-*.out
-*.pid
-*.seed
-*.id
-*.core
-*.dump
-*.stackdump
-*.crash
-*.crashreport
-*.crash_report
-*.minidump
-*.dmp
-*.heap
-*.trace
-*.trc
-*.log.*
-*.log-*
-*.log_*
-*.log*
-*log
-*log.*
-*log-*
-*log_*
-*log*
 ```
