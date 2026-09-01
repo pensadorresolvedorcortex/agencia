@@ -39,3 +39,5 @@ Para ambientes onde o código deve ser sempre carregado, copie `playbrand-perfor
 
 ### Modo seguro
 Desmarque **Ativo** na tela administrativa (ou defina `pbpf_options[enabled]` como `0` via WP-CLI) para desligar todos os módulos sem desinstalar. Mantenha `dry_run=1` até validar cada rota.
+
+Em uma emergência, defina `PBPF_SAFE_MODE` como `true` no `wp-config.php` antes do carregamento dos plugins. Isso mantém a tela administrativa disponível, mas impede todos os módulos front-end; remova a constante após a investigação.
