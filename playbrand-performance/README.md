@@ -1,6 +1,6 @@
 # PlayBrand Performance
 
-Plugin instalável para WordPress 6.3+/PHP 8.1+, desenhado para cPanel/LiteSpeed com WP Rocket. **Fail-safe, reversível e sem dependências externas.**
+Plugin instalável para WordPress 6.3+/PHP 8.5+, desenhado para cPanel/LiteSpeed com WP Rocket. **Fail-safe, reversível e sem dependências externas.**
 
 ## Auditoria de entrada
 O PHP-base `playbrand-performance-core.php` foi localizado e lido integralmente; trata-se de um MU-plugin monolítico (7.0.0-rc8) com cache próprio, reescrita HTML e várias sobreposições ao Rocket. `01.har` (280.945 bytes) e `01.png` também foram inspecionados. Esta implementação substitui a abordagem monolítica por módulos instaláveis; nenhum arquivo do tema, WP Rocket ou servidor é alterado.

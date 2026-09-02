@@ -4,13 +4,13 @@
  * Description: Otimizações de performance seguras e complementares ao WP Rocket/LiteSpeed.
  * Version: 1.0.0
  * Requires at least: 6.3
- * Requires PHP: 8.1
+ * Requires PHP: 8.5
  * Author: PlayBrand
  */
 declare(strict_types=1);
 namespace PlayBrand\Performance;
 if (!defined('ABSPATH')) exit;
-const PBPF_VERSION='1.0.0'; const PBPF_OPTION='pbpf_options';
+const PBPF_VERSION='1.1.0'; const PBPF_OPTION='pbpf_options';
 require_once __DIR__.'/includes/Assets.php'; require_once __DIR__.'/includes/Fonts.php'; require_once __DIR__.'/includes/ThirdParty.php'; require_once __DIR__.'/includes/ResourceHints.php'; require_once __DIR__.'/includes/Admin.php'; require_once __DIR__.'/includes/Diagnostics.php';
 final class Plugin { public static function boot(): void { if (\is_admin() && !\wp_doing_ajax()) Admin::init(); if (defined('PBPF_SAFE_MODE') && PBPF_SAFE_MODE) return; if (!self::safe_context()) return; Assets::init(); Fonts::init(); ThirdParty::init(); ResourceHints::init(); \add_action('init',[self::class,'cleanup']); }
  public static function safe_context(): bool {
